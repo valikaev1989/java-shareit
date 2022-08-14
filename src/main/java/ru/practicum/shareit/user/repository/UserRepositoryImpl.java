@@ -9,7 +9,7 @@ import java.util.Map;
 @Repository
 public class UserRepositoryImpl implements UserRepository {
     private static long id = 0;
-    private final static Map<Long, User> users = new HashMap<>();
+    private final Map<Long, User> users = new HashMap<>();
 
     private static long generateId() {
         return ++id;
