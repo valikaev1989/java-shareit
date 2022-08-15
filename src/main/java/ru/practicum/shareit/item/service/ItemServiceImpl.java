@@ -27,7 +27,8 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Autowired
-    public ItemServiceImpl(ItemMapper itemMapper, ItemRepository itemRepository, UserMapper userMapper, UserService userService) {
+    public ItemServiceImpl(ItemMapper itemMapper, ItemRepository itemRepository,
+                           UserMapper userMapper, UserService userService) {
         this.itemMapper = itemMapper;
         this.itemRepository = itemRepository;
         this.userMapper = userMapper;
@@ -66,7 +67,7 @@ public class ItemServiceImpl implements ItemService {
      */
     @Override
     public ItemDto addItem(Long userId, ItemDto itemDto) {
-        validateItemNameAndDescAndAvailable(itemDto);
+        validateItemAll(itemDto);
         User user = userMapper.toUser(userService.getUserById(userId));
         user.setId(userId);
         log.info("ItemServiceImpl addItem user {}", user);
@@ -134,7 +135,7 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-    private void validateItemNameAndDescAndAvailable(ItemDto itemDto) {
+    private void validateItemAll(ItemDto itemDto) {
         validateItemName(itemDto);
         validateItemDesc(itemDto);
         if (itemDto.getAvailable() == null) {
