@@ -1,6 +1,6 @@
-package ru.practicum.shareit.booking.service;
+package ru.practicum.shareit.request.service;
 /**
  * // будет реализовано после 13-го спринта .
  */
-public interface BookingService {
+public interface ItemRequestService {
 }
