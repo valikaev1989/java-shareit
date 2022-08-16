@@ -61,13 +61,15 @@ public class ItemControllerTest {
     @Test
     void testCreateBlankName() {
         final UserDto userDto = userController.addUser(user1);
-        assertThrows(ValidationException.class, () -> itemController.addNewItem(userDto.getId(), item1.toBuilder().name("").build()));
+        assertThrows(ValidationException.class, () -> itemController.addNewItem(userDto.getId(),
+                item1.toBuilder().name("").build()));
     }
 
     @Test
     void testCreateBlankDescription() {
         final UserDto userDto = userController.addUser(user1);
-        assertThrows(ValidationException.class, () -> itemController.addNewItem(userDto.getId(), item1.toBuilder().description("").build()));
+        assertThrows(ValidationException.class, () -> itemController.addNewItem(userDto.getId(),
+                item1.toBuilder().description("").build()));
     }
 
     @Test

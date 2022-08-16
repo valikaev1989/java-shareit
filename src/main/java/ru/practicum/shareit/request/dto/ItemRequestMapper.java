@@ -3,7 +3,9 @@ package ru.practicum.shareit.request.dto;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
-
+/**
+ * // TODO .
+ */
 @Component
 public class ItemRequestMapper {
     public static ItemRequestDto toItemRequestDto(ItemRequest itemRequest) {

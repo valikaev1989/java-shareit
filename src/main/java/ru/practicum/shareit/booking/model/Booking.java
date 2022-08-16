@@ -5,7 +5,9 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
-
+/**
+ * // TODO .
+ */
 @Data
 public class Booking {
     private Long id;
