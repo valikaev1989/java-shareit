@@ -1,4 +1,5 @@
 package ru.practicum.shareit.booking.model;
+
 /**
  * // TODO .
  */
