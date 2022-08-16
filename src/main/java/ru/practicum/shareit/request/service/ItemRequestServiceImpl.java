@@ -1,6 +1,6 @@
 package ru.practicum.shareit.request.service;
 /**
- * // будет реализовано после 13-го спринта .
+ * // TODO .
  */
 public class ItemRequestServiceImpl implements ItemRequestService {
 }

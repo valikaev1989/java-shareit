@@ -55,7 +55,6 @@ public class UserServiceImpl implements UserService {
         validateIdUser(userId);
         User user = userRepository.getUserById(userId);
         if (userDto.getName() != null) {
-            validateNameUser(userDto);
             user.setName(userDto.getName());
         }
         if (userDto.getEmail() != null) {
