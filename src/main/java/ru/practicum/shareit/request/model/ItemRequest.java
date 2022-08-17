@@ -4,8 +4,9 @@ import lombok.Data;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
+
 /**
- * // TODO .
+ * // TODO: будет реализовано после 13-го спринта
  */
 @Data
 public class ItemRequest {
