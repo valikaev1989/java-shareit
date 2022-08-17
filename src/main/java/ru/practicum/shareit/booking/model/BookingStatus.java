@@ -1,7 +1,7 @@
 package ru.practicum.shareit.booking.model;
 
 /**
- * // TODO .
+ * // TODO: будет реализовано после 13-го спринта
  */
 public enum BookingStatus {
     WAITING,

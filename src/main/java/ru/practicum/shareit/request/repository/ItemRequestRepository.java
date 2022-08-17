@@ -1,7 +1,7 @@
 package ru.practicum.shareit.request.repository;
 
 /**
- * // TODO .
+ * // TODO: будет реализовано после 13-го спринта
  */
 public interface ItemRequestRepository {
 }
