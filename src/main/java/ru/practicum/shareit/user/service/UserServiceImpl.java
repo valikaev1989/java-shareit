@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<UserDto> getUsers() {
-        return userMapper.toUserDto(userRepository.getAllUsers().values());
+        return userMapper.toUserDto(userRepository.findAll());
     }
 
     /**
@@ -40,9 +40,9 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto addNewUser(UserDto userDto) {
-        validateUser(userDto);
+        validateUserDTO(userDto);
         User user = userMapper.toUser(userDto);
-        return userMapper.toUserDto(userRepository.createUser(user));
+        return userMapper.toUserDto(userRepository.save(user));
     }
 
     /**
@@ -52,8 +52,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto updateUser(UserDto userDto, Long userId) {
-        validateIdUser(userId);
-        User user = userRepository.getUserById(userId);
+        User user = validateIdUser(userId);
         if (userDto.getName() != null) {
             user.setName(userDto.getName());
         }
@@ -61,7 +60,7 @@ public class UserServiceImpl implements UserService {
             validateEmailUser(userDto);
             user.setEmail(userDto.getEmail());
         }
-        userRepository.updateUser(user);
+        userRepository.save(user);
         return userMapper.toUserDto(user);
     }
 
@@ -72,8 +71,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto getUserById(Long userId) {
-        validateIdUser(userId);
-        return userMapper.toUserDto(userRepository.getUserById(userId));
+        return userMapper.toUserDto(validateIdUser(userId));
     }
 
     /**
@@ -84,18 +82,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long userId) {
         validateIdUser(userId);
-        userRepository.deleteUserById(userId);
+        userRepository.deleteById(userId);
     }
 
-    private void validateIdUser(Long userId) {
-        if (userId == null || !userRepository.getAllUsers().containsKey(userId)) {
-            log.warn("пользователь с id '{}' не найден в списке пользователей!", userId);
-            throw new UserNotFoundException(String.format("пользователь с id '%d' не найден в списке пользователей!",
-                    userId));
-        }
+
+    private User validateIdUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(String.format
+                ("пользователь с id '%d' не найден в списке пользователей!", userId)));
     }
 
-    private void validateUser(UserDto userDto) {
+    private void validateUserDTO(UserDto userDto) {
         validateNameUser(userDto);
         validateNotNullEmailUser(userDto);
         validateEmailUser(userDto);
@@ -124,7 +120,7 @@ public class UserServiceImpl implements UserService {
             log.warn("Некорректный адрес электронной почты: {}", userDto.getEmail());
             throw new ValidationException("некорректный email");
         }
-        if (userRepository.getAllUsers().values().stream()
+        if (userRepository.findAll().stream()
                 .anyMatch(x -> x.getEmail().equalsIgnoreCase(userDto.getEmail()))) {
             log.warn("Пользователь '{}' с электронной почтой '{}' уже существует.",
                     userDto.getName(), userDto.getEmail());
