@@ -68,10 +68,22 @@ public class UserServiceImpl implements UserService {
      * Поиск пользователя по id
      *
      * @param userId id пользователя
+     * @return UserDto
      */
     @Override
-    public UserDto getUserById(Long userId) {
+    public UserDto findUserDtoById(Long userId) {
         return userMapper.toUserDto(validateIdUser(userId));
+    }
+
+    /**
+     * Поиск пользователя по id
+     *
+     * @param userId id пользователя
+     * @return User
+     */
+    @Override
+    public User findUserById(Long userId) {
+        return validateIdUser(userId);
     }
 
     /**

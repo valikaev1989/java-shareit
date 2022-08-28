@@ -4,9 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemOwnerDto;
 import ru.practicum.shareit.item.service.ItemService;
 
 import java.util.Collection;
+import java.util.List;
 
 
 @Slf4j
@@ -23,14 +25,14 @@ public class ItemController {
     }
 
     @GetMapping
-    public Collection<ItemDto> findAllByUserId(@RequestHeader(HEADER) long userId) {
+    public List<ItemOwnerDto> findAllByUserId(@RequestHeader(HEADER) long userId) {
         log.info("Get items by user id = {}", userId);
         return itemService.getAllUserItems(userId);
     }
 
     @GetMapping("/search")
-    public Collection<ItemDto> findByDescription(@RequestParam(value = "text") String text) {
-        log.info("Get item name/description = {}", text);
+    public List<ItemDto> findByDescription(@RequestParam(value = "text") String text) {
+        log.info("search items by text = {} in name and description", text);
         return itemService.searchItemByNameAndDesc(text);
     }
 
@@ -50,7 +52,7 @@ public class ItemController {
     @GetMapping("/{itemId}")
     public ItemDto findById(@PathVariable long itemId) {
         log.info("Get item id = {}", itemId);
-        return itemService.getItemById(itemId);
+        return itemService.findItemDtoById(itemId);
     }
 
     @DeleteMapping("/{itemId}")

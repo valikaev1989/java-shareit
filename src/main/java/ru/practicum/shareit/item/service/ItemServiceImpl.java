@@ -8,6 +8,7 @@ import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
+import ru.practicum.shareit.item.dto.ItemOwnerDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.dto.UserMapper;
@@ -16,6 +17,7 @@ import ru.practicum.shareit.user.service.UserService;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -41,9 +43,9 @@ public class ItemServiceImpl implements ItemService {
      * @param userId id пользователя
      */
     @Override
-    public Collection<ItemDto> getAllUserItems(Long userId) {
-        userService.getUserById(userId);
-        return itemMapper.toItemDto(itemRepository.findByUserId(userId));
+    public List<ItemOwnerDto> getAllUserItems(Long userId) {
+        userService.findUserById(userId);
+        return itemMapper.toItemOwnerDto(itemRepository.findByUserId(userId));
     }
 
     /**
@@ -52,11 +54,12 @@ public class ItemServiceImpl implements ItemService {
      * @param text текст для поиска
      */
     @Override
-    public Collection<ItemDto> searchItemByNameAndDesc(String text) {
+    public List<ItemDto> searchItemByNameAndDesc(String text) {
         if (text == null || text.isEmpty()) {
             return new ArrayList<>();
         }
-        return itemMapper.toItemDto(itemRepository.searchItemByNameAndDesc(text));
+        return itemMapper.toItemDto(itemRepository.
+                searchAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseAndAvailableIsTrue(text,text));
     }
 
     /**
@@ -68,10 +71,9 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto addItem(Long userId, ItemDto itemDto) {
         validateItemAll(itemDto);
-        User user = userMapper.toUser(userService.getUserById(userId));
-        user.setId(userId);
+        User user = userService.findUserById(userId);
         log.info("ItemServiceImpl addItem user {}", user);
-        Item item = itemRepository.addItem(itemMapper.toItem(itemDto, user));
+        Item item = itemRepository.save(itemMapper.toItem(itemDto, user));
         log.info("ItemServiceImpl addItem item {}", item);
         return itemMapper.toItemDto(item);
     }
@@ -82,9 +84,19 @@ public class ItemServiceImpl implements ItemService {
      * @param itemId id предмета
      */
     @Override
-    public ItemDto getItemById(Long itemId) {
+    public ItemDto findItemDtoById(Long itemId) {
         validateItemId(itemId);
-        return itemMapper.toItemDto(itemRepository.getItemById(itemId));
+        return itemMapper.toItemDto(validateItemId(itemId));
+    }
+
+    /**
+     * Поиск предмета по id
+     *
+     * @param itemId id предмета
+     */
+    @Override
+    public Item findItemById(Long itemId) {
+        return validateItemId(itemId);
     }
 
     /**
@@ -96,9 +108,8 @@ public class ItemServiceImpl implements ItemService {
      */
     @Override
     public ItemDto updateItem(Long userId, Long itemId, ItemDto itemDto) {
-        validateItemId(itemId);
-        Item item = itemRepository.getItemById(itemId);
-        userService.getUserById(userId);
+        Item item = validateItemId(itemId);
+        userService.findUserById(userId);
         validateUserFromItem(userId, itemId);
         if (itemDto.getName() != null) {
             validateItemName(itemDto);
@@ -111,7 +122,7 @@ public class ItemServiceImpl implements ItemService {
         if (itemDto.getAvailable() != null) {
             item.setAvailable(itemDto.getAvailable());
         }
-        return itemMapper.toItemDto(itemRepository.updateItem(item));
+        return itemMapper.toItemDto(itemRepository.save(item));
     }
 
     /**
@@ -123,12 +134,12 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void deleteItemById(Long userId, Long itemId) {
         validateItemId(itemId);
-        userService.getUserById(userId);
-        itemRepository.deleteItemById(userId, itemId);
+        userService.findUserById(userId);
+        itemRepository.deleteById(userId, itemId);
     }
 
     private void validateUserFromItem(Long userId, Long itemId) {
-        if (!userId.equals(itemRepository.getItemById(itemId).getOwner().getId())) {
+        if (!userId.equals(validateItemId(itemId).getOwner().getId())) {
             log.warn("пользователь с userId '{}' не является владельцем предмета с itemId {}!", userId, itemId);
             throw new UserNotFoundException(String.format("предмет с userId '%d' не является " +
                     "владельцем предмета с itemId '%d'!", userId, itemId));
@@ -158,11 +169,9 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-    private void validateItemId(Long itemId) {
-        if (itemId == null || !itemRepository.getAllItem().containsKey(itemId)) {
-            log.warn("предмет с id '{}' не найден в списке предметов!", itemId);
-            throw new ItemNotFoundException(String.format("предмет с id '%d' не найден в списке предметов!",
-                    itemId));
-        }
+    private Item validateItemId(Long itemId) {
+        return itemRepository.findById(itemId).orElseThrow(()->
+                new ItemNotFoundException(String.format("предмет с id '%d' не найден в списке предметов!",
+                itemId)));
     }
 }

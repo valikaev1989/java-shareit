@@ -18,13 +18,14 @@ import java.time.Instant;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "comment_id")
     private long id;
     @Column(name = "text")
     private String text;
     @JoinColumn(name = "item_id")
     @ManyToOne
     private Item item;
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "author_user_id")
     @ManyToOne
     private User author;
     @Column(name = "created")
