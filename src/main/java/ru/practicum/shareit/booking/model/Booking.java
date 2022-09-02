@@ -7,14 +7,12 @@ import ru.practicum.shareit.user.model.User;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 @Entity
 @Table(name = "bookings")
 @Builder(toBuilder = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,5 +29,6 @@ public class Booking {
     @Column(name = "end_date_time")
     private LocalDateTime end;
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private BookingStatus status;
 }

@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto updateUser(UserDto userDto, Long userId) {
-        User user = validateIdUser(userId);
+        User user = validateAndReturnUserByUserId(userId);
         if (userDto.getName() != null) {
             user.setName(userDto.getName());
         }
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto findUserDtoById(Long userId) {
-        return userMapper.toUserDto(validateIdUser(userId));
+        return userMapper.toUserDto(validateAndReturnUserByUserId(userId));
     }
 
     /**
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User findUserById(Long userId) {
-        return validateIdUser(userId);
+        return validateAndReturnUserByUserId(userId);
     }
 
     /**
@@ -93,12 +93,12 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void deleteUser(Long userId) {
-        validateIdUser(userId);
+        validateAndReturnUserByUserId(userId);
         userRepository.deleteById(userId);
     }
 
 
-    private User validateIdUser(Long userId) {
+    private User validateAndReturnUserByUserId(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(String.format
                 ("пользователь с id '%d' не найден в списке пользователей!", userId)));
     }
@@ -132,11 +132,11 @@ public class UserServiceImpl implements UserService {
             log.warn("Некорректный адрес электронной почты: {}", userDto.getEmail());
             throw new ValidationException("некорректный email");
         }
-        if (userRepository.findAll().stream()
-                .anyMatch(x -> x.getEmail().equalsIgnoreCase(userDto.getEmail()))) {
-            log.warn("Пользователь '{}' с электронной почтой '{}' уже существует.",
-                    userDto.getName(), userDto.getEmail());
-            throw new AlreadyExistsException("Пользователь с такой электронной почтой уже существует.");
-        }
+//        if (userRepository.findAll().stream()
+//                .anyMatch(x -> x.getEmail().equalsIgnoreCase(userDto.getEmail()))) {
+//            log.warn("Пользователь '{}' с электронной почтой '{}' уже существует.",
+//                    userDto.getName(), userDto.getEmail());
+//            throw new AlreadyExistsException("Пользователь с такой электронной почтой уже существует.");
+//        }
     }
 }

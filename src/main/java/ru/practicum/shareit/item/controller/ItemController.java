@@ -3,11 +3,12 @@ package ru.practicum.shareit.item.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemOwnerDto;
+import ru.practicum.shareit.item.service.CommentService;
 import ru.practicum.shareit.item.service.ItemService;
 
-import java.util.Collection;
 import java.util.List;
 
 
@@ -18,10 +19,12 @@ public class ItemController {
 
     private static final String HEADER = "X-Sharer-User-Id";
     private final ItemService itemService;
+    private final CommentService commentService;
 
     @Autowired
-    public ItemController(ItemService itemService) {
+    public ItemController(ItemService itemService, CommentService commentService) {
         this.itemService = itemService;
+        this.commentService = commentService;
     }
 
     @GetMapping
@@ -31,7 +34,7 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public List<ItemDto> findByDescription(@RequestParam(value = "text") String text) {
+    public List<ItemDto> findItemByText(@RequestParam(value = "text") String text) {
         log.info("search items by text = {} in name and description", text);
         return itemService.searchItemByNameAndDesc(text);
     }
@@ -50,14 +53,21 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto findById(@PathVariable long itemId) {
-        log.info("Get item id = {}", itemId);
-        return itemService.findItemDtoById(itemId);
+    public ItemOwnerDto findItemById(@RequestHeader(HEADER) long userId,@PathVariable long itemId) {
+        log.info("Get itemId = {}, with userId = {}", itemId,userId);
+        return itemService.findItemOwnerDtoById(itemId,userId);
     }
 
     @DeleteMapping("/{itemId}")
     public void deleteItem(@RequestHeader(HEADER) long userId, @PathVariable long itemId) {
         log.info("Delete item id = {}", itemId);
         itemService.deleteItemById(userId, itemId);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(@RequestHeader(HEADER) long userId, @PathVariable long itemId,
+                                 @RequestBody CommentDto commentDto) {
+        log.info("User {} adds comment {} to item {}", userId, commentDto, itemId);
+        return commentService.addCommentForItem(userId, itemId, commentDto);
     }
 }

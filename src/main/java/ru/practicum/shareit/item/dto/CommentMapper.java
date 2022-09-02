@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
@@ -10,10 +9,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@NoArgsConstructor
 @Component
 public class CommentMapper {
-    public static CommentDto toCommentDto(Comment comment) {
+    public CommentDto toCommentDto(Comment comment) {
         return new CommentDto(
                 comment.getId(),
                 comment.getText(),
@@ -22,7 +20,7 @@ public class CommentMapper {
         );
     }
 
-    public static Comment toComment(CommentDto commentDto, Item item, User user) {
+    public Comment toComment(CommentDto commentDto, Item item, User user) {
         Comment comment = new Comment();
         comment.setId(commentDto.getId());
         comment.setText(commentDto.getText());
@@ -32,7 +30,7 @@ public class CommentMapper {
         return comment;
     }
 
-    public static List<CommentDto> toCommentDto(Collection<Comment> comments) {
+    public List<CommentDto> toCommentDto(Collection<Comment> comments) {
         List<CommentDto> commentDtoList = new ArrayList<>();
         for (Comment comment : comments) {
             commentDtoList.add(toCommentDto(comment));

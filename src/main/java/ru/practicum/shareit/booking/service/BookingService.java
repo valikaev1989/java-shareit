@@ -2,10 +2,23 @@ package ru.practicum.shareit.booking.service;
 
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoOnlyId;
+import ru.practicum.shareit.booking.model.BookingStatus;
+import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
 
 public interface BookingService {
+    /**
+     * Получение списка всех бронирований пользователя
+     */
+    List<BookingDto> getAllBookingsByBooker(long userId, String state);
+
+    /**
+     * Получние списка бронирования для всех предметов пользователя
+     */
+    List<BookingDto> getBookingByIdOwner(long userId, String state);
+
     /**
      * Добавление нового бронирования
      */
@@ -22,12 +35,12 @@ public interface BookingService {
     BookingDto getBookingById(long userId, long bookingId);
 
     /**
-     * Получение списка всех бронирований пользователя
+     * проверка что пользователь брал вещь в аренду
      */
-    List<BookingDto> getAllBookingsFromUser(long userId, String state);
+    void validateBookingForComment(Item item, User booker, BookingStatus status);
 
-    /**
-     * Получние списка бронирования для всех предметов пользователя
-     */
-    List<BookingDto> getBookingByIdOwner(long userId, String state);
+    BookingDto findNextBookingForItem(long itemId);
+
+    BookingDto findLastBookingForItem(long itemId);
+
 }

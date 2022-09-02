@@ -48,14 +48,14 @@ public class ItemControllerTest {
         for (UserDto userDto : userController.getAllUsers()) {
             userController.deleteUserById(userDto.getId());
         }
-        itemRepository.getAllItem().clear();
+        itemRepository.findAll().clear();
     }
 
     @Test
     void testCreateAndFindCorrectItem() {
         final UserDto userDto = userController.addUser(user1);
         final ItemDto itemDto = itemController.addNewItem(userDto.getId(), item1);
-        assertEquals(1, itemController.findById(itemDto.getId()).getId());
+        assertEquals(1, itemController.findItemById(itemDto.getId(),userDto.getId()).getId());
     }
 
     @Test
@@ -93,6 +93,6 @@ public class ItemControllerTest {
     void testSearchItemByDescription() {
         final UserDto userDto = userController.addUser(user1);
         final ItemDto itemDto = itemController.addNewItem(userDto.getId(), item1.toBuilder().name("roBOcoP").build());
-        assertEquals(List.of(itemDto), itemController.findByDescription("oboc"));
+        assertEquals(List.of(itemDto), itemController.findItemByText("oboc"));
     }
 }

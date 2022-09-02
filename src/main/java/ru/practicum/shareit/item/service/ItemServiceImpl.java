@@ -2,21 +2,24 @@ package ru.practicum.shareit.item.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.exception.ItemNotFoundException;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemOwnerDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Slf4j
@@ -24,17 +27,18 @@ import java.util.List;
 public class ItemServiceImpl implements ItemService {
     private final ItemMapper itemMapper;
     private final ItemRepository itemRepository;
-    private final UserMapper userMapper;
     private final UserService userService;
-
+    private final BookingService bookingService;
+    private final CommentService commentService;
 
     @Autowired
     public ItemServiceImpl(ItemMapper itemMapper, ItemRepository itemRepository,
-                           UserMapper userMapper, UserService userService) {
+                           UserService userService,  BookingService bookingService, CommentService commentService) {
         this.itemMapper = itemMapper;
         this.itemRepository = itemRepository;
-        this.userMapper = userMapper;
         this.userService = userService;
+        this.bookingService = bookingService;
+        this.commentService = commentService;
     }
 
     /**
@@ -43,13 +47,17 @@ public class ItemServiceImpl implements ItemService {
      * @param userId id пользователя
      */
     @Override
-    public List<ItemOwnerDto> getAllUserItems(Long userId) {
-        userService.findUserById(userId);
-        return itemMapper.toItemOwnerDto(itemRepository.findByUserId(userId));
+    public List<ItemOwnerDto> getAllUserItems(long userId) {
+        List<Item> userItems = itemRepository.findByOwnerId(userId);
+        List<ItemOwnerDto> result = new ArrayList<>();
+        for (Item item : userItems) {
+            result.add(findItemOwnerDtoById(userId, item.getId()));
+        }
+        return result;
     }
 
     /**
-     * Поиск предмета по фрагменту в названии или описании
+     * Поиск предмета по тексту в названии или описании
      *
      * @param text текст для поиска
      */
@@ -59,7 +67,7 @@ public class ItemServiceImpl implements ItemService {
             return new ArrayList<>();
         }
         return itemMapper.toItemDto(itemRepository.
-                searchAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseAndAvailableIsTrue(text,text));
+                searchAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseAndAvailableIsTrue(text, text));
     }
 
     /**
@@ -69,12 +77,10 @@ public class ItemServiceImpl implements ItemService {
      * @param itemDto dto предмета
      */
     @Override
-    public ItemDto addItem(Long userId, ItemDto itemDto) {
+    public ItemDto addItem(long userId, ItemDto itemDto) {
         validateItemAll(itemDto);
         User user = userService.findUserById(userId);
-        log.info("ItemServiceImpl addItem user {}", user);
         Item item = itemRepository.save(itemMapper.toItem(itemDto, user));
-        log.info("ItemServiceImpl addItem item {}", item);
         return itemMapper.toItemDto(item);
     }
 
@@ -82,21 +88,37 @@ public class ItemServiceImpl implements ItemService {
      * Поиск предмета по id
      *
      * @param itemId id предмета
+     * @param userId id пользователя
      */
     @Override
-    public ItemDto findItemDtoById(Long itemId) {
-        validateItemId(itemId);
-        return itemMapper.toItemDto(validateItemId(itemId));
+    public ItemOwnerDto findItemOwnerDtoById(long itemId, long userId) {
+        Item item = validateAndReturnItemByItemId(itemId);
+        BookingDto lastBooking = bookingService.findLastBookingForItem(itemId);
+        BookingDto nextBooking = bookingService.findNextBookingForItem(itemId);
+        BookingDto last = null;
+        BookingDto next = null;
+        if (lastBooking != null) {
+            last = lastBooking;
+        }
+        if (nextBooking != null) {
+            next = nextBooking;
+        }
+        List<CommentDto> comments = commentService.getCommentsByItemId(itemId);
+        if (userId == item.getOwner().getId()) {
+            return itemMapper.toItemOwnerDto(item, comments, next, last);
+        }
+        return itemMapper.toItemOwnerDto(item, comments, null, null);
     }
 
+
     /**
-     * Поиск предмета по id
+     * Поиск предмета по id для внутреннего пользования в сервисах
      *
      * @param itemId id предмета
      */
     @Override
-    public Item findItemById(Long itemId) {
-        return validateItemId(itemId);
+    public Item findItemById(long itemId) {
+        return validateAndReturnItemByItemId(itemId);
     }
 
     /**
@@ -107,10 +129,10 @@ public class ItemServiceImpl implements ItemService {
      * @param itemDto dto предмета
      */
     @Override
-    public ItemDto updateItem(Long userId, Long itemId, ItemDto itemDto) {
-        Item item = validateItemId(itemId);
+    public ItemDto updateItem(long userId, long itemId, ItemDto itemDto) {
+        Item item = validateAndReturnItemByItemId(itemId);
         userService.findUserById(userId);
-        validateUserFromItem(userId, itemId);
+        validateOwnerFromItem(userId, itemId);
         if (itemDto.getName() != null) {
             validateItemName(itemDto);
             item.setName(itemDto.getName());
@@ -132,14 +154,15 @@ public class ItemServiceImpl implements ItemService {
      * @param itemId id предмета
      */
     @Override
-    public void deleteItemById(Long userId, Long itemId) {
-        validateItemId(itemId);
+    public void deleteItemById(long userId, long itemId) {
         userService.findUserById(userId);
-        itemRepository.deleteById(userId, itemId);
+        validateAndReturnItemByItemId(itemId);
+        validateOwnerFromItem(userId, itemId);
+        itemRepository.deleteById(itemId);
     }
 
-    private void validateUserFromItem(Long userId, Long itemId) {
-        if (!userId.equals(validateItemId(itemId).getOwner().getId())) {
+    private void validateOwnerFromItem(Long userId, Long itemId) {
+        if (!userId.equals(validateAndReturnItemByItemId(itemId).getOwner().getId())) {
             log.warn("пользователь с userId '{}' не является владельцем предмета с itemId {}!", userId, itemId);
             throw new UserNotFoundException(String.format("предмет с userId '%d' не является " +
                     "владельцем предмета с itemId '%d'!", userId, itemId));
@@ -169,9 +192,9 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-    private Item validateItemId(Long itemId) {
-        return itemRepository.findById(itemId).orElseThrow(()->
+    private Item validateAndReturnItemByItemId(Long itemId) {
+        return itemRepository.findById(itemId).orElseThrow(() ->
                 new ItemNotFoundException(String.format("предмет с id '%d' не найден в списке предметов!",
-                itemId)));
+                        itemId)));
     }
 }

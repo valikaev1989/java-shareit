@@ -1,14 +1,11 @@
 package ru.practicum.shareit.booking.dto;
 
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
@@ -40,6 +37,17 @@ public class BookingMapper {
     }
 
     public Booking toBooking(BookingDto bookingDto, User user, Item item, BookingStatus status) {
+        return new Booking(
+                bookingDto.getId(),
+                item,
+                user,
+                bookingDto.getStart(),
+                bookingDto.getEnd(),
+                status
+        );
+
+    }
+    public Booking newBooking(BookingDtoOnlyId bookingDto, User user, Item item, BookingStatus status) {
         return new Booking(
                 bookingDto.getId(),
                 item,

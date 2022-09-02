@@ -28,6 +28,4 @@ public class Item {
     @JoinColumn(name = "owner_user_id")
     @ManyToOne
     private User owner;
-//    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
-//    List<Comment> comments;
 }

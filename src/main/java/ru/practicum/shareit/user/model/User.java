@@ -1,11 +1,10 @@
 package ru.practicum.shareit.user.model;
 
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users")
@@ -20,8 +19,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private long id;
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, length = 200)
     private String name;
-    @Column(name = "email")
+    @Column(name = "email", nullable = false, length = 200)
     private String email;
 }

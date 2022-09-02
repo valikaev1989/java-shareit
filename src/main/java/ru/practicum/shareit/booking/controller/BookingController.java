@@ -26,7 +26,7 @@ public class BookingController {
     public List<BookingDto> getAllBookingsFromUser(@RequestHeader(HEADER) long userId,
                                                    @RequestParam(defaultValue = "ALL") String state) {
         log.info("User {} get own bookings state = {}", userId, state);
-        return bookingService.getAllBookingsFromUser(userId, state);
+        return bookingService.getAllBookingsByBooker(userId, state);
     }
 
     @GetMapping("/owner")

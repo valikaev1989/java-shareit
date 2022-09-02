@@ -1,55 +1,48 @@
 package ru.practicum.shareit.item.service;
 
-import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemOwnerDto;
 import ru.practicum.shareit.item.model.Item;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface ItemService {
     /**
      * Получение списка предметов пользователя
      */
-    List<ItemOwnerDto> getAllUserItems(Long userId);
+    List<ItemOwnerDto> getAllUserItems(long userId);
 
     /**
-     * Поиск предмета по описанию
+     * Поиск предмета по тексту
      */
     List<ItemDto> searchItemByNameAndDesc(String text);
 
     /**
-     * Получение списка отзывов предмета
-     */
-    List<CommentDto> getComments(long itemId);
-
-    /**
      * Добавление предмета
      */
-    ItemDto addItem(Long userId, ItemDto itemDto);
+    ItemDto addItem(long userId, ItemDto itemDto);
 
     /**
      * Поиск предмета по id
      *
-     * @return ItemDto предмета
+     * @return ItemOwnerDto предмета
      */
-    ItemDto findItemDtoById(Long itemId);
+    ItemOwnerDto findItemOwnerDtoById(long itemId,long ownerId);
 
     /**
-     * Поиск предмета по id
+     * Поиск предмета по id для внутреннего пользования в сервисах
      *
      * @return Item сущность предмета
      */
-    Item findItemById(Long itemId);
+    Item findItemById(long itemId);
 
     /**
-     * Редактирование предмета
+     * Изменение предмета
      */
-    ItemDto updateItem(Long userId, Long itemId, ItemDto itemDto);
+    ItemDto updateItem(long userId, long itemId, ItemDto itemDto);
 
     /**
      * Удаление предмета
      */
-    void deleteItemById(Long userId, Long itemId);
+    void deleteItemById(long userId, long itemId);
 }
