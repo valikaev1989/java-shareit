@@ -1,9 +1,9 @@
 package ru.practicum.shareit.user;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.exception.AlreadyExistsException;
 import ru.practicum.shareit.exception.ValidationException;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class UserControllerTest {
 
     private final UserController userController;
@@ -29,14 +29,6 @@ class UserControllerTest {
     private final UserDto user1 = UserDto.builder().name("test1").email("test1@test.com").build();
     private final UserDto user2 = UserDto.builder().name("test2").email("test2@test.com").build();
     private final UserDto user3 = UserDto.builder().name("test3").email("test3@test.com").build();
-
-    @BeforeEach
-    void cleanTemp() {
-        for (UserDto userDto : userController.getAllUsers()) {
-            userController.deleteUserById(userDto.getId());
-        }
-    }
-
 
     @Test
     void contextLoads() {
@@ -64,7 +56,7 @@ class UserControllerTest {
     @Test
     void testCreateUserWithExistingEmail() {
         userController.addUser(user1);
-        assertThrows(AlreadyExistsException.class,
+        assertThrows(DataIntegrityViolationException.class,
                 () -> userController.addUser(user2.toBuilder().email("test1@test.com").build()));
     }
 
@@ -80,7 +72,7 @@ class UserControllerTest {
     void testUpdateUserExistingEmail() {
         userController.addUser(user1);
         final UserDto userDto2 = userController.addUser(user2);
-        assertThrows(AlreadyExistsException.class,
+        assertThrows(DataIntegrityViolationException.class,
                 () -> userController.updateUser(user3.toBuilder().email("test1@test.com").build(), userDto2.getId()));
     }
 
