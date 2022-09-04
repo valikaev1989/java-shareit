@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS item_requests
     requester_user_id BIGINT,
     created           TIMESTAMP WITHOUT TIME ZONE             NOT NULL,
     CONSTRAINT pk_item_request PRIMARY KEY (item_request_id),
-    CONSTRAINT FK_ITEM_REQUEST_ON_REQUESTER FOREIGN KEY (requester_user_id) REFERENCES users (user_id) ON DELETE CASCADE
+    CONSTRAINT FK_ITEM_REQUEST_ON_REQUESTER FOREIGN KEY (requester_user_id) REFERENCES users (user_id)
 );
 
 CREATE TABLE IF NOT EXISTS items
@@ -28,8 +28,8 @@ CREATE TABLE IF NOT EXISTS items
     owner_user_id BIGINT                                  NOT NULL,
     request_id    BIGINT,
     CONSTRAINT pk_item PRIMARY KEY (item_id),
-    CONSTRAINT FK_ITEM_ON_OWNER FOREIGN KEY (owner_user_id) REFERENCES users (user_id) ON DELETE CASCADE,
-    CONSTRAINT FK_ITEM_ON_REQUEST FOREIGN KEY (request_id) REFERENCES item_requests (item_request_id) ON DELETE CASCADE
+    CONSTRAINT FK_ITEM_ON_OWNER FOREIGN KEY (owner_user_id) REFERENCES users (user_id),
+    CONSTRAINT FK_ITEM_ON_REQUEST FOREIGN KEY (request_id) REFERENCES item_requests (item_request_id)
 );
 
 CREATE TABLE IF NOT EXISTS bookings
@@ -41,8 +41,8 @@ CREATE TABLE IF NOT EXISTS bookings
     booker_user_id  BIGINT,
     status          VARCHAR(20)                             NOT NULL,
     CONSTRAINT pk_booking PRIMARY KEY (booking_id),
-    CONSTRAINT FK_BOOKING_ON_BOOKER FOREIGN KEY (booker_user_id) REFERENCES users (user_id) ON DELETE CASCADE,
-    CONSTRAINT FK_BOOKING_ON_ITEM FOREIGN KEY (item_id) REFERENCES items (item_id) ON DELETE CASCADE
+    CONSTRAINT FK_BOOKING_ON_BOOKER FOREIGN KEY (booker_user_id) REFERENCES users (user_id),
+    CONSTRAINT FK_BOOKING_ON_ITEM FOREIGN KEY (item_id) REFERENCES items (item_id)
 );
 
 CREATE TABLE IF NOT EXISTS comments
@@ -53,6 +53,6 @@ CREATE TABLE IF NOT EXISTS comments
     author_user_id BIGINT,
     created        TIMESTAMP WITHOUT TIME ZONE             NOT NULL,
     CONSTRAINT pk_comment PRIMARY KEY (comment_id),
-    CONSTRAINT FK_COMMENT_ON_AUTHOR FOREIGN KEY (author_user_id) REFERENCES users (user_id) ON DELETE CASCADE,
-    CONSTRAINT FK_COMMENT_ON_ITEM FOREIGN KEY (item_id) REFERENCES items (item_id) ON DELETE CASCADE
+    CONSTRAINT FK_COMMENT_ON_AUTHOR FOREIGN KEY (author_user_id) REFERENCES users (user_id),
+    CONSTRAINT FK_COMMENT_ON_ITEM FOREIGN KEY (item_id) REFERENCES items (item_id)
 );

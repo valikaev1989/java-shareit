@@ -1,7 +1,6 @@
 package ru.practicum.shareit.user.service;
 
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
 
@@ -24,15 +23,10 @@ public interface UserService {
 
     /**
      * Поиск пользователя по id
-     *@return UserDto
+     *
+     * @return UserDto
      */
     UserDto findUserDtoById(Long userId);
-
-    /**
-     * Поиск пользователя по id
-     *@return UserDto
-     */
-    User findUserById(Long userId);
 
     /**
      * Удаление пользователя по id

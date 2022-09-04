@@ -2,7 +2,6 @@ package ru.practicum.shareit.item.service;
 
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemOwnerDto;
-import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ public interface ItemService {
     /**
      * Поиск предмета по тексту
      */
-    List<ItemDto> searchItemByNameAndDesc(String text);
+    List<ItemDto> findItemsByText(String text);
 
     /**
      * Добавление предмета
@@ -27,9 +26,7 @@ public interface ItemService {
      *
      * @return ItemOwnerDto предмета
      */
-    ItemOwnerDto findItemOwnerDtoById(long userId,long itemId);
-
-
+    ItemOwnerDto findItemOwnerDtoById(long userId, long itemId);
 
     /**
      * Изменение предмета

@@ -11,7 +11,6 @@ import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.exception.ItemNotFoundException;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
-import ru.practicum.shareit.comment.repository.CommentRepository;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
@@ -20,7 +19,6 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -65,7 +63,6 @@ public class Validator {
             throw new ValidationException("некорректный email");
         }
     }
-
 
 
     public void validateOwnerFromItem(Long userId, Long itemId) {
@@ -167,14 +164,10 @@ public class Validator {
             log.warn("Комментарий не должен быть пустым!");
             throw new ValidationException("Комментарий не должен быть пустым!");
         }
-        if (bookingRepository.findByStatusNotAndBookerAndItemAndStartLessThanEqual(BookingStatus.REJECTED, booker, item, LocalDateTime.now()).isEmpty()) {
+        if (bookingRepository.validateForTakeItem(BookingStatus.REJECTED, booker,
+                item, LocalDateTime.now()).isEmpty()) {
             log.warn("Вы не брали в аренду эту вещь");
             throw new ValidationException("Вы не брали в аренду эту вещь");
         }
-//        List<Booking> bookingList = bookingRepository.findByItemAndBookerAndStatusNot(item, booker, BookingStatus.REJECTED);
-//        if (bookingList.isEmpty()|| commentDto.getCreated().isBefore(booking.getStart())) {
-//            log.warn("Вы не брали в аренду эту вещь");
-//            throw new ValidationException("Вы не брали в аренду эту вещь");
-//        }
     }
 }

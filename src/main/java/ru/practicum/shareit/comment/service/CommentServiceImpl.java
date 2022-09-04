@@ -3,20 +3,14 @@ package ru.practicum.shareit.comment.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.comment.dto.CommentMapper;
 import ru.practicum.shareit.comment.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.comment.repository.CommentRepository;
-import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.util.Validator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -35,7 +29,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentDto> getCommentsByItemId(long itemId) {
         List<Comment> commentDtoList = commentRepository.getAllByItemId(itemId);
-        return  commentMapper.toCommentDto(commentDtoList);
+        return commentMapper.toCommentDto(commentDtoList);
     }
 
     /**
@@ -49,7 +43,7 @@ public class CommentServiceImpl implements CommentService {
     public CommentDto addCommentForItem(long userId, long itemId, CommentDto commentDto) {
         Item item = validator.validateAndReturnItemByItemId(itemId);
         User user = validator.validateAndReturnUserByUserId(userId);
-        validator.validateBookingForComment(item, user,commentDto);
+        validator.validateBookingForComment(item, user, commentDto);
         Comment comment = commentRepository.save(commentMapper.toComment(commentDto, item, user));
         return commentMapper.toCommentDto(comment);
     }

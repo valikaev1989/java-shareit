@@ -36,7 +36,7 @@ public class ItemController {
     @GetMapping("/search")
     public List<ItemDto> findItemByText(@RequestParam(value = "text") String text) {
         log.info("search items by text = {} in name and description", text);
-        return itemService.searchItemByNameAndDesc(text);
+        return itemService.findItemsByText(text);
     }
 
     @PostMapping
@@ -53,9 +53,9 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemOwnerDto findItemById(@RequestHeader(HEADER) long userId,@PathVariable long itemId) {
-        log.info("Get itemId = {}, with userId = {}", itemId,userId);
-        ItemOwnerDto itemOwnerDto = itemService.findItemOwnerDtoById(userId,itemId);
+    public ItemOwnerDto findItemById(@RequestHeader(HEADER) long userId, @PathVariable long itemId) {
+        log.info("Get itemId = {}, with userId = {}", itemId, userId);
+        ItemOwnerDto itemOwnerDto = itemService.findItemOwnerDtoById(userId, itemId);
         log.info("ItemController.findItemById return itemOwnerDto{}", itemOwnerDto);
         return itemOwnerDto;
     }

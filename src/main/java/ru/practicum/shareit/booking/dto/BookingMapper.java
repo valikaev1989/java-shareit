@@ -47,17 +47,6 @@ public class BookingMapper {
         return bookingDtoOnlyId;
     }
 
-    public Booking toBooking(BookingDto bookingDto, User user, Item item, BookingStatus status) {
-        return new Booking(
-                bookingDto.getId(),
-                item,
-                user,
-                bookingDto.getStart(),
-                bookingDto.getEnd(),
-                status
-        );
-
-    }
     public Booking newBooking(BookingDtoOnlyId bookingDto, User user, Item item, BookingStatus status) {
         Booking booking = new Booking();
         booking.setItem(item);
