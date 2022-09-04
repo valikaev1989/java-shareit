@@ -82,19 +82,19 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemOwnerDto findItemOwnerDtoById(long userId, long itemId) {
         Item item = validator.validateAndReturnItemByItemId(itemId);
-        Booking l = bookingRepository.findFirstByItem_IdOrderByEndDesc(itemId);
-        Booking n = bookingRepository.findFirstByItem_IdOrderByStartAsc(itemId);
-        BookingDtoOnlyId last = null;
-        BookingDtoOnlyId next = null;
-        if (l != null) {
-            last = bookingMapper.toBookingDtoOnlyId(l);
+        Booking lastBooking = bookingRepository.findFirstByItem_IdOrderByEndDesc(itemId);
+        Booking nextBooking = bookingRepository.findFirstByItem_IdOrderByStartAsc(itemId);
+        BookingDtoOnlyId lastBookingDto = null;
+        BookingDtoOnlyId nextBookingDto = null;
+        if (lastBooking != null) {
+            lastBookingDto = bookingMapper.toBookingDtoOnlyId(lastBooking);
         }
-        if (n != null) {
-            next = bookingMapper.toBookingDtoOnlyId(n);
+        if (nextBooking != null) {
+            nextBookingDto = bookingMapper.toBookingDtoOnlyId(nextBooking);
         }
         List<CommentDto> comments = commentService.getCommentsByItemId(itemId);
         if (userId == item.getOwner().getId()) {
-            return itemMapper.toItemOwnerDto(item, comments, next, last);
+            return itemMapper.toItemOwnerDto(item, comments, nextBookingDto, lastBookingDto);
         }
         return itemMapper.toItemOwnerDto(item, comments, null, null);
     }
