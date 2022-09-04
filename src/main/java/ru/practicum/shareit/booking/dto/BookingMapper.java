@@ -36,6 +36,17 @@ public class BookingMapper {
         );
     }
 
+    public BookingDtoOnlyId toBookingDtoOnlyId(Booking booking) {
+        BookingDtoOnlyId bookingDtoOnlyId =new BookingDtoOnlyId();
+        bookingDtoOnlyId.setId(booking.getId());
+        bookingDtoOnlyId.setStart(booking.getStart());
+        bookingDtoOnlyId.setEnd(booking.getEnd());
+        bookingDtoOnlyId.setItemId(booking.getItem().getId());
+        bookingDtoOnlyId.setBookerId(booking.getBooker().getId());
+        bookingDtoOnlyId.setStatus(booking.getStatus());
+        return bookingDtoOnlyId;
+    }
+
     public Booking toBooking(BookingDto bookingDto, User user, Item item, BookingStatus status) {
         return new Booking(
                 bookingDto.getId(),
@@ -48,14 +59,13 @@ public class BookingMapper {
 
     }
     public Booking newBooking(BookingDtoOnlyId bookingDto, User user, Item item, BookingStatus status) {
-        return new Booking(
-                bookingDto.getId(),
-                item,
-                user,
-                bookingDto.getStart(),
-                bookingDto.getEnd(),
-                status
-        );
+        Booking booking = new Booking();
+        booking.setItem(item);
+        booking.setBooker(user);
+        booking.setStart(bookingDto.getStart());
+        booking.setEnd(bookingDto.getEnd());
+        booking.setStatus(status);
+        return booking;
 
     }
 

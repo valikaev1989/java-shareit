@@ -3,13 +3,11 @@ package ru.practicum.shareit.user.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.AlreadyExistsException;
-import ru.practicum.shareit.exception.UserNotFoundException;
-import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.util.Validator;
 
 import java.util.List;
 
@@ -18,11 +16,13 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final Validator validator;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, Validator validator) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.validator = validator;
     }
 
     /**
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto addNewUser(UserDto userDto) {
-        validateUserDTO(userDto);
+       validator.validateUserDTO(userDto);
         User user = userMapper.toUser(userDto);
         return userMapper.toUserDto(userRepository.save(user));
     }
@@ -52,12 +52,12 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto updateUser(UserDto userDto, Long userId) {
-        User user = validateAndReturnUserByUserId(userId);
+        User user = validator.validateAndReturnUserByUserId(userId);
         if (userDto.getName() != null) {
             user.setName(userDto.getName());
         }
         if (userDto.getEmail() != null) {
-            validateEmailUser(userDto);
+           validator.validateEmailUser(userDto);
             user.setEmail(userDto.getEmail());
         }
         userRepository.save(user);
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto findUserDtoById(Long userId) {
-        return userMapper.toUserDto(validateAndReturnUserByUserId(userId));
+        return userMapper.toUserDto(validator.validateAndReturnUserByUserId(userId));
     }
 
     /**
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User findUserById(Long userId) {
-        return validateAndReturnUserByUserId(userId);
+        return validator.validateAndReturnUserByUserId(userId);
     }
 
     /**
@@ -93,50 +93,50 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void deleteUser(Long userId) {
-        validateAndReturnUserByUserId(userId);
+        validator.validateAndReturnUserByUserId(userId);
         userRepository.deleteById(userId);
     }
 
 
-    private User validateAndReturnUserByUserId(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(String.format
-                ("пользователь с id '%d' не найден в списке пользователей!", userId)));
-    }
-
-    private void validateUserDTO(UserDto userDto) {
-        validateNameUser(userDto);
-        validateNotNullEmailUser(userDto);
-        validateEmailUser(userDto);
-    }
-
-    private void validateNameUser(UserDto userDto) {
-        if (userDto.getName().isEmpty() || userDto.getName().contains(" ")) {
-            log.warn("Логин не должен быть пустым и не должен содержать пробелов");
-            throw new ValidationException("некорректный логин");
-        }
-    }
-
-    private void validateNotNullEmailUser(UserDto userDto) {
-        if (userDto.getEmail() == null) {
-            log.warn("отсутствует адрес электронной почты: {}", userDto.getEmail());
-            throw new ValidationException("email отсутствует");
-        }
-    }
-
-    private void validateEmailUser(UserDto userDto) {
-        String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+" +
-                "@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
-        java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
-        java.util.regex.Matcher m = p.matcher(userDto.getEmail());
-        if (!m.matches()) {
-            log.warn("Некорректный адрес электронной почты: {}", userDto.getEmail());
-            throw new ValidationException("некорректный email");
-        }
-//        if (userRepository.findAll().stream()
-//                .anyMatch(x -> x.getEmail().equalsIgnoreCase(userDto.getEmail()))) {
-//            log.warn("Пользователь '{}' с электронной почтой '{}' уже существует.",
-//                    userDto.getName(), userDto.getEmail());
-//            throw new AlreadyExistsException("Пользователь с такой электронной почтой уже существует.");
+//    private User validateAndReturnUserByUserId(Long userId) {
+//        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(String.format
+//                ("пользователь с id '%d' не найден в списке пользователей!", userId)));
+//    }
+//
+//    private void validateUserDTO(UserDto userDto) {
+//        validateNameUser(userDto);
+//        validateNotNullEmailUser(userDto);
+//        validateEmailUser(userDto);
+//    }
+//
+//    private void validateNameUser(UserDto userDto) {
+//        if (userDto.getName().isEmpty() || userDto.getName().contains(" ")) {
+//            log.warn("Логин не должен быть пустым и не должен содержать пробелов");
+//            throw new ValidationException("некорректный логин");
 //        }
-    }
+//    }
+//
+//    private void validateNotNullEmailUser(UserDto userDto) {
+//        if (userDto.getEmail() == null) {
+//            log.warn("отсутствует адрес электронной почты: {}", userDto.getEmail());
+//            throw new ValidationException("email отсутствует");
+//        }
+//    }
+//
+//    private void validateEmailUser(UserDto userDto) {
+//        String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+" +
+//                "@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+//        java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
+//        java.util.regex.Matcher m = p.matcher(userDto.getEmail());
+//        if (!m.matches()) {
+//            log.warn("Некорректный адрес электронной почты: {}", userDto.getEmail());
+//            throw new ValidationException("некорректный email");
+//        }
+////        if (userRepository.findAll().stream()
+////                .anyMatch(x -> x.getEmail().equalsIgnoreCase(userDto.getEmail()))) {
+////            log.warn("Пользователь '{}' с электронной почтой '{}' уже существует.",
+////                    userDto.getName(), userDto.getEmail());
+////            throw new AlreadyExistsException("Пользователь с такой электронной почтой уже существует.");
+////        }
+//    }
 }

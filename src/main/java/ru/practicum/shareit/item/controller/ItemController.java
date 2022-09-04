@@ -3,10 +3,10 @@ package ru.practicum.shareit.item.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemOwnerDto;
-import ru.practicum.shareit.item.service.CommentService;
+import ru.practicum.shareit.comment.service.CommentService;
 import ru.practicum.shareit.item.service.ItemService;
 
 import java.util.List;
@@ -55,7 +55,9 @@ public class ItemController {
     @GetMapping("/{itemId}")
     public ItemOwnerDto findItemById(@RequestHeader(HEADER) long userId,@PathVariable long itemId) {
         log.info("Get itemId = {}, with userId = {}", itemId,userId);
-        return itemService.findItemOwnerDtoById(itemId,userId);
+        ItemOwnerDto itemOwnerDto = itemService.findItemOwnerDtoById(userId,itemId);
+        log.info("ItemController.findItemById return itemOwnerDto{}", itemOwnerDto);
+        return itemOwnerDto;
     }
 
     @DeleteMapping("/{itemId}")

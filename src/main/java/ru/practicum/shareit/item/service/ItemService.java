@@ -27,14 +27,9 @@ public interface ItemService {
      *
      * @return ItemOwnerDto предмета
      */
-    ItemOwnerDto findItemOwnerDtoById(long itemId,long ownerId);
+    ItemOwnerDto findItemOwnerDtoById(long userId,long itemId);
 
-    /**
-     * Поиск предмета по id для внутреннего пользования в сервисах
-     *
-     * @return Item сущность предмета
-     */
-    Item findItemById(long itemId);
+
 
     /**
      * Изменение предмета

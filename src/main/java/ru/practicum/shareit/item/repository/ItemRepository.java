@@ -13,8 +13,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
      *
      * @param userId id пользователя
      */
-    @Query("select i from Item i where i.owner.id = ?1")
-    List<Item> findByOwnerId(long userId);
+    @Query("select i from Item i where i.owner.id = ?1 order by i.id")
+    List<Item> findByOwnerIdOrderById(long userId);
 
     /**
      * Поиск предметов по тексту в названии и описании.

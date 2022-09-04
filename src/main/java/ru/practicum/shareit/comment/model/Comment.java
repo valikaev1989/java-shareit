@@ -1,9 +1,10 @@
-package ru.practicum.shareit.item.model;
+package ru.practicum.shareit.comment.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
@@ -20,6 +21,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
     private long id;
+    @JoinColumn(name = "item_id")
     @ManyToOne
     private Item item;
     @JoinColumn(name = "author_user_id")
@@ -27,7 +29,6 @@ public class Comment {
     private User author;
     @Column(name = "text")
     private String text;
-    @JoinColumn(name = "item_id")
     @Column(name = "created")
     private Instant created = Instant.now();
 }

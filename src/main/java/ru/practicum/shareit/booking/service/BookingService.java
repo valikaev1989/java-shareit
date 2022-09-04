@@ -12,12 +12,12 @@ public interface BookingService {
     /**
      * Получение списка всех бронирований пользователя
      */
-    List<BookingDto> getAllBookingsByBooker(long userId, String state);
+    List<BookingDto> getAllBookingsByBookerId(long userId, String state);
 
     /**
      * Получние списка бронирования для всех предметов пользователя
      */
-    List<BookingDto> getBookingByIdOwner(long userId, String state);
+    List<BookingDto> getBookingByOwnerId(long userId, String state);
 
     /**
      * Добавление нового бронирования
@@ -37,10 +37,8 @@ public interface BookingService {
     /**
      * проверка что пользователь брал вещь в аренду
      */
-    void validateBookingForComment(Item item, User booker, BookingStatus status);
+//    void validateBookingForComment(Item item, User booker, BookingStatus status);
 
-    BookingDto findNextBookingForItem(long itemId);
 
-    BookingDto findLastBookingForItem(long itemId);
 
 }

@@ -38,10 +38,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     /**
      * Получений списка текущих бронирований пользователя
      */
-    @Query("select b from Booking b where b.booker.id = ?1 and b.start < ?2 and b.end > ?3 order by b.start DESC")
-    List<Booking> findByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc
-    (long bookerId, LocalDateTime start, LocalDateTime end);
-
+    @Query("select b from Booking b where b.booker.id = ?1 and b.start < ?2 and b.end > ?2")
+    List<Booking> findAllByBookerIdAndStartIsBeforeAndEndIsAfter(long bookerId, LocalDateTime end);
+    @Query("select b from Booking b where b.booker.id = ?1 and b.start < ?2 and b.end > ?2 order by b.start DESC")
+    List<Booking> findByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc(long booker, LocalDateTime now);
     /**
      * Получение списка бронирований владельца предметов  с учетом статуса
      */
@@ -76,14 +76,29 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      * Получение последнего бронирования
      */
     Booking findFirstByItem_IdOrderByEndDesc(long itemId);
+
+    @Query(value = "select * from bookings b " +
+            "where b.item_id = :itemId and b.start_date_time < :date order by b.start_date_time limit  1",
+            nativeQuery = true)
+    Booking findBookingByItemWithDateBefore(long itemId, LocalDateTime date);
+
     /**
      * Получение следующего бронирования
      */
     Booking findFirstByItem_IdOrderByStartAsc(long itemId);
+
+    @Query(value = "select * from bookings b " +
+            "where b.item_id = :itemId and b.start_date_time > :date order by b.start_date_time limit  1",
+            nativeQuery = true)
+    Booking findBookingByItemWithDateAfter(long itemId, LocalDateTime date);
 
     /**
      * проверка что пользователь брал вещь в аренду
      */
     @Query("select b from Booking b where b.item = ?1 and b.booker = ?2 and b.status <> ?3")
     List<Booking> findByItemAndBookerAndStatusNot(Item item, User booker, BookingStatus status);
+
+    @Query("select b from Booking b where b.status <> ?1 and b.booker = ?2 and b.item = ?3 and b.start <= ?4")
+    List<Booking> findByStatusNotAndBookerAndItemAndStartLessThanEqual
+            (BookingStatus bookingStatus, User user, Item item, LocalDateTime localDateTime);
 }
