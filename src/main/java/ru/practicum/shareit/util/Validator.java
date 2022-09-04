@@ -29,8 +29,8 @@ public class Validator {
     private final BookingRepository bookingRepository;
 
     public User validateAndReturnUserByUserId(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(String.format
-                ("пользователь с id '%d' не найден в списке пользователей!", userId)));
+        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(String.format(
+                "пользователь с id '%d' не найден в списке пользователей!", userId)));
     }
 
     public void validateUserDTO(UserDto userDto) {

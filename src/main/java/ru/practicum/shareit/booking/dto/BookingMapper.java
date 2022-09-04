@@ -37,7 +37,7 @@ public class BookingMapper {
     }
 
     public BookingDtoOnlyId toBookingDtoOnlyId(Booking booking) {
-        BookingDtoOnlyId bookingDtoOnlyId =new BookingDtoOnlyId();
+        BookingDtoOnlyId bookingDtoOnlyId = new BookingDtoOnlyId();
         bookingDtoOnlyId.setId(booking.getId());
         bookingDtoOnlyId.setStart(booking.getStart());
         bookingDtoOnlyId.setEnd(booking.getEnd());

@@ -50,12 +50,10 @@ public class BookingServiceImpl implements BookingService {
                 bookings.addAll(bookingRepository.findPastBookingByBookerId(userId, LocalDateTime.now()));
                 break;
             case ("WAITING"):
-                bookings.addAll(bookingRepository.findByBookerIdAndStatus
-                        (userId, BookingStatus.WAITING));
+                bookings.addAll(bookingRepository.findByBookerIdAndStatus(userId, BookingStatus.WAITING));
                 break;
             case ("REJECTED"):
-                bookings.addAll(bookingRepository.findByBookerIdAndStatus
-                        (userId, BookingStatus.REJECTED));
+                bookings.addAll(bookingRepository.findByBookerIdAndStatus(userId, BookingStatus.REJECTED));
                 break;
             default:
                 log.warn("некорректный статус: {}", state);
@@ -79,8 +77,7 @@ public class BookingServiceImpl implements BookingService {
                 bookings.addAll(bookingRepository.findAllByItemOwnerId(ownerId));
                 break;
             case ("CURRENT"):
-                bookings.addAll(bookingRepository.findCurrentBookingByItemOwnerId
-                        (ownerId, LocalDateTime.now()));
+                bookings.addAll(bookingRepository.findCurrentBookingByItemOwnerId(ownerId, LocalDateTime.now()));
                 break;
             case ("FUTURE"):
                 bookings.addAll(bookingRepository.findFutureBookingByItemOwnerId(ownerId, LocalDateTime.now()));
@@ -89,12 +86,10 @@ public class BookingServiceImpl implements BookingService {
                 bookings.addAll(bookingRepository.findPastBookingByItemOwnerId(ownerId, LocalDateTime.now()));
                 break;
             case ("WAITING"):
-                bookings.addAll(bookingRepository.findBookingByOwnerIdAndStatus
-                        (ownerId, BookingStatus.WAITING));
+                bookings.addAll(bookingRepository.findBookingByOwnerIdAndStatus(ownerId, BookingStatus.WAITING));
                 break;
             case ("REJECTED"):
-                bookings.addAll(bookingRepository.findBookingByOwnerIdAndStatus
-                        (ownerId, BookingStatus.REJECTED));
+                bookings.addAll(bookingRepository.findBookingByOwnerIdAndStatus(ownerId, BookingStatus.REJECTED));
                 break;
             default:
                 log.warn("некорректный статус: {}", state);
