@@ -54,11 +54,11 @@ public class Validator {
     }
 
     public void validateEmailUser(UserDto userDto) {
-        String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+" +
+        String patternEmail = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+" +
                 "@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
-        java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
-        java.util.regex.Matcher m = p.matcher(userDto.getEmail());
-        if (!m.matches()) {
+        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(patternEmail);
+        java.util.regex.Matcher matcher = pattern.matcher(userDto.getEmail());
+        if (!matcher.matches()) {
             log.warn("Некорректный адрес электронной почты: {}", userDto.getEmail());
             throw new ValidationException("некорректный email");
         }

@@ -75,12 +75,12 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     /**
      * Получение последнего бронирования
      */
-    Booking findFirstByItem_IdOrderByEndDesc(long itemId);
+    Booking findFirstByItemOrderByEndDesc(Item item);
 
     /**
      * Получение следующего бронирования
      */
-    Booking findFirstByItem_IdOrderByStartAsc(long itemId);
+    Booking findFirstByItemOrderByStartAsc(Item item);
 
     /**
      * проверка что пользователь брал вещь в аренду

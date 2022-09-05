@@ -82,8 +82,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemOwnerDto findItemOwnerDtoById(long userId, long itemId) {
         Item item = validator.validateAndReturnItemByItemId(itemId);
-        Booking lastBooking = bookingRepository.findFirstByItem_IdOrderByEndDesc(itemId);
-        Booking nextBooking = bookingRepository.findFirstByItem_IdOrderByStartAsc(itemId);
+        Booking lastBooking = bookingRepository.findFirstByItemOrderByEndDesc(item);
+        Booking nextBooking = bookingRepository.findFirstByItemOrderByStartAsc(item);
         BookingDtoOnlyId lastBookingDto = null;
         BookingDtoOnlyId nextBookingDto = null;
         if (lastBooking != null) {
