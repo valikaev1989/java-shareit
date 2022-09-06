@@ -2,6 +2,8 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.booking.dto.BookingDtoOnlyId;
+import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -28,6 +30,19 @@ public class ItemMapper {
         item.setAvailable(itemDto.getAvailable());
         item.setOwner(user);
         return item;
+    }
+
+    public ItemOwnerDto toItemOwnerDto(Item item, List<CommentDto> comments,
+                                       BookingDtoOnlyId last, BookingDtoOnlyId next) {
+        return new ItemOwnerDto(
+                item.getId(),
+                item.getName(),
+                item.getDescription(),
+                item.getAvailable(),
+                last,
+                next,
+                comments
+        );
     }
 
     public List<ItemDto> toItemDto(Collection<Item> items) {

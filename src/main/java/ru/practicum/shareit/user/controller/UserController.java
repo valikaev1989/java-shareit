@@ -40,7 +40,7 @@ public class UserController {
     @GetMapping("/{userId}")
     public UserDto getUserById(@PathVariable long userId) {
         log.info("Get user id = {}", userId);
-        return userService.getUserById(userId);
+        return userService.findUserDtoById(userId);
     }
 
     @DeleteMapping("/{userId}")

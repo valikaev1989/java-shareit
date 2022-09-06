@@ -1,7 +1,7 @@
 package ru.practicum.shareit.request.repository;
 
-/**
- * // TODO: будет реализовано после 13-го спринта
- */
+import ru.practicum.shareit.request.model.ItemRequest;
+
 public interface ItemRequestRepository {
+    ItemRequest addRequest(long userId, ItemRequest itemRequest);
 }

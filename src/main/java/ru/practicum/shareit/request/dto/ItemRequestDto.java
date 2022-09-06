@@ -6,9 +6,6 @@ import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 
-/**
- * // TODO: будет реализовано после 13-го спринта
- */
 @Data
 @Builder(toBuilder = true)
 public class ItemRequestDto {

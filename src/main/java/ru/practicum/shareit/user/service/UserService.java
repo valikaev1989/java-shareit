@@ -23,8 +23,10 @@ public interface UserService {
 
     /**
      * Поиск пользователя по id
+     *
+     * @return UserDto
      */
-    UserDto getUserById(Long userId);
+    UserDto findUserDtoById(Long userId);
 
     /**
      * Удаление пользователя по id
