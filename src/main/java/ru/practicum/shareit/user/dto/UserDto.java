@@ -8,7 +8,11 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
+/**
+ * id — уникальный идентификатор пользователя;
+ * name — имя или логин пользователя;
+ * email — адрес электронной почты.
+ */
 @Data
 @Builder(toBuilder = true)
 @AllArgsConstructor

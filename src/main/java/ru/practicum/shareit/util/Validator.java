@@ -14,6 +14,9 @@ import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
@@ -27,6 +30,7 @@ public class Validator {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final BookingRepository bookingRepository;
+    private final ItemRequestRepository itemRequestRepository;
 
     public User validateAndReturnUserByUserId(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(String.format(
@@ -168,6 +172,29 @@ public class Validator {
                 item, LocalDateTime.now()).isEmpty()) {
             log.warn("Вы не брали в аренду эту вещь");
             throw new ValidationException("Вы не брали в аренду эту вещь");
+        }
+    }
+
+    public void validateItemRequestDesc(ItemRequestDto itemRequestDto) {
+        if (itemRequestDto.getDescription() == null || itemRequestDto.getDescription().isBlank()) {
+            log.warn("описание предмета не должно быть пустым!");
+            throw new ValidationException("описание предмета не должно быть пустым!");
+        }
+    }
+
+    public ItemRequest validateAndReturnItemRequestByRequestId(Long requestId) {
+        return itemRequestRepository.findById(requestId).orElseThrow(() -> new ItemNotFoundException(String.format(
+                "запрос предмета с id '%d' не найден в списке запросов!", requestId)));
+    }
+
+    public void validatePage(int from, int size) {
+        if (from < 0) {
+            log.warn("страниц выборки не должно быть меньше 0!");
+            throw new ValidationException("страниц выборки не должно быть меньше 0!");
+        }
+        if (size < 1) {
+            log.warn("размер выборки не должно быть меньше 1!");
+            throw new ValidationException("размер выборки не должно быть меньше 1!");
         }
     }
 }

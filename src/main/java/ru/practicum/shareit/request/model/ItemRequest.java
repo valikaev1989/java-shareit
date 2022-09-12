@@ -6,6 +6,12 @@ import ru.practicum.shareit.user.model.User;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * id — уникальный идентификатор запроса;
+ * description — текст запроса, содержащий описание требуемой вещи;
+ * requester — пользователь, создавший запрос;
+ * created — дата и время создания запроса..
+ */
 @Getter
 @Setter
 @ToString

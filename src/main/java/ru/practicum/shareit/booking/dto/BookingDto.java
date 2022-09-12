@@ -8,6 +8,14 @@ import ru.practicum.shareit.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 
+/**
+ * id — уникальный идентификатор бронирования;
+ * start — дата начала бронирования;
+ * end — дата конца бронирования;
+ * item — вещь, которую пользователь бронирует;
+ * booker — пользователь, который осуществляет бронирование;
+ * status — статус бронирования.
+ */
 @Data
 @Builder(toBuilder = true)
 public class BookingDto {

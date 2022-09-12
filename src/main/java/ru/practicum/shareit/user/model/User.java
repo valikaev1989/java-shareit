@@ -3,7 +3,11 @@ package ru.practicum.shareit.user.model;
 import lombok.*;
 
 import javax.persistence.*;
-
+/**
+ * id — уникальный идентификатор пользователя;
+ * name — имя или логин пользователя;
+ * email — адрес электронной почты.
+ */
 @Entity
 @Table(name = "users")
 @Getter

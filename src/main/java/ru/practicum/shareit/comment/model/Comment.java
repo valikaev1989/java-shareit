@@ -10,6 +10,13 @@ import ru.practicum.shareit.user.model.User;
 import javax.persistence.*;
 import java.time.Instant;
 
+/**
+ * id — уникальный идентификатор комментария;
+ * item — вещь, к которой относится комментарий;
+ * author — автор комментария;
+ * text — содержимое комментария;
+ * created — дата создания комментария.
+ */
 @Entity
 @Table(name = "comments")
 @Getter

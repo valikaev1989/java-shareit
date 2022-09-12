@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.dto.BookingDtoOnlyId;
 import ru.practicum.shareit.comment.dto.CommentDto;
@@ -11,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@NoArgsConstructor
 @Component
 public class ItemMapper {
     public ItemDto toItemDto(Item item) {
@@ -19,7 +17,9 @@ public class ItemMapper {
                 item.getId(),
                 item.getName(),
                 item.getDescription(),
-                item.getAvailable()
+                item.getAvailable(),
+                item.getOwner().getId(),
+                item.getRequestId()
         );
     }
 

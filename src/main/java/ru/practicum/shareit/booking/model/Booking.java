@@ -7,6 +7,14 @@ import ru.practicum.shareit.user.model.User;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * id — уникальный идентификатор бронирования;
+ * item — вещь, которую пользователь бронирует;
+ * booker — пользователь, который осуществляет бронирование;
+ * start — дата начала бронирования;
+ * end — дата конца бронирования;
+ * status — статус бронирования;
+ */
 @Data
 @Entity
 @Table(name = "bookings")

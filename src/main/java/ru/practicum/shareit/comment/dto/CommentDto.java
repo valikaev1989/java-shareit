@@ -6,6 +6,12 @@ import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
+/**
+ * id — уникальный идентификатор комментария;
+ * text — содержимое комментария;
+ * authorName — автор комментария;
+ * created — дата создания комментария.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
