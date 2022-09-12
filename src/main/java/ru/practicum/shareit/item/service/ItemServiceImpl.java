@@ -81,6 +81,7 @@ public class ItemServiceImpl implements ItemService {
      */
     @Override
     public ItemOwnerDto findItemOwnerDtoById(long userId, long itemId) {
+        User user = validator.validateAndReturnUserByUserId(userId);
         Item item = validator.validateAndReturnItemByItemId(itemId);
         Booking lastBooking = bookingRepository.findFirstByItemOrderByEndDesc(item);
         Booking nextBooking = bookingRepository.findFirstByItemOrderByStartAsc(item);
@@ -93,7 +94,7 @@ public class ItemServiceImpl implements ItemService {
             nextBookingDto = bookingMapper.toBookingDtoOnlyId(nextBooking);
         }
         List<CommentDto> comments = commentService.getCommentsByItemId(itemId);
-        if (userId == item.getOwner().getId()) {
+        if (user.equals(item.getOwner())) {
             return itemMapper.toItemOwnerDto(item, comments, nextBookingDto, lastBookingDto);
         }
         return itemMapper.toItemOwnerDto(item, comments, null, null);
