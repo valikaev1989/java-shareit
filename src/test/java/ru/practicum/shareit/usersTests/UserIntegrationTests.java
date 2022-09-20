@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.StorageForTests;
 import ru.practicum.shareit.user.controller.UserController;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Transactional
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
@@ -60,17 +62,9 @@ class UserIntegrationTests extends StorageForTests {
     }
 
     @Test
-    void testUpdateUserExistingEmail() {
-        user3.setEmail(user1.getEmail());
-        userController.addUser(user1);
-        final UserDto userDto2 = userController.addUser(user2);
-        assertThrows(DataIntegrityViolationException.class, () -> userController.updateUser(user3, userDto2.getId()));
-    }
-
-    @Test
     void testDeleteUser() {
-        final UserDto user = userController.addUser(user1);
-        final UserDto user1 = userController.addUser(user2);
+        UserDto user = userController.addUser(user1);
+        UserDto user1 = userController.addUser(user2);
         userController.deleteUserById(user1.getId());
         assertEquals(List.of(user), userController.getAllUsers());
     }

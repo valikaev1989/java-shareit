@@ -76,17 +76,17 @@ public class ItemRepositoryTests extends StorageForTests {
         entityManager.persist(itemRequest);
         User user2 = createUserTwoWithoutId();
         entityManager.persist(user2);
-        Item item1 = makeItemWithRequestId("Магнит", "сувенир", user1);
+        Item item1 = makeItemWithRequestId("Магнит", "сувенир", user1,itemRequest.getId());
         entityManager.persist(item1);
         Item item2 = makeItem("Магний", "сувенир2", false, user1);
         entityManager.persist(item2);
-        Item item3 = makeItemWithRequestId("магнитуда", "сувенир3", user2);
+        Item item3 = makeItemWithRequestId("магнитуда", "сувенир3", user2, itemRequest.getId());
         entityManager.persist(item3);
         Item item4 = makeItem("Открытка", "сувенир4", true, user1);
         entityManager.persist(item4);
-        Item item5 = makeItemWithRequestId("Сувенир", "магнит5", user2);
+        Item item5 = makeItemWithRequestId("Сувенир", "магнит5", user2, itemRequest.getId());
         entityManager.persist(item5);
-        List<Item> items = itemRepository.findByRequestId(1L);
+        List<Item> items = itemRepository.findByRequestId(itemRequest.getId());
         assertThat(items).hasSize(3).contains(item1, item3, item5);
     }
 
@@ -99,13 +99,13 @@ public class ItemRepositoryTests extends StorageForTests {
         return item;
     }
 
-    private Item makeItemWithRequestId(String name, String description, User user) {
+    private Item makeItemWithRequestId(String name, String description, User user, long id) {
         Item item = new Item();
         item.setName(name);
         item.setDescription(description);
         item.setAvailable(true);
         item.setOwner(user);
-        item.setRequestId(1L);
+        item.setRequestId(id);
         return item;
     }
 }
