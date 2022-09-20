@@ -47,8 +47,8 @@ public class ItemRequestServiceTests extends StorageForTests {
 
     @BeforeEach
     void setUp() {
-        mockItemRequestService = new ItemRequestServiceImpl
-                (mockRequestRepository, mockItemRepository, mockValidator, itemRequestMapper, itemMapper);
+        mockItemRequestService = new ItemRequestServiceImpl(
+                mockRequestRepository, mockItemRepository, mockValidator, itemRequestMapper, itemMapper);
     }
 
     @Test

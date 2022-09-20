@@ -34,14 +34,14 @@ public class BookingRepositoryTests extends StorageForTests {
             .of(0 / 20, 20, Sort.by(Sort.Direction.DESC, "end"));
 
     @Test
-    void AllBookingByBooker() {
+    void allBookingByBooker() {
         List<Booking> expectedAllBookings = getBookingList("ALL");
         List<Booking> actualAllBookings = bookingRepository.findAllByBookerId(user2.getId(), pageable);
         assertEquals(expectedAllBookings, actualAllBookings);
     }
 
     @Test
-    void CurrentBookingByBooker() {
+    void currentBookingByBooker() {
         List<Booking> expectedCurrentBookings = getBookingList("CURRENT");
         List<Booking> actualCurrentBookings = bookingRepository
                 .findCurrentBookingByBookerId(user2.getId(), LocalDateTime.now(), pageable);
@@ -49,7 +49,7 @@ public class BookingRepositoryTests extends StorageForTests {
     }
 
     @Test
-    void PastBookingByBooker() {
+    void pastBookingByBooker() {
         List<Booking> expectedPastBookings = getBookingList("PAST");
         List<Booking> actualPastBookings = bookingRepository
                 .findPastBookingByBookerId(user2.getId(), LocalDateTime.now(), pageable);
@@ -57,7 +57,7 @@ public class BookingRepositoryTests extends StorageForTests {
     }
 
     @Test
-    void FutureBookingByBooker() {
+    void futureBookingByBooker() {
         List<Booking> expectedFutureBookings = getBookingList("FUTURE");
         List<Booking> actualFutureBookings = bookingRepository
                 .findFutureBookingByBookerId(user2.getId(), LocalDateTime.now(), pageable);
@@ -65,7 +65,7 @@ public class BookingRepositoryTests extends StorageForTests {
     }
 
     @Test
-    void WaitingBookingByBooker() {
+    void waitingBookingByBooker() {
         List<Booking> expectedWaitingBookings = getBookingList("WAITING");
         List<Booking> actualWaitingBookings = bookingRepository
                 .findByBookerIdAndStatus(user2.getId(), BookingStatus.WAITING, pageable);
@@ -73,7 +73,7 @@ public class BookingRepositoryTests extends StorageForTests {
     }
 
     @Test
-    void RejectedBookingByBooker() {
+    void rejectedBookingByBooker() {
         List<Booking> expectedRejectedBookings = getBookingList("REJECTED");
         List<Booking> actualRejectedBookings = bookingRepository
                 .findByBookerIdAndStatus(user2.getId(), BookingStatus.REJECTED, pageable);
@@ -81,14 +81,14 @@ public class BookingRepositoryTests extends StorageForTests {
     }
 
     @Test
-    void AllBookingByOwner() {
+    void allBookingByOwner() {
         List<Booking> expectedAllBookings = getBookingList("ALL");
         List<Booking> actualAllBookings = bookingRepository.findAllByItemOwnerId(user1.getId(), pageable);
         assertEquals(expectedAllBookings, actualAllBookings);
     }
 
     @Test
-    void CurrentBookingByOwner() {
+    void currentBookingByOwner() {
         List<Booking> expectedCurrentBookings = getBookingList("CURRENT");
         List<Booking> actualCurrentBookings = bookingRepository
                 .findCurrentBookingByItemOwnerId(user1.getId(), LocalDateTime.now(), pageable);
@@ -96,7 +96,7 @@ public class BookingRepositoryTests extends StorageForTests {
     }
 
     @Test
-    void PastBookingByOwner() {
+    void pastBookingByOwner() {
         List<Booking> expectedPastBookings = getBookingList("PAST");
         List<Booking> actualPastBookings = bookingRepository
                 .findPastBookingByItemOwnerId(user1.getId(), LocalDateTime.now(), pageable);
@@ -104,7 +104,7 @@ public class BookingRepositoryTests extends StorageForTests {
     }
 
     @Test
-    void FutureBookingByOwner() {
+    void futureBookingByOwner() {
         List<Booking> expectedFutureBookings = getBookingList("FUTURE");
         List<Booking> actualFutureBookings = bookingRepository
                 .findFutureBookingByItemOwnerId(user1.getId(), LocalDateTime.now(), pageable);
@@ -112,7 +112,7 @@ public class BookingRepositoryTests extends StorageForTests {
     }
 
     @Test
-    void WaitingBookingByOwner() {
+    void waitingBookingByOwner() {
         List<Booking> expectedWaitingBookings = getBookingList("WAITING");
         List<Booking> actualWaitingBookings = bookingRepository
                 .findBookingByOwnerIdAndStatus(user1.getId(), BookingStatus.WAITING, pageable);
@@ -120,7 +120,7 @@ public class BookingRepositoryTests extends StorageForTests {
     }
 
     @Test
-    void RejectedBookingByOwner() {
+    void rejectedBookingByOwner() {
         List<Booking> expectedRejectedBookings = getBookingList("REJECTED");
         List<Booking> actualRejectedBookings = bookingRepository
                 .findBookingByOwnerIdAndStatus(user1.getId(), BookingStatus.REJECTED, pageable);
@@ -202,17 +202,17 @@ public class BookingRepositoryTests extends StorageForTests {
         bookingRejected.setStatus(BookingStatus.REJECTED);
         entityManager.persist(bookingRejected);
 
-        List<Booking> actualOtherUserBooking = bookingRepository.validateForTakeItem
-                (BookingStatus.REJECTED, user3, item1, LocalDateTime.now());
+        List<Booking> actualOtherUserBooking = bookingRepository.validateForTakeItem(
+                BookingStatus.REJECTED, user3, item1, LocalDateTime.now());
         assertEquals(List.of(), actualOtherUserBooking);
 
-        List<Booking> actualOwnerBooking = bookingRepository.validateForTakeItem
-                (BookingStatus.REJECTED, user1, item1, LocalDateTime.now());
+        List<Booking> actualOwnerBooking = bookingRepository.validateForTakeItem(
+                BookingStatus.REJECTED, user1, item1, LocalDateTime.now());
         assertEquals(List.of(), actualOwnerBooking);
 
         List<Booking> expectedBooker = List.of(bookingPast, bookingCurrent);
-        List<Booking> actualBooker = bookingRepository.validateForTakeItem
-                (BookingStatus.REJECTED, user2, item1, LocalDateTime.now());
+        List<Booking> actualBooker = bookingRepository.validateForTakeItem(
+                BookingStatus.REJECTED, user2, item1, LocalDateTime.now());
         assertEquals(expectedBooker, actualBooker);
     }
 

@@ -71,8 +71,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public ItemRequestDto addItemRequest(long userId, ItemRequestDto itemRequestDto) {
         User user = validator.validateAndReturnUserByUserId(userId);
         validator.validateItemRequestDesc(itemRequestDto);
-        return itemRequestMapper.toItemRequestDto
-                (requestRepository.save(itemRequestMapper.toItemRequest(user, itemRequestDto)));
+        return itemRequestMapper.toItemRequestDto(
+                requestRepository.save(itemRequestMapper.toItemRequest(user, itemRequestDto)));
     }
 
     /**
@@ -103,7 +103,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
      * @param requests список запросов вещей
      */
     private List<ItemRequestWithItemDto> getListRequest(List<ItemRequest> requests) {
-        return requests.stream().map(itemRequest -> itemRequestMapper.toItemRequestWithItemDto
-                (itemRequest, getListItemDtoByRequestId(itemRequest.getId()))).collect(Collectors.toList());
+        return requests.stream().map(itemRequest -> itemRequestMapper.toItemRequestWithItemDto(
+                itemRequest, getListItemDtoByRequestId(itemRequest.getId()))).collect(Collectors.toList());
     }
 }

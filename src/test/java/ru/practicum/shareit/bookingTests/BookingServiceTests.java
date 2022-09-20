@@ -56,7 +56,7 @@ public class BookingServiceTests extends StorageForTests {
 
     @Test
     @DisplayName("ServiceMVC Тест ошибки получения букинга пользователя предмета")
-    void UnknownStateBookingByBooker() {
+    void unknownStateBookingByBooker() {
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user2);
         ValidationException ex = assertThrows(ValidationException.class, () -> mockBookingServiceImpl
                 .getBookingsByBookerId(user2.getId(), "Unknown state", 0, 5));
@@ -65,7 +65,7 @@ public class BookingServiceTests extends StorageForTests {
 
     @Test
     @DisplayName("ServiceMVC Тест получения всех букингов пользователя предмета")
-    void AllBookingByBooker() {
+    void allBookingByBooker() {
         List<BookingDto> expectedAllBookings = getBookingList("ALL");
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user2);
         when(mockBookingRepository.findAllByBookerId(anyLong(), any(Pageable.class)))
@@ -77,7 +77,7 @@ public class BookingServiceTests extends StorageForTests {
 
     @Test
     @DisplayName("ServiceMVC Тест получения текущих букингов пользователя предмета")
-    void CurrentBookingByBooker() {
+    void currentBookingByBooker() {
         List<BookingDto> expectedCurrentBookings = getBookingList("CURRENT");
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user2);
         when(mockBookingRepository
@@ -90,7 +90,7 @@ public class BookingServiceTests extends StorageForTests {
 
     @Test
     @DisplayName("ServiceMVC Тест получения прошлых букингов пользователя предмета")
-    void PastBookingByBooker() {
+    void pastBookingByBooker() {
         List<BookingDto> expectedPastBooking = getBookingList("PAST");
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user2);
         when(mockBookingRepository
@@ -103,7 +103,7 @@ public class BookingServiceTests extends StorageForTests {
 
     @Test
     @DisplayName("ServiceMVC Тест получения будущих букингов пользователя предмета")
-    void FutureBookingByBooker() {
+    void futureBookingByBooker() {
         List<BookingDto> expectedFutureBooking = getBookingList("FUTURE");
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user2);
         when(mockBookingRepository
@@ -116,7 +116,7 @@ public class BookingServiceTests extends StorageForTests {
 
     @Test
     @DisplayName("ServiceMVC Тест получения ожидающих букингов пользователя предмета")
-    void WaitingBookingByBooker() {
+    void waitingBookingByBooker() {
         List<BookingDto> expectedWaitingBooking = getBookingList("WAITING");
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user2);
         when(mockBookingRepository
@@ -129,7 +129,7 @@ public class BookingServiceTests extends StorageForTests {
 
     @Test
     @DisplayName("ServiceMVC Тест получения отмененных букингов пользователя предмета")
-    void RejectedBookingByBooker() {
+    void rejectedBookingByBooker() {
         List<BookingDto> expectedRejectedBooking = getBookingList("REJECTED");
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user2);
         when(mockBookingRepository
@@ -142,7 +142,7 @@ public class BookingServiceTests extends StorageForTests {
 
     @Test
     @DisplayName("ServiceMVC Тест ошибки получения букинга владельца предмета")
-    void UnknownStateBookingByOwner() {
+    void unknownStateBookingByOwner() {
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user1);
         ValidationException ex = assertThrows(ValidationException.class, () -> mockBookingServiceImpl
                 .getBookingsByOwnerId(user1.getId(), "Unknown state", 0, 5));
@@ -151,7 +151,7 @@ public class BookingServiceTests extends StorageForTests {
 
     @Test
     @DisplayName("ServiceMVC Тест получения всех букингов владельца предмета")
-    void AllBookingByOwner() {
+    void allBookingByOwner() {
         List<BookingDto> expectedAllBookings = getBookingList("ALL");
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user1);
         when(mockBookingRepository.findAllByItemOwnerId(anyLong(), any(Pageable.class)))
@@ -163,7 +163,7 @@ public class BookingServiceTests extends StorageForTests {
 
     @Test
     @DisplayName("ServiceMVC Тест получения текущих букингов владельца предмета")
-    void CurrentBookingByOwner() {
+    void currentBookingByOwner() {
         List<BookingDto> expectedCurrentBookings = getBookingList("CURRENT");
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user1);
         when(mockBookingRepository
@@ -176,7 +176,7 @@ public class BookingServiceTests extends StorageForTests {
 
     @Test
     @DisplayName("ServiceMVC Тест получения прошлых букингов владельца предмета")
-    void PastBookingByOwner() {
+    void pastBookingByOwner() {
         List<BookingDto> expectedPastBooking = getBookingList("PAST");
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user1);
         when(mockBookingRepository
@@ -189,7 +189,7 @@ public class BookingServiceTests extends StorageForTests {
 
     @Test
     @DisplayName("ServiceMVC Тест получения будущих букингов владельца предмета")
-    void FutureBookingByOwner() {
+    void futureBookingByOwner() {
         List<BookingDto> expectedFutureBooking = getBookingList("FUTURE");
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user1);
         when(mockBookingRepository
@@ -202,7 +202,7 @@ public class BookingServiceTests extends StorageForTests {
 
     @Test
     @DisplayName("ServiceMVC Тест получения ожидающих букингов владельца предмета")
-    void WaitingBookingByOwner() {
+    void waitingBookingByOwner() {
         List<BookingDto> expectedWaitingBooking = getBookingList("WAITING");
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user1);
         when(mockBookingRepository
@@ -215,7 +215,7 @@ public class BookingServiceTests extends StorageForTests {
 
     @Test
     @DisplayName("ServiceMVC Тест получения отменных букингов владельца предмета")
-    void RejectedBookingByOwner() {
+    void rejectedBookingByOwner() {
         List<BookingDto> expectedRejectedBooking = getBookingList("REJECTED");
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user1);
         when(mockBookingRepository

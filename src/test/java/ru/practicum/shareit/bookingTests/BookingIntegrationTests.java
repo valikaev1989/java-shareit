@@ -10,7 +10,6 @@ import ru.practicum.shareit.booking.controller.BookingController;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoOnlyId;
 import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.comment.service.CommentService;
 import ru.practicum.shareit.exception.ItemNotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -32,7 +31,6 @@ public class BookingIntegrationTests extends StorageForTests {
     private final CommentService commentService;
     private final UserDto user1 = createUserDtoWithoutId();
     private final UserDto user2 = createUserDtoTwoWithoutId();
-    private final UserDto user3 = createUserDtoThreeWithoutId();
     private final ItemDto item1 = createItemDtoNullRequestAndId();
     private final ItemDto item2 = createItemDtoNullRequestAndIdTwo();
     BookingDtoOnlyId bookingDtoOnlyId1 = createBookingForComment();

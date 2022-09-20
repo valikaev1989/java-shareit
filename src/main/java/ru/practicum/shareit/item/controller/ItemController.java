@@ -28,20 +28,20 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemOwnerDto> findAllByUserId
-            (@RequestHeader(HEADER) long userId,
-             @RequestParam(value = "from", required = false, defaultValue = "0") int from,
-             @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
+    public List<ItemOwnerDto> findAllByUserId(
+            @RequestHeader(HEADER) long userId,
+            @RequestParam(value = "from", required = false, defaultValue = "0") int from,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
         log.info("Get items by user id = {}", userId);
         log.info("With from = {} and size = {}", from, size);
         return itemService.getAllUserItems(userId, from, size);
     }
 
     @GetMapping("/search")
-    public List<ItemDto> findItemByText
-            (@RequestParam(value = "text") String text,
-             @RequestParam(value = "from", required = false, defaultValue = "0") int from,
-             @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
+    public List<ItemDto> findItemByText(
+            @RequestParam(value = "text") String text,
+            @RequestParam(value = "from", required = false, defaultValue = "0") int from,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
         log.info("search items by text = {} in name and description", text);
         log.info("With from = {} and size = {}", from, size);
         return itemService.findItemsByText(text, from, size);
