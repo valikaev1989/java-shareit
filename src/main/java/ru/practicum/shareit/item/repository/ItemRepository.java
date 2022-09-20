@@ -30,6 +30,11 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "and i.available = true")
     List<Item> searchItemByNameAndDesc(String text, Pageable pageable);
 
+    /**
+     * Получение списка предметов по идентификатору запроса предмета
+     *
+     * @param requestId id запроса предмета
+     */
     @Query("select i from Item i where i.requestId = ?1")
     List<Item> findByRequestId(Long requestId);
 }

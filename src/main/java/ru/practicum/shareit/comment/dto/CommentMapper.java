@@ -5,9 +5,9 @@ import ru.practicum.shareit.comment.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class CommentMapper {
@@ -30,11 +30,7 @@ public class CommentMapper {
         return comment;
     }
 
-    public List<CommentDto> toCommentDto(Collection<Comment> comments) {
-        List<CommentDto> commentDtoList = new ArrayList<>();
-        for (Comment comment : comments) {
-            commentDtoList.add(toCommentDto(comment));
-        }
-        return commentDtoList;
+    public List<CommentDto> toCommentDtoList(Collection<Comment> comments) {
+        return comments.stream().map(this::toCommentDto).collect(Collectors.toList());
     }
 }

@@ -27,11 +27,10 @@ public class ItemRequestController {
     }
 
     @GetMapping("/all")
-    public List<ItemRequestWithItemDto> getAllRequests(@RequestHeader(HEADER) long userId,
-                                                       @RequestParam(value = "from", required = false,
-                                                               defaultValue = "0") int from,
-                                                       @RequestParam(value = "size", required = false,
-                                                               defaultValue = "10") int size) {
+    public List<ItemRequestWithItemDto> getAllRequests
+            (@RequestHeader(HEADER) long userId,
+             @RequestParam(value = "from", required = false, defaultValue = "0") int from,
+             @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
         log.info("User {} get all requests with from = {} and size = {}", userId, from, size);
         return requestService.getAllRequests(userId, from, size);
     }

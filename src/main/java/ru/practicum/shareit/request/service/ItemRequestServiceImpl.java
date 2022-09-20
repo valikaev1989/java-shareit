@@ -1,6 +1,8 @@
 package ru.practicum.shareit.request.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -17,9 +19,10 @@ import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.util.Validator;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -27,7 +30,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     private final ItemRequestRepository requestRepository;
     private final ItemRepository itemRepository;
     private final Validator validator;
-    ItemRequestMapper itemRequestMapper;
+    private final ItemRequestMapper itemRequestMapper;
     private final ItemMapper itemMapper;
 
     /**
@@ -39,7 +42,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public List<ItemRequestWithItemDto> getOwnRequests(long userId) {
         validator.validateAndReturnUserByUserId(userId);
         List<ItemRequest> requests = requestRepository.findAllByRequesterId(userId);
-        return getListRequest(userId, requests);
+        return getListRequest(requests);
     }
 
     /**
@@ -54,9 +57,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         validator.validateAndReturnUserByUserId(userId);
         validator.validatePage(from, size);
         Pageable pageable = PageRequest.of(from, size, Sort.by("created").descending());
-        List<ItemRequest> requests = requestRepository.findAllByRequesterIdIsNot(userId, pageable).toList();
-        return getListRequest(userId, requests);
-
+        List<ItemRequest> requests = requestRepository.findAllByRequesterIdIsNot(userId, pageable);
+        return getListRequest(requests);
     }
 
     /**
@@ -70,8 +72,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public ItemRequestDto addItemRequest(long userId, ItemRequestDto itemRequestDto) {
         User user = validator.validateAndReturnUserByUserId(userId);
         validator.validateItemRequestDesc(itemRequestDto);
-        ItemRequest request = requestRepository.save(itemRequestMapper.toItemRequest(user, itemRequestDto));
-        return itemRequestMapper.toItemRequestDto(request);
+        return itemRequestMapper.toItemRequestDto
+                (requestRepository.save(itemRequestMapper.toItemRequest(user, itemRequestDto)));
     }
 
     /**
@@ -84,28 +86,36 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public ItemRequestWithItemDto getRequest(long userId, long requestId) {
         validator.validateAndReturnUserByUserId(userId);
         ItemRequest itemRequest = validator.validateAndReturnItemRequestByRequestId(requestId);
-        return itemRequestMapper.toItemRequestWithItemDto(itemRequest, getListItemDtoByUserId(userId));
+        return itemRequestMapper.toItemRequestWithItemDto(itemRequest, getListItemDtoByRequestId(requestId));
     }
 
     /**
-     * Получение списка запрошенных вещей по идентификатору пользователя
+     * Получение списка запрошенных вещей по идентификатору запроса
      *
-     * @param userId id пользователя
+     * @param requestId id запроса
      */
-    private List<ItemDto> getListItemDtoByUserId(long userId) {
-        return itemMapper.toItemDto(itemRepository.findByRequestId(userId));
+    private List<ItemDto> getListItemDtoByRequestId(long requestId) {
+        return itemMapper.toItemDtoList(itemRepository.findByRequestId(requestId));
     }
 
     /**
-     * Получение списка запросов со списком вещей подходящих по запросу
+     * Получение списка своих запросов со списком вещей подходящих по запросу
      *
-     * @param userId   id пользователя
      * @param requests список запросов вещей
      */
-    private List<ItemRequestWithItemDto> getListRequest(long userId, List<ItemRequest> requests) {
-        List<ItemRequestWithItemDto> result = new ArrayList<>();
-        requests.forEach(itemRequest -> result.add(
-                itemRequestMapper.toItemRequestWithItemDto(itemRequest, getListItemDtoByUserId(userId))));
-        return result;
+    private List<ItemRequestWithItemDto> getListRequest(List<ItemRequest> requests) {
+        return requests.stream().map(itemRequest -> itemRequestMapper.toItemRequestWithItemDto
+                (itemRequest, getListItemDtoByRequestId(itemRequest.getId()))).collect(Collectors.toList());
     }
+//    /**
+//     * Получение списка запросов других пользователей со списком вещей подходящих по запросу
+//     *
+//     * @param requests список запросов вещей
+//     */
+//    private List<ItemRequestWithItemDto> getListNotOwnRequest(List<ItemRequest> requests) {
+//        return requests.stream()
+//                .map(itemRequest -> itemRequestMapper.toItemRequestWithItemDto(
+//                        itemRequest, getListItemDtoByRequestId(itemRequest.getRequester().getId())))
+//                .collect(Collectors.toList());
+//    }
 }

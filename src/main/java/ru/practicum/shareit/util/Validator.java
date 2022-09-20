@@ -27,6 +27,7 @@ import java.time.LocalDateTime;
 @Slf4j
 @Component
 public class Validator {
+
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final BookingRepository bookingRepository;
@@ -117,6 +118,10 @@ public class Validator {
         }
         LocalDateTime startTime = bookingDtoId.getStart();
         LocalDateTime endTime = bookingDtoId.getEnd();
+        if (endTime.isBefore(LocalDateTime.now())) {
+            log.warn("Время окончания не корректно");
+            throw new ValidationException("Время окончания не корректно");
+        }
         if (startTime.isAfter(endTime)) {
             log.warn("Время окончания раньше начала");
             throw new ValidationException("Время окончания раньше начала");
@@ -124,10 +129,6 @@ public class Validator {
         if (startTime.isBefore(LocalDateTime.now())) {
             log.warn("Время начала не корректно");
             throw new ValidationException("Время начала не корректно");
-        }
-        if (endTime.isBefore(LocalDateTime.now())) {
-            log.warn("Время окончания не корректно");
-            throw new ValidationException("Время окончания не корректно");
         }
     }
 
@@ -143,7 +144,12 @@ public class Validator {
     }
 
     public Booking validateForUpdateBooking(User owner, long bookingId, Boolean approved) {
-        Booking booking = validateForGetBooking(owner, bookingId);
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() ->
+                new ItemNotFoundException(String.format("бронь предмета с bookingId '%d' не найдена!", bookingId)));
+        if(!owner.equals(booking.getItem().getOwner())){
+            log.warn("Вы не владелец вещи");
+            throw new ItemNotFoundException("Вы не владелец вещи");
+        }
         if (approved == null) {
             log.warn("Approved не может быть пустым");
             throw new ValidationException("Approved не может быть пустым");
@@ -155,10 +161,6 @@ public class Validator {
         if (!booking.getStatus().equals(BookingStatus.WAITING)) {
             log.warn("Бронь уже подтверждена(WAITING)");
             throw new ValidationException("Бронь уже подтверждена(WAITING)");
-        }
-        if (!booking.getItem().getOwner().equals(owner)) {
-            log.warn("Вы не владелец вещи");
-            throw new UserNotFoundException("Вы не владелец вещи");
         }
         return booking;
     }
@@ -186,6 +188,7 @@ public class Validator {
         return itemRequestRepository.findById(requestId).orElseThrow(() -> new ItemNotFoundException(String.format(
                 "запрос предмета с id '%d' не найден в списке запросов!", requestId)));
     }
+
 
     public void validatePage(int from, int size) {
         if (from < 0) {

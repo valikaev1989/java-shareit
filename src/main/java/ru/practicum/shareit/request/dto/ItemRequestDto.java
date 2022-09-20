@@ -1,7 +1,9 @@
 package ru.practicum.shareit.request.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -13,10 +15,11 @@ import java.time.LocalDateTime;
  * items - список вещей по данному запросу
  */
 @Data
-@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class ItemRequestDto {
     private long id;
     private String description;
-    private long requester;
-    private LocalDateTime created;
+    private long requesterId;
+    private LocalDateTime created = LocalDateTime.now();
 }

@@ -18,8 +18,6 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "bookings")
-@Builder(toBuilder = true)
-@AllArgsConstructor
 @NoArgsConstructor
 public class Booking {
     @Id

@@ -17,11 +17,11 @@ public class ErrorHandler {
         return new ErrorResponse(e.getMessage());
     }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleAlreadyExistsException(final AlreadyExistsException e) {
-        return new ErrorResponse(e.getMessage());
-    }
+//    @ExceptionHandler
+//    @ResponseStatus(HttpStatus.CONFLICT)
+//    public ErrorResponse handleAlreadyExistsException(final AlreadyExistsException e) {
+//        return new ErrorResponse(e.getMessage());
+//    }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -41,15 +41,15 @@ public class ErrorHandler {
         return new ErrorResponse("Пользователь не найден");
     }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNoSuchElementException(final NoSuchElementException e) {
-        return new ErrorResponse("Not found");
-    }
+//    @ExceptionHandler
+//    @ResponseStatus(HttpStatus.NOT_FOUND)
+//    public ErrorResponse handleNoSuchElementException(final NoSuchElementException e) {
+//        return new ErrorResponse("Not found");
+//    }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse handleAccessDeniedException(final AccessDeniedException e) {
-        return new ErrorResponse("Forbidden");
-    }
+//    @ExceptionHandler
+//    @ResponseStatus(HttpStatus.FORBIDDEN)
+//    public ErrorResponse handleAccessDeniedException(final AccessDeniedException e) {
+//        return new ErrorResponse("Forbidden");
+//    }
 }

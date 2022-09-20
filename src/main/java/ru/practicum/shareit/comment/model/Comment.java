@@ -9,6 +9,7 @@ import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 /**
  * id — уникальный идентификатор комментария;
@@ -37,5 +38,5 @@ public class Comment {
     @Column(name = "text")
     private String text;
     @Column(name = "created")
-    private Instant created = Instant.now();
+    private LocalDateTime created = LocalDateTime.now();
 }

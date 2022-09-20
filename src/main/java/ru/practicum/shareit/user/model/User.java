@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.model;
 import lombok.*;
 
 import javax.persistence.*;
+
 /**
  * id — уникальный идентификатор пользователя;
  * name — имя или логин пользователя;
@@ -13,8 +14,6 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString
-@Builder(toBuilder = true)
-@AllArgsConstructor
 @NoArgsConstructor
 public class User {
     @Id

@@ -1,7 +1,10 @@
 package ru.practicum.shareit.item.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * id — уникальный идентификатор вещи;
  * name — краткое название;
@@ -10,9 +13,10 @@ import lombok.Data;
  * requestId - id ссылки на соответствующий запрос
  */
 @Data
-@Builder(toBuilder = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class ItemDto {
-    private Long id;
+    private long id;
     private String name;
     private String description;
     private Boolean available;
