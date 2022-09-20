@@ -4,6 +4,7 @@ import lombok.*;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
+
 /**
  * id — уникальный идентификатор вещи;
  * name — краткое название;

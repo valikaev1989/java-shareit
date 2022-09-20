@@ -1,6 +1,7 @@
 package ru.practicum.shareit.bookingTests;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -38,6 +39,15 @@ public class BookingServiceTests extends StorageForTests {
     private BookingRepository mockBookingRepository;
     @Mock
     private Validator mockValidator;
+    private final User user1 = createUser();
+    private final User user2 = createUserTwo();
+    private final Item item1 = createItemNullRequest();
+    private final Item item2 = createItemNullRequest2();
+    private final Item item3 = createItemNullRequest3();
+    private final Booking bookingPast = createBooking(user2, item1, 1L);
+    private final Booking bookingCurrent = createBooking(user2, item2, 2L);
+    private final Booking bookingFuture = createBooking(user2, item3, 3L);
+    private final Booking bookingRejected = createBooking(user2, item2, 4L);
 
     @BeforeEach
     void setUp() {
@@ -45,43 +55,30 @@ public class BookingServiceTests extends StorageForTests {
     }
 
     @Test
-    void getBookingsByBookerId() {
-        User user2 = createUserTwo();
+    @DisplayName("ServiceMVC Тест ошибки получения букинга пользователя предмета")
+    void UnknownStateBookingByBooker() {
+        when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user2);
+        ValidationException ex = assertThrows(ValidationException.class, () -> mockBookingServiceImpl
+                .getBookingsByBookerId(user2.getId(), "Unknown state", 0, 5));
+        assertEquals("Unknown state: UNSUPPORTED_STATUS", ex.getMessage());
+    }
 
-        Item item1 = createItemNullRequest();
-        Item item2 = createItemNullRequest2();
-        Item item3 = createItemNullRequest3();
-
-        Booking bookingPast = createBooking(user2, item1, 1L);
-        bookingPast.setStart(LocalDateTime.now().minusDays(10));
-        bookingPast.setEnd(LocalDateTime.now().minusDays(5));
-        bookingPast.setStatus(BookingStatus.APPROVED);
-
-        Booking bookingCurrent = createBooking(user2, item2, 2L);
-        bookingCurrent.setStart(LocalDateTime.now().minusDays(4));
-        bookingCurrent.setEnd(LocalDateTime.now().plusDays(2));
-        bookingCurrent.setStatus(BookingStatus.APPROVED);
-
-        Booking bookingFuture = createBooking(user2, item3, 3L);
-        bookingFuture.setStart(LocalDateTime.now().plusDays(5));
-        bookingFuture.setEnd(LocalDateTime.now().plusDays(10));
-
-        Booking bookingRejected = createBooking(user2, item2, 4L);
-        bookingRejected.setStart(LocalDateTime.now());
-        bookingRejected.setEnd(LocalDateTime.now().plusDays(10));
-        bookingRejected.setStatus(BookingStatus.REJECTED);
-
-        List<BookingDto> expectedAllBookings = bookingMapper
-                .toBookingDtoList(List.of(bookingPast, bookingCurrent, bookingFuture, bookingRejected));
+    @Test
+    @DisplayName("ServiceMVC Тест получения всех букингов пользователя предмета")
+    void AllBookingByBooker() {
+        List<BookingDto> expectedAllBookings = getBookingList("ALL");
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user2);
         when(mockBookingRepository.findAllByBookerId(anyLong(), any(Pageable.class)))
                 .thenReturn(List.of(bookingPast, bookingCurrent, bookingFuture, bookingRejected));
         List<BookingDto> actualAllBookings = mockBookingServiceImpl
                 .getBookingsByBookerId(user2.getId(), "ALL", 0, 5);
         assertEquals(expectedAllBookings, actualAllBookings);
+    }
 
-        List<BookingDto> expectedCurrentBookings = bookingMapper
-                .toBookingDtoList(List.of(bookingCurrent, bookingRejected));
+    @Test
+    @DisplayName("ServiceMVC Тест получения текущих букингов пользователя предмета")
+    void CurrentBookingByBooker() {
+        List<BookingDto> expectedCurrentBookings = getBookingList("CURRENT");
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user2);
         when(mockBookingRepository
                 .findCurrentBookingByBookerId(anyLong(), any(LocalDateTime.class), any(Pageable.class)))
@@ -89,9 +86,12 @@ public class BookingServiceTests extends StorageForTests {
         List<BookingDto> actualCurrentBookings = mockBookingServiceImpl
                 .getBookingsByBookerId(user2.getId(), "CURRENT", 0, 5);
         assertEquals(expectedCurrentBookings, actualCurrentBookings);
+    }
 
-        List<BookingDto> expectedPastBooking = bookingMapper
-                .toBookingDtoList(List.of(bookingPast));
+    @Test
+    @DisplayName("ServiceMVC Тест получения прошлых букингов пользователя предмета")
+    void PastBookingByBooker() {
+        List<BookingDto> expectedPastBooking = getBookingList("PAST");
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user2);
         when(mockBookingRepository
                 .findPastBookingByBookerId(anyLong(), any(LocalDateTime.class), any(Pageable.class)))
@@ -99,9 +99,12 @@ public class BookingServiceTests extends StorageForTests {
         List<BookingDto> actualPastBookings = mockBookingServiceImpl
                 .getBookingsByBookerId(user2.getId(), "PAST", 0, 5);
         assertEquals(expectedPastBooking, actualPastBookings);
+    }
 
-        List<BookingDto> expectedFutureBooking = bookingMapper
-                .toBookingDtoList(List.of(bookingFuture));
+    @Test
+    @DisplayName("ServiceMVC Тест получения будущих букингов пользователя предмета")
+    void FutureBookingByBooker() {
+        List<BookingDto> expectedFutureBooking = getBookingList("FUTURE");
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user2);
         when(mockBookingRepository
                 .findFutureBookingByBookerId(anyLong(), any(LocalDateTime.class), any(Pageable.class)))
@@ -109,17 +112,25 @@ public class BookingServiceTests extends StorageForTests {
         List<BookingDto> actualFutureBookings = mockBookingServiceImpl
                 .getBookingsByBookerId(user2.getId(), "FUTURE", 0, 5);
         assertEquals(expectedFutureBooking, actualFutureBookings);
+    }
 
+    @Test
+    @DisplayName("ServiceMVC Тест получения ожидающих букингов пользователя предмета")
+    void WaitingBookingByBooker() {
+        List<BookingDto> expectedWaitingBooking = getBookingList("WAITING");
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user2);
         when(mockBookingRepository
                 .findByBookerIdAndStatus(anyLong(), any(BookingStatus.class), any(Pageable.class)))
                 .thenReturn(List.of(bookingFuture));
         List<BookingDto> actualWaitingBookings = mockBookingServiceImpl
                 .getBookingsByBookerId(user2.getId(), "WAITING", 0, 5);
-        assertEquals(expectedFutureBooking, actualWaitingBookings);
+        assertEquals(expectedWaitingBooking, actualWaitingBookings);
+    }
 
-        List<BookingDto> expectedRejectedBooking = bookingMapper
-                .toBookingDtoList(List.of(bookingRejected));
+    @Test
+    @DisplayName("ServiceMVC Тест получения отмененных букингов пользователя предмета")
+    void RejectedBookingByBooker() {
+        List<BookingDto> expectedRejectedBooking = getBookingList("REJECTED");
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user2);
         when(mockBookingRepository
                 .findByBookerIdAndStatus(anyLong(), any(BookingStatus.class), any(Pageable.class)))
@@ -127,51 +138,33 @@ public class BookingServiceTests extends StorageForTests {
         List<BookingDto> actualRejectedBookings = mockBookingServiceImpl
                 .getBookingsByBookerId(user2.getId(), "REJECTED", 0, 5);
         assertEquals(expectedRejectedBooking, actualRejectedBookings);
+    }
 
-        when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user2);
-        ValidationException ex = assertThrows(ValidationException.class, () -> mockBookingServiceImpl.getBookingsByBookerId(user2.getId(), "Unknown state", 0, 5));
+    @Test
+    @DisplayName("ServiceMVC Тест ошибки получения букинга владельца предмета")
+    void UnknownStateBookingByOwner() {
+        when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user1);
+        ValidationException ex = assertThrows(ValidationException.class, () -> mockBookingServiceImpl
+                .getBookingsByOwnerId(user1.getId(), "Unknown state", 0, 5));
         assertEquals("Unknown state: UNSUPPORTED_STATUS", ex.getMessage());
     }
 
     @Test
-    void getBookingsByOwnerId() {
-        User user1 = createUser();
-        User user2 = createUserTwo();
-
-        Item item1 = createItemNullRequest();
-        Item item2 = createItemNullRequest2();
-        Item item3 = createItemNullRequest3();
-
-        Booking bookingPast = createBooking(user2, item1, 1L);
-        bookingPast.setStart(LocalDateTime.now().minusDays(10));
-        bookingPast.setEnd(LocalDateTime.now().minusDays(5));
-        bookingPast.setStatus(BookingStatus.APPROVED);
-
-        Booking bookingCurrent = createBooking(user2, item2, 2L);
-        bookingCurrent.setStart(LocalDateTime.now().minusDays(4));
-        bookingCurrent.setEnd(LocalDateTime.now().plusDays(2));
-        bookingCurrent.setStatus(BookingStatus.APPROVED);
-
-        Booking bookingFuture = createBooking(user2, item3, 3L);
-        bookingFuture.setStart(LocalDateTime.now().plusDays(5));
-        bookingFuture.setEnd(LocalDateTime.now().plusDays(10));
-
-        Booking bookingRejected = createBooking(user2, item2, 4L);
-        bookingRejected.setStart(LocalDateTime.now());
-        bookingRejected.setEnd(LocalDateTime.now().plusDays(10));
-        bookingRejected.setStatus(BookingStatus.REJECTED);
-
-        List<BookingDto> expectedAllBookings = bookingMapper
-                .toBookingDtoList(List.of(bookingPast, bookingCurrent, bookingFuture, bookingRejected));
+    @DisplayName("ServiceMVC Тест получения всех букингов владельца предмета")
+    void AllBookingByOwner() {
+        List<BookingDto> expectedAllBookings = getBookingList("ALL");
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user1);
         when(mockBookingRepository.findAllByItemOwnerId(anyLong(), any(Pageable.class)))
                 .thenReturn(List.of(bookingPast, bookingCurrent, bookingFuture, bookingRejected));
         List<BookingDto> actualAllBookings = mockBookingServiceImpl
                 .getBookingsByOwnerId(user1.getId(), "ALL", 0, 5);
         assertEquals(expectedAllBookings, actualAllBookings);
+    }
 
-        List<BookingDto> expectedCurrentBookings = bookingMapper
-                .toBookingDtoList(List.of(bookingCurrent, bookingRejected));
+    @Test
+    @DisplayName("ServiceMVC Тест получения текущих букингов владельца предмета")
+    void CurrentBookingByOwner() {
+        List<BookingDto> expectedCurrentBookings = getBookingList("CURRENT");
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user1);
         when(mockBookingRepository
                 .findCurrentBookingByItemOwnerId(anyLong(), any(LocalDateTime.class), any(Pageable.class)))
@@ -179,51 +172,62 @@ public class BookingServiceTests extends StorageForTests {
         List<BookingDto> actualCurrentBookings = mockBookingServiceImpl
                 .getBookingsByOwnerId(user1.getId(), "CURRENT", 0, 5);
         assertEquals(expectedCurrentBookings, actualCurrentBookings);
+    }
 
-        List<BookingDto> expectedPastBooking = bookingMapper
-                .toBookingDtoList(List.of(bookingPast));
-        when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user2);
+    @Test
+    @DisplayName("ServiceMVC Тест получения прошлых букингов владельца предмета")
+    void PastBookingByOwner() {
+        List<BookingDto> expectedPastBooking = getBookingList("PAST");
+        when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user1);
         when(mockBookingRepository
                 .findPastBookingByItemOwnerId(anyLong(), any(LocalDateTime.class), any(Pageable.class)))
                 .thenReturn(List.of(bookingPast));
         List<BookingDto> actualPastBookings = mockBookingServiceImpl
                 .getBookingsByOwnerId(user1.getId(), "PAST", 0, 5);
         assertEquals(expectedPastBooking, actualPastBookings);
+    }
 
-        List<BookingDto> expectedFutureBooking = bookingMapper
-                .toBookingDtoList(List.of(bookingFuture));
-        when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user2);
+    @Test
+    @DisplayName("ServiceMVC Тест получения будущих букингов владельца предмета")
+    void FutureBookingByOwner() {
+        List<BookingDto> expectedFutureBooking = getBookingList("FUTURE");
+        when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user1);
         when(mockBookingRepository
                 .findFutureBookingByItemOwnerId(anyLong(), any(LocalDateTime.class), any(Pageable.class)))
                 .thenReturn(List.of(bookingFuture));
         List<BookingDto> actualFutureBookings = mockBookingServiceImpl
                 .getBookingsByOwnerId(user1.getId(), "FUTURE", 0, 5);
         assertEquals(expectedFutureBooking, actualFutureBookings);
+    }
 
-        when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user2);
+    @Test
+    @DisplayName("ServiceMVC Тест получения ожидающих букингов владельца предмета")
+    void WaitingBookingByOwner() {
+        List<BookingDto> expectedWaitingBooking = getBookingList("WAITING");
+        when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user1);
         when(mockBookingRepository
                 .findBookingByOwnerIdAndStatus(anyLong(), any(BookingStatus.class), any(Pageable.class)))
                 .thenReturn(List.of(bookingFuture));
         List<BookingDto> actualWaitingBookings = mockBookingServiceImpl
                 .getBookingsByOwnerId(user1.getId(), "WAITING", 0, 5);
-        assertEquals(expectedFutureBooking, actualWaitingBookings);
+        assertEquals(expectedWaitingBooking, actualWaitingBookings);
+    }
 
-        List<BookingDto> expectedRejectedBooking = bookingMapper
-                .toBookingDtoList(List.of(bookingRejected));
-        when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user2);
+    @Test
+    @DisplayName("ServiceMVC Тест получения отменных букингов владельца предмета")
+    void RejectedBookingByOwner() {
+        List<BookingDto> expectedRejectedBooking = getBookingList("REJECTED");
+        when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user1);
         when(mockBookingRepository
                 .findBookingByOwnerIdAndStatus(anyLong(), any(BookingStatus.class), any(Pageable.class)))
                 .thenReturn(List.of(bookingRejected));
         List<BookingDto> actualRejectedBookings = mockBookingServiceImpl
                 .getBookingsByOwnerId(user1.getId(), "REJECTED", 0, 5);
         assertEquals(expectedRejectedBooking, actualRejectedBookings);
-
-        when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user1);
-        ValidationException ex = assertThrows(ValidationException.class, () -> mockBookingServiceImpl.getBookingsByOwnerId(user1.getId(), "Unknown state", 0, 5));
-        assertEquals("Unknown state: UNSUPPORTED_STATUS", ex.getMessage());
     }
 
     @Test
+    @DisplayName("ServiceMVC Тест добавления букинга предмета")
     void addBooking() {
         User user = createUserTwo();
         Item item = createItemNullRequest();
@@ -239,6 +243,7 @@ public class BookingServiceTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ServiceMVC Тест получение букинга предмета")
     void getBookingById() {
         User user = createUserTwo();
         Booking booking = createBooking2();
@@ -258,7 +263,49 @@ public class BookingServiceTests extends StorageForTests {
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user);
         when(mockValidator.validateForUpdateBooking(any(User.class), anyLong(), anyBoolean())).thenReturn(booking);
         when(mockBookingRepository.save(any(Booking.class))).thenReturn(booking);
-        BookingDto actualBookingDto = mockBookingServiceImpl.updateStatusBooking(user.getId(), booking.getId(), true);
+        BookingDto actualBookingDto = mockBookingServiceImpl
+                .updateStatusBooking(user.getId(), booking.getId(), true);
         assertEquals(expectedBookingDto, actualBookingDto);
+    }
+
+    private List<BookingDto> getBookingList(String state) {
+        bookingPast.setStart(LocalDateTime.now().minusDays(10));
+        bookingPast.setEnd(LocalDateTime.now().minusDays(5));
+        bookingPast.setStatus(BookingStatus.APPROVED);
+
+        bookingCurrent.setStart(LocalDateTime.now().minusDays(4));
+        bookingCurrent.setEnd(LocalDateTime.now().plusDays(2));
+        bookingCurrent.setStatus(BookingStatus.APPROVED);
+
+        bookingFuture.setStart(LocalDateTime.now().plusDays(5));
+        bookingFuture.setEnd(LocalDateTime.now().plusDays(10));
+
+        bookingRejected.setStart(LocalDateTime.now());
+        bookingRejected.setEnd(LocalDateTime.now().plusDays(10));
+        bookingRejected.setStatus(BookingStatus.REJECTED);
+        List<BookingDto> bookingList;
+        switch (state) {
+            case ("ALL"):
+                bookingList = bookingMapper
+                        .toBookingDtoList(List.of(bookingPast, bookingCurrent, bookingFuture, bookingRejected));
+                break;
+            case ("CURRENT"):
+                bookingList = bookingMapper
+                        .toBookingDtoList(List.of(bookingCurrent, bookingRejected));
+                break;
+            case ("FUTURE"):
+            case ("WAITING"):
+                bookingList = bookingMapper.toBookingDtoList(List.of(bookingFuture));
+                break;
+            case ("PAST"):
+                bookingList = bookingMapper.toBookingDtoList(List.of(bookingPast));
+                break;
+            case ("REJECTED"):
+                bookingList = bookingMapper.toBookingDtoList(List.of(bookingRejected));
+                break;
+            default:
+                throw new ValidationException("Unknown state: UNSUPPORTED_STATUS");
+        }
+        return bookingList;
     }
 }

@@ -23,27 +23,32 @@ public class BookingMapperTests extends StorageForTests {
     @Test
     void toBooking() {
         Booking expectedBooking = createBooking();
-        Booking actualBooking = bookingMapper.newBooking(createBookingDtoOnlyIdLast(), createUser(), createItemNullRequest(), BookingStatus.WAITING);
+        Booking actualBooking = bookingMapper
+                .newBooking(createBookingDtoOnlyIdLast(), createUser(),
+                        createItemNullRequest(), BookingStatus.WAITING);
         actualBooking.setId(1);
         assertEquals(expectedBooking.toString(), actualBooking.toString());
     }
+
     @Test
-    void toBookingDto(){
+    void toBookingDto() {
         BookingDto expectedBookingDto = createBookingDto();
         BookingDto actualBookingDto = bookingMapper.toBookingDto(createBooking());
-        assertEquals(expectedBookingDto,actualBookingDto);
+        assertEquals(expectedBookingDto, actualBookingDto);
     }
+
     @Test
-    void toBookingDtoOnlyId(){
-        BookingDtoOnlyId expectedBooking= createBookingDtoOnlyIdLast();
+    void toBookingDtoOnlyId() {
+        BookingDtoOnlyId expectedBooking = createBookingDtoOnlyIdLast();
         BookingDtoOnlyId actualBooking = bookingMapper.toBookingDtoOnlyId(createBooking());
-        assertEquals(expectedBooking,actualBooking);
+        assertEquals(expectedBooking, actualBooking);
     }
+
     @Test
-    void toBookingDtoList(){
+    void toBookingDtoList() {
         List<BookingDto> expectedBookingDtoList = List.of(createBookingDto());
         List<BookingDto> actualBookingDtoList = bookingMapper.toBookingDtoList(List.of(createBooking()));
-        assertEquals(expectedBookingDtoList,actualBookingDtoList);
-        assertEquals(createBookingDto(),actualBookingDtoList.get(0));
-     }
+        assertEquals(expectedBookingDtoList, actualBookingDtoList);
+        assertEquals(createBookingDto(), actualBookingDtoList.get(0));
+    }
 }

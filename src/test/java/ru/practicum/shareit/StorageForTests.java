@@ -53,6 +53,13 @@ public class StorageForTests {
         return dto;
     }
 
+    protected UserDto createUserDtoThreeWithoutId() {
+        UserDto dto = new UserDto();
+        dto.setName("NameDtoThree");
+        dto.setEmail("emailThree@email.ru");
+        return dto;
+    }
+
     protected User createUser() {
         User user = new User();
         user.setId(1);
@@ -115,6 +122,7 @@ public class StorageForTests {
         request.setCreated(dateTime);
         return request;
     }
+
     protected ItemRequestDto createRequestDtoNullId() {
         ItemRequestDto request = new ItemRequestDto();
         request.setDescription("DescriptionRequest");
@@ -141,6 +149,7 @@ public class StorageForTests {
         item.setOwner(createUser());
         return item;
     }
+
     protected Item createItemNullRequest2() {
         Item item = new Item();
         item.setId(2);
@@ -150,6 +159,7 @@ public class StorageForTests {
         item.setOwner(createUser());
         return item;
     }
+
     protected Item createItemNullRequest3() {
         Item item = new Item();
         item.setId(3);
@@ -208,6 +218,7 @@ public class StorageForTests {
         item.setOwnerId(createUserDto().getId());
         return item;
     }
+
     protected ItemDto createItemDtoNullRequestAndId() {
         ItemDto item = new ItemDto();
         item.setName("NameItem");
@@ -216,6 +227,16 @@ public class StorageForTests {
         item.setOwnerId(createUserDto().getId());
         return item;
     }
+
+    protected ItemDto createItemDtoNullRequestAndIdTwo() {
+        ItemDto item = new ItemDto();
+        item.setName("NameItemTwo");
+        item.setDescription("DescriptionItemTwo");
+        item.setAvailable(true);
+        item.setOwnerId(createUserTwo().getId());
+        return item;
+    }
+
     protected ItemDto createItemDtoNullRequest2() {
         ItemDto item = new ItemDto();
         item.setId(2);
@@ -255,7 +276,7 @@ public class StorageForTests {
         dtoBooking.setAvailable(true);
         dtoBooking.setLastBooking(createBookingDtoOnlyIdLast());
         dtoBooking.setNextBooking(createBookingDtoOnlyIdNext());
-        dtoBooking.setComments(List.of(createCommentDto()));
+        dtoBooking.setComments(List.of(createCommentDto2()));
         return dtoBooking;
     }
 
@@ -267,7 +288,7 @@ public class StorageForTests {
         dtoBooking.setAvailable(true);
         dtoBooking.setLastBooking(null);
         dtoBooking.setNextBooking(null);
-        dtoBooking.setComments(List.of(createCommentDto()));
+        dtoBooking.setComments(List.of(createCommentDto2()));
         return dtoBooking;
     }
 
@@ -280,7 +301,8 @@ public class StorageForTests {
         booking.setStatus(BookingStatus.WAITING);
         return booking;
     }
-    protected Booking createBooking(User user, Item item,Long bookerId) {
+
+    protected Booking createBooking(User user, Item item, Long bookerId) {
         Booking booking = new Booking();
         booking.setId(bookerId);
         booking.setItem(item);
@@ -313,6 +335,7 @@ public class StorageForTests {
         booking.setStatus(BookingStatus.WAITING);
         return booking;
     }
+
     protected Booking createLastBooking() {
         Booking booking = new Booking();
         booking.setId(1);
@@ -323,6 +346,7 @@ public class StorageForTests {
         booking.setStatus(BookingStatus.APPROVED);
         return booking;
     }
+
     protected Booking createNextBooking() {
         Booking booking = new Booking();
         booking.setId(2);
@@ -344,6 +368,7 @@ public class StorageForTests {
         bookingDto.setStatus(BookingStatus.WAITING);
         return bookingDto;
     }
+
     protected BookingDto createBookingDto2() {
         BookingDto bookingDto = new BookingDto();
         bookingDto.setId(2);
@@ -365,6 +390,7 @@ public class StorageForTests {
         booking.setStatus(BookingStatus.WAITING);
         return booking;
     }
+
     protected BookingDtoOnlyId createBookingDtoOnlyId() {
         BookingDtoOnlyId booking = new BookingDtoOnlyId();
         booking.setId(1);
@@ -383,6 +409,14 @@ public class StorageForTests {
         booking.setStart(dateTimeLast);
         booking.setEnd(dateTimeNext);
         booking.setStatus(BookingStatus.WAITING);
+        return booking;
+    }
+
+    protected BookingDtoOnlyId createBookingForComment() {
+        BookingDtoOnlyId booking = new BookingDtoOnlyId();
+        booking.setItemId(1L);
+        booking.setStart(LocalDateTime.now().plusSeconds(1).minusNanos(100));
+        booking.setEnd(LocalDateTime.now().plusSeconds(1));
         return booking;
     }
 
@@ -410,9 +444,19 @@ public class StorageForTests {
         comment.setId(1);
         comment.setAuthorName("NameDtoTwo");
         comment.setText("comment");
+        comment.setCreated(dateTime.plusDays(3));
+        return comment;
+    }
+
+    protected CommentDto createCommentDto2() {
+        CommentDto comment = new CommentDto();
+        comment.setId(1);
+        comment.setAuthorName("NameDtoTwo");
+        comment.setText("comment");
         comment.setCreated(dateTime);
         return comment;
     }
+
     protected CommentDto createCommentDtoWithoutId() {
         CommentDto comment = new CommentDto();
         comment.setAuthorName("NameDtoTwo");

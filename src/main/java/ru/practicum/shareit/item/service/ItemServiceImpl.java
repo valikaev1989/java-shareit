@@ -20,7 +20,6 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.util.Validator;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -103,8 +102,8 @@ public class ItemServiceImpl implements ItemService {
             nextBookingDto = bookingMapper.toBookingDtoOnlyId(nextBooking);
         }
         List<CommentDto> comments = commentService.getCommentsByItemId(itemId);
-        if (user.getId()==(item.getOwner().getId())) {
-            return itemMapper.toItemOwnerDto(item, comments,lastBookingDto, nextBookingDto );
+        if (user.getId() == (item.getOwner().getId())) {
+            return itemMapper.toItemOwnerDto(item, comments, lastBookingDto, nextBookingDto);
         }
         return itemMapper.toItemOwnerDto(item, comments, null, null);
     }

@@ -1,6 +1,7 @@
 package ru.practicum.shareit.itemsTests;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -52,16 +53,18 @@ public class ItemServiceTests extends StorageForTests {
     @BeforeEach
     void setUp() {
         mockItemService = new ItemServiceImpl(
-                itemMapper, mockItemRepository, mockBookingRepository, bookingMapper, mockCommentService, mockValidator);
+                itemMapper, mockItemRepository, mockBookingRepository,
+                bookingMapper, mockCommentService, mockValidator);
     }
 
+    @DisplayName("qwe")
     @Test
     void getAllUserItems() {
         User user = createUser();
         Item item1 = createItemWithRequest();
         Booking lastBooking = createLastBooking();
         Booking nextBooking = createNextBooking();
-        CommentDto commentDto = createCommentDto();
+        CommentDto commentDto = createCommentDto2();
         ItemOwnerDto expectedItemOwnerDto = createItemOwnerDto();
         expectedItemOwnerDto.setLastBooking(bookingMapper.toBookingDtoOnlyId(lastBooking));
         expectedItemOwnerDto.setNextBooking(bookingMapper.toBookingDtoOnlyId(nextBooking));
@@ -83,7 +86,8 @@ public class ItemServiceTests extends StorageForTests {
         ItemDto itemDto1 = createItemDtoNullRequest();
         ItemDto itemDto2 = createItemDtoNullRequest2();
         List<ItemDto> expectedList = List.of(itemDto1, itemDto2);
-        when(mockItemRepository.searchItemByNameAndDesc(any(String.class), any(Pageable.class))).thenReturn(List.of(item1, item2));
+        when(mockItemRepository.searchItemByNameAndDesc(any(String.class),
+                any(Pageable.class))).thenReturn(List.of(item1, item2));
         List<ItemDto> actualList = mockItemService.findItemsByText("item", 0, 5);
         assertEquals(expectedList, actualList);
 
@@ -112,7 +116,7 @@ public class ItemServiceTests extends StorageForTests {
         Item item = createItemWithRequest();
         Booking lastBooking = createLastBooking();
         Booking nextBooking = createNextBooking();
-        CommentDto commentDto = createCommentDto();
+        CommentDto commentDto = createCommentDto2();
         ItemOwnerDto expectedItemOwnerDto = createItemOwnerDto();
         expectedItemOwnerDto.setLastBooking(bookingMapper.toBookingDtoOnlyId(lastBooking));
         expectedItemOwnerDto.setNextBooking(bookingMapper.toBookingDtoOnlyId(nextBooking));

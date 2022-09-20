@@ -79,9 +79,11 @@ public class ItemRequestServiceTests extends StorageForTests {
         itemRequestWithItemDto.setItems(List.of(expectedItemDto));
         List<ItemRequestWithItemDto> expectedRequest = List.of(itemRequestWithItemDto);
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user);
-        when(mockRequestRepository.findAllByRequesterIdIsNot(anyLong(), any(Pageable.class))).thenReturn(List.of(itemRequest));
+        when(mockRequestRepository.findAllByRequesterIdIsNot(anyLong(),
+                any(Pageable.class))).thenReturn(List.of(itemRequest));
         when(mockItemRepository.findByRequestId(anyLong())).thenReturn(List.of(item));
-        List<ItemRequestWithItemDto> actualRequest = mockItemRequestService.getAllRequests(user.getId(), 0, 5);
+        List<ItemRequestWithItemDto> actualRequest = mockItemRequestService
+                .getAllRequests(user.getId(), 0, 5);
         assertEquals(expectedRequest, actualRequest);
         assertEquals(expectedItemDto, actualRequest.get(0).getItems().get(0));
     }
@@ -94,7 +96,8 @@ public class ItemRequestServiceTests extends StorageForTests {
         itemRequest.setRequester(user);
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user);
         when(mockRequestRepository.save(any(ItemRequest.class))).thenReturn(itemRequest);
-        ItemRequestDto actualItemRequestDto = mockItemRequestService.addItemRequest(user.getId(), expectedItemRequestDto);
+        ItemRequestDto actualItemRequestDto = mockItemRequestService
+                .addItemRequest(user.getId(), expectedItemRequestDto);
         expectedItemRequestDto.setRequesterId(user.getId());
         assertEquals(expectedItemRequestDto, actualItemRequestDto);
     }
@@ -110,7 +113,8 @@ public class ItemRequestServiceTests extends StorageForTests {
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user);
         when(mockValidator.validateAndReturnItemRequestByRequestId(anyLong())).thenReturn(itemRequest);
         when(mockItemRepository.findByRequestId(anyLong())).thenReturn(List.of(item));
-        ItemRequestWithItemDto actualRequest = mockItemRequestService.getRequest(user.getId(), itemRequest.getId());
+        ItemRequestWithItemDto actualRequest = mockItemRequestService
+                .getRequest(user.getId(), itemRequest.getId());
         assertEquals(expectedRequest, actualRequest);
         assertEquals(itemDto, actualRequest.getItems().get(0));
     }

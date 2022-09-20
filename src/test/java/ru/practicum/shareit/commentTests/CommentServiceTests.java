@@ -45,7 +45,7 @@ public class CommentServiceTests extends StorageForTests {
     void getCommentsByItemId() {
         Item item = createItemNullRequest();
         Comment comment = createComment();
-        CommentDto commentDto = createCommentDto();
+        CommentDto commentDto = createCommentDto2();
         List<CommentDto> expectedCommentDto = List.of(commentDto);
         when(mockCommentRepository.getAllByItemId(anyLong())).thenReturn(List.of(comment));
         List<CommentDto> actualCommentDto = mockCommentServiceImpl.getCommentsByItemId(item.getId());
@@ -57,7 +57,7 @@ public class CommentServiceTests extends StorageForTests {
         User user = createUserTwo();
         Item item = createItemNullRequest();
         Comment comment = createComment();
-        CommentDto expectedCommentDto = createCommentDto();
+        CommentDto expectedCommentDto = createCommentDto2();
         CommentDto commentDto1 = createCommentDtoWithoutId();
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user);
         when(mockCommentRepository.save(any(Comment.class))).thenReturn(comment);

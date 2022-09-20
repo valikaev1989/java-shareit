@@ -1,6 +1,7 @@
 package ru.practicum.shareit.bookingTests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -13,7 +14,6 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoOnlyId;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.item.controller.ItemController;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -38,6 +38,7 @@ public class BookingControllerTests extends StorageForTests {
     private static final String HEADER = "X-Sharer-User-Id";
 
     @Test
+    @DisplayName("ControllerMVC Тест добавления букинга")
     void addBooking() throws Exception {
         BookingDtoOnlyId bookingDtoOnlyId = createBookingDtoOnlyId();
         BookingDto bookingDto = createBookingDto();
@@ -60,6 +61,7 @@ public class BookingControllerTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ControllerMVC Тест обновления статуса букинга")
     void updateStatusBooking() throws Exception {
         BookingDto bookingDto = createBookingDto();
         BookingDto expectedBookingDto = createBookingDto();
@@ -79,6 +81,7 @@ public class BookingControllerTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ControllerMVC Тест получения букинга по Id")
     void getBookingById() throws Exception {
         BookingDto bookingDto = createBookingDto();
         when(bookingService.getBookingById(anyLong(), anyLong()))
@@ -99,6 +102,7 @@ public class BookingControllerTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ControllerMVC Тест получения букинга пользователя предмета")
     void getBookingsByBookerId() throws Exception {
         BookingDto bookingDto = createBookingDto();
         when(bookingService.getBookingsByBookerId(anyLong(), anyString(), anyInt(), anyInt()))
@@ -117,6 +121,7 @@ public class BookingControllerTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ControllerMVC Тест получения букинга владельца предмета")
     void getBookingsByOwnerId() throws Exception {
         BookingDto bookingDto = createBookingDto();
         when(bookingService.getBookingsByOwnerId(anyLong(), anyString(), anyInt(), anyInt()))
@@ -133,5 +138,4 @@ public class BookingControllerTests extends StorageForTests {
                 .andExpect(jsonPath("$[0].end", is(bookingDto.getEnd().toString())))
                 .andExpect(jsonPath("$[0].status", is(bookingDto.getStatus().toString())));
     }
-
 }

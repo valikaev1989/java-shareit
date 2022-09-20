@@ -176,7 +176,7 @@ class ItemControllerTests extends StorageForTests {
     @Test
     void updateItemTestWithIncorrectId() throws Exception {
         ItemDto itemDto = createItemDtoNullRequest();
-        Mockito.when(itemService.updateItem(anyLong(),anyLong(), any(ItemDto.class)))
+        Mockito.when(itemService.updateItem(anyLong(), anyLong(), any(ItemDto.class)))
                 .thenThrow(ItemNotFoundException.class);
         mvc.perform(patch("/items/1")
                         .header("X-Sharer-User-Id", 1L)

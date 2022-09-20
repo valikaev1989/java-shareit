@@ -17,7 +17,6 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -29,123 +28,103 @@ import static org.junit.jupiter.api.Assertions.*;
 public class BookingRepositoryTests extends StorageForTests {
     private final TestEntityManager entityManager;
     private final BookingRepository bookingRepository;
+    private final User user2 = createUserTwoWithoutId();
+    private final User user1 = createUserWithoutId();
+    private final Pageable pageable = PageRequest
+            .of(0 / 20, 20, Sort.by(Sort.Direction.DESC, "end"));
 
     @Test
-    void getUserBookings() {
-        User user1 = createUserWithoutId();
-        entityManager.persist(user1);
-        User user2 = createUserTwoWithoutId();
-        entityManager.persist(user2);
-        Item item1 = createItemWithoutId(user1);
-        entityManager.persist(item1);
-        Item item2 = createItemWithoutId2(user1);
-        entityManager.persist(item2);
-        Item item3 = createItemWithoutId3(user1);
-        entityManager.persist(item3);
-        Booking bookingPast = createBookingWithoutId(user2, item1);
-        bookingPast.setStart(LocalDateTime.now().minusDays(10));
-        bookingPast.setEnd(LocalDateTime.now().minusDays(5));
-        bookingPast.setStatus(BookingStatus.APPROVED);
-        entityManager.persist(bookingPast);
-        Booking bookingCurrent = createBookingWithoutId(user2, item2);
-        bookingCurrent.setStart(LocalDateTime.now().minusDays(4));
-        bookingCurrent.setEnd(LocalDateTime.now().plusDays(2));
-        bookingCurrent.setStatus(BookingStatus.APPROVED);
-        entityManager.persist(bookingCurrent);
-        Booking bookingFuture = createBookingWithoutId(user2, item3);
-        bookingFuture.setStart(LocalDateTime.now().plusDays(5));
-        bookingFuture.setEnd(LocalDateTime.now().plusDays(10));
-        entityManager.persist(bookingFuture);
-        Booking bookingRejected = createBookingWithoutId(user2, item2);
-        bookingRejected.setStart(LocalDateTime.now());
-        bookingRejected.setEnd(LocalDateTime.now().plusDays(10));
-        bookingRejected.setStatus(BookingStatus.REJECTED);
-        entityManager.persist(bookingRejected);
-        Pageable pageable = PageRequest.of(0 / 20, 20, Sort.by(Sort.Direction.DESC, "end"));
-
-        List<Booking> expectedAllBookings = Arrays.asList(bookingPast, bookingCurrent, bookingFuture, bookingRejected);
-        expectedAllBookings.sort(Comparator.comparing(Booking::getStart).reversed());
+    void AllBookingByBooker() {
+        List<Booking> expectedAllBookings = getBookingList("ALL");
         List<Booking> actualAllBookings = bookingRepository.findAllByBookerId(user2.getId(), pageable);
         assertEquals(expectedAllBookings, actualAllBookings);
-
-        List<Booking> expectedCurrentBookings = Arrays.asList(bookingCurrent, bookingRejected);
-        expectedCurrentBookings.sort(Comparator.comparing(Booking::getStart).reversed());
-        List<Booking> actualCurrentBookings = bookingRepository.findCurrentBookingByBookerId(user2.getId(), LocalDateTime.now(), pageable);
-        assertEquals(expectedCurrentBookings, actualCurrentBookings);
-
-        List<Booking> expectedPastBooking = List.of(bookingPast);
-        List<Booking> actualPastBookings = bookingRepository.findPastBookingByBookerId(user2.getId(), LocalDateTime.now(), pageable);
-        assertEquals(expectedPastBooking, actualPastBookings);
-
-        List<Booking> expectedFutureBooking = List.of(bookingFuture);
-        List<Booking> actualFutureBookings = bookingRepository.findFutureBookingByBookerId(user2.getId(), LocalDateTime.now(), pageable);
-        assertEquals(expectedFutureBooking, actualFutureBookings);
-
-        List<Booking> actualWaitingBookings = bookingRepository.findByBookerIdAndStatus(user2.getId(), BookingStatus.WAITING, pageable);
-        assertEquals(expectedFutureBooking, actualWaitingBookings);
-
-        List<Booking> expectedRejectedBooking = List.of(bookingRejected);
-        List<Booking> actualRejectedBookings = bookingRepository.findByBookerIdAndStatus(user2.getId(), BookingStatus.REJECTED, pageable);
-        assertEquals(expectedRejectedBooking, actualRejectedBookings);
     }
 
     @Test
-    void getOwnerBookings() {
-        User user1 = createUserWithoutId();
-        entityManager.persist(user1);
-        User user2 = createUserTwoWithoutId();
-        entityManager.persist(user2);
-        Item item1 = createItemWithoutId(user1);
-        entityManager.persist(item1);
-        Item item2 = createItemWithoutId2(user1);
-        entityManager.persist(item2);
-        Item item3 = createItemWithoutId3(user1);
-        entityManager.persist(item3);
-        Booking bookingPast = createBookingWithoutId(user2, item1);
-        bookingPast.setStart(LocalDateTime.now().minusDays(10));
-        bookingPast.setEnd(LocalDateTime.now().minusDays(5));
-        bookingPast.setStatus(BookingStatus.APPROVED);
-        entityManager.persist(bookingPast);
-        Booking bookingCurrent = createBookingWithoutId(user2, item2);
-        bookingCurrent.setStart(LocalDateTime.now().minusDays(4));
-        bookingCurrent.setEnd(LocalDateTime.now().plusDays(2));
-        bookingCurrent.setStatus(BookingStatus.APPROVED);
-        entityManager.persist(bookingCurrent);
-        Booking bookingFuture = createBookingWithoutId(user2, item3);
-        bookingFuture.setStart(LocalDateTime.now().plusDays(5));
-        bookingFuture.setEnd(LocalDateTime.now().plusDays(10));
-        entityManager.persist(bookingFuture);
-        Booking bookingRejected = createBookingWithoutId(user2, item2);
-        bookingRejected.setStart(LocalDateTime.now());
-        bookingRejected.setEnd(LocalDateTime.now().plusDays(10));
-        bookingRejected.setStatus(BookingStatus.REJECTED);
-        entityManager.persist(bookingRejected);
-        Pageable pageable = PageRequest.of(0 / 20, 20, Sort.by(Sort.Direction.DESC, "end"));
+    void CurrentBookingByBooker() {
+        List<Booking> expectedCurrentBookings = getBookingList("CURRENT");
+        List<Booking> actualCurrentBookings = bookingRepository
+                .findCurrentBookingByBookerId(user2.getId(), LocalDateTime.now(), pageable);
+        assertEquals(expectedCurrentBookings, actualCurrentBookings);
+    }
 
-        List<Booking> expectedAllBookings = Arrays.asList(bookingPast, bookingCurrent, bookingFuture, bookingRejected);
-        expectedAllBookings.sort(Comparator.comparing(Booking::getStart).reversed());
+    @Test
+    void PastBookingByBooker() {
+        List<Booking> expectedPastBookings = getBookingList("PAST");
+        List<Booking> actualPastBookings = bookingRepository
+                .findPastBookingByBookerId(user2.getId(), LocalDateTime.now(), pageable);
+        assertEquals(expectedPastBookings, actualPastBookings);
+    }
+
+    @Test
+    void FutureBookingByBooker() {
+        List<Booking> expectedFutureBookings = getBookingList("FUTURE");
+        List<Booking> actualFutureBookings = bookingRepository
+                .findFutureBookingByBookerId(user2.getId(), LocalDateTime.now(), pageable);
+        assertEquals(expectedFutureBookings, actualFutureBookings);
+    }
+
+    @Test
+    void WaitingBookingByBooker() {
+        List<Booking> expectedWaitingBookings = getBookingList("WAITING");
+        List<Booking> actualWaitingBookings = bookingRepository
+                .findByBookerIdAndStatus(user2.getId(), BookingStatus.WAITING, pageable);
+        assertEquals(expectedWaitingBookings, actualWaitingBookings);
+    }
+
+    @Test
+    void RejectedBookingByBooker() {
+        List<Booking> expectedRejectedBookings = getBookingList("REJECTED");
+        List<Booking> actualRejectedBookings = bookingRepository
+                .findByBookerIdAndStatus(user2.getId(), BookingStatus.REJECTED, pageable);
+        assertEquals(expectedRejectedBookings, actualRejectedBookings);
+    }
+
+    @Test
+    void AllBookingByOwner() {
+        List<Booking> expectedAllBookings = getBookingList("ALL");
         List<Booking> actualAllBookings = bookingRepository.findAllByItemOwnerId(user1.getId(), pageable);
         assertEquals(expectedAllBookings, actualAllBookings);
+    }
 
-        List<Booking> expectedCurrentBookings = Arrays.asList(bookingCurrent, bookingRejected);
-        expectedCurrentBookings.sort(Comparator.comparing(Booking::getStart).reversed());
-        List<Booking> actualCurrentBookings = bookingRepository.findCurrentBookingByItemOwnerId(user1.getId(), LocalDateTime.now(), pageable);
+    @Test
+    void CurrentBookingByOwner() {
+        List<Booking> expectedCurrentBookings = getBookingList("CURRENT");
+        List<Booking> actualCurrentBookings = bookingRepository
+                .findCurrentBookingByItemOwnerId(user1.getId(), LocalDateTime.now(), pageable);
         assertEquals(expectedCurrentBookings, actualCurrentBookings);
+    }
 
-        List<Booking> expectedPastBooking = List.of(bookingPast);
-        List<Booking> actualPastBookings = bookingRepository.findPastBookingByItemOwnerId(user1.getId(), LocalDateTime.now(), pageable);
-        assertEquals(expectedPastBooking, actualPastBookings);
+    @Test
+    void PastBookingByOwner() {
+        List<Booking> expectedPastBookings = getBookingList("PAST");
+        List<Booking> actualPastBookings = bookingRepository
+                .findPastBookingByItemOwnerId(user1.getId(), LocalDateTime.now(), pageable);
+        assertEquals(expectedPastBookings, actualPastBookings);
+    }
 
-        List<Booking> expectedFutureBooking = List.of(bookingFuture);
-        List<Booking> actualFutureBookings = bookingRepository.findFutureBookingByItemOwnerId(user1.getId(), LocalDateTime.now(), pageable);
-        assertEquals(expectedFutureBooking, actualFutureBookings);
+    @Test
+    void FutureBookingByOwner() {
+        List<Booking> expectedFutureBookings = getBookingList("FUTURE");
+        List<Booking> actualFutureBookings = bookingRepository
+                .findFutureBookingByItemOwnerId(user1.getId(), LocalDateTime.now(), pageable);
+        assertEquals(expectedFutureBookings, actualFutureBookings);
+    }
 
-        List<Booking> actualWaitingBookings = bookingRepository.findBookingByOwnerIdAndStatus(user1.getId(), BookingStatus.WAITING, pageable);
-        assertEquals(expectedFutureBooking, actualWaitingBookings);
+    @Test
+    void WaitingBookingByOwner() {
+        List<Booking> expectedWaitingBookings = getBookingList("WAITING");
+        List<Booking> actualWaitingBookings = bookingRepository
+                .findBookingByOwnerIdAndStatus(user1.getId(), BookingStatus.WAITING, pageable);
+        assertEquals(expectedWaitingBookings, actualWaitingBookings);
+    }
 
-        List<Booking> expectedRejectedBooking = List.of(bookingRejected);
-        List<Booking> actualRejectedBookings = bookingRepository.findBookingByOwnerIdAndStatus(user1.getId(), BookingStatus.REJECTED, pageable);
-        assertEquals(expectedRejectedBooking, actualRejectedBookings);
+    @Test
+    void RejectedBookingByOwner() {
+        List<Booking> expectedRejectedBookings = getBookingList("REJECTED");
+        List<Booking> actualRejectedBookings = bookingRepository
+                .findBookingByOwnerIdAndStatus(user1.getId(), BookingStatus.REJECTED, pageable);
+        assertEquals(expectedRejectedBookings, actualRejectedBookings);
     }
 
     @Test
@@ -186,7 +165,6 @@ public class BookingRepositoryTests extends StorageForTests {
         Booking nextBooking = bookingRepository.findFirstByItemOrderByEndDesc(item1);
         assertEquals(bookingFuture, nextBooking);
     }
-
 
     @Test
     void validateForTakeItem() {
@@ -236,5 +214,60 @@ public class BookingRepositoryTests extends StorageForTests {
         List<Booking> actualBooker = bookingRepository.validateForTakeItem
                 (BookingStatus.REJECTED, user2, item1, LocalDateTime.now());
         assertEquals(expectedBooker, actualBooker);
+    }
+
+    private List<Booking> getBookingList(String state) {
+        entityManager.persist(user1);
+        entityManager.persist(user2);
+        Item item1 = createItemWithoutId(user1);
+        entityManager.persist(item1);
+        Item item2 = createItemWithoutId2(user1);
+        entityManager.persist(item2);
+        Item item3 = createItemWithoutId3(user1);
+        entityManager.persist(item3);
+        Booking bookingPast = createBookingWithoutId(user2, item1);
+        bookingPast.setStart(LocalDateTime.now().minusDays(10));
+        bookingPast.setEnd(LocalDateTime.now().minusDays(5));
+        bookingPast.setStatus(BookingStatus.APPROVED);
+        entityManager.persist(bookingPast);
+        Booking bookingCurrent = createBookingWithoutId(user2, item2);
+        bookingCurrent.setStart(LocalDateTime.now().minusDays(4));
+        bookingCurrent.setEnd(LocalDateTime.now().plusDays(2));
+        bookingCurrent.setStatus(BookingStatus.APPROVED);
+        entityManager.persist(bookingCurrent);
+        Booking bookingFuture = createBookingWithoutId(user2, item3);
+        bookingFuture.setStart(LocalDateTime.now().plusDays(5));
+        bookingFuture.setEnd(LocalDateTime.now().plusDays(10));
+        entityManager.persist(bookingFuture);
+        Booking bookingRejected = createBookingWithoutId(user2, item2);
+        bookingRejected.setStart(LocalDateTime.now().plusDays(1));
+        bookingRejected.setEnd(LocalDateTime.now().plusDays(10));
+        bookingRejected.setStatus(BookingStatus.REJECTED);
+        entityManager.persist(bookingRejected);
+        List<Booking> bookingList;
+        switch (state) {
+            case ("ALL"):
+                bookingList = Arrays.asList(bookingPast, bookingCurrent, bookingFuture, bookingRejected);
+                bookingList.sort(Comparator.comparing(Booking::getStart).reversed());
+                break;
+            case ("CURRENT"):
+                bookingList = List.of(bookingCurrent);
+                break;
+            case ("FUTURE"):
+                bookingList = List.of(bookingFuture, bookingRejected);
+                break;
+            case ("WAITING"):
+                bookingList = List.of(bookingFuture);
+                break;
+            case ("PAST"):
+                bookingList = List.of(bookingPast);
+                break;
+            case ("REJECTED"):
+                bookingList = List.of(bookingRejected);
+                break;
+            default:
+                throw new ValidationException("Unknown state: UNSUPPORTED_STATUS");
+        }
+        return bookingList;
     }
 }

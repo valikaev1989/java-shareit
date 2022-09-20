@@ -44,9 +44,6 @@ public class BookingServiceImpl implements BookingService {
         switch (state) {
             case ("ALL"):
                 bookings.addAll(bookingRepository.findAllByBookerId(userId, pageable));
-//                log.info(" bookings = {} ", bookings);
-//                List<Booking> booking = bookingRepository.findAllByBookerId(userId);
-//                log.info(" booking = {} ", booking);
                 break;
             case ("CURRENT"):
                 bookings.addAll(bookingRepository.findCurrentBookingByBookerId(userId, LocalDateTime.now(), pageable));
@@ -75,8 +72,6 @@ public class BookingServiceImpl implements BookingService {
      *
      * @param ownerId id пользователя
      * @param state   состояние бронирования
-     * @param from
-     * @param size
      */
     @Override
     public List<BookingDto> getBookingsByOwnerId(long ownerId, String state, int from, int size) {

@@ -127,22 +127,27 @@ public class ValidatorTests extends StorageForTests {
         bookingDtoOnlyId.setStart(LocalDateTime.now().plusDays(1));
         bookingDtoOnlyId.setEnd(LocalDateTime.now().minusDays(1));
 
-        ItemNotFoundException ex1 =   assertThrows(ItemNotFoundException.class, () -> validator.validateForAddBooking(owner, item, bookingDtoOnlyId));
-        assertEquals("Владелец не может арендовать у себя",ex1.getMessage());
+        ItemNotFoundException ex1 = assertThrows(ItemNotFoundException.class, () -> validator
+                .validateForAddBooking(owner, item, bookingDtoOnlyId));
+        assertEquals("Владелец не может арендовать у себя", ex1.getMessage());
         item.setAvailable(false);
-        ValidationException ex2 =  assertThrows(ValidationException.class, () -> validator.validateForAddBooking(user, item, bookingDtoOnlyId));
+        ValidationException ex2 = assertThrows(ValidationException.class, () -> validator
+                .validateForAddBooking(user, item, bookingDtoOnlyId));
         assertEquals("Вешь занята", ex2.getMessage());
         item.setAvailable(true);
-        ValidationException ex5=   assertThrows(ValidationException.class, () -> validator.validateForAddBooking(user, item, bookingDtoOnlyId));
-        assertEquals("Время окончания не корректно",ex5.getMessage());
+        ValidationException ex5 = assertThrows(ValidationException.class, () -> validator
+                .validateForAddBooking(user, item, bookingDtoOnlyId));
+        assertEquals("Время окончания не корректно", ex5.getMessage());
         bookingDtoOnlyId.setStart(LocalDateTime.now().plusDays(5));
         bookingDtoOnlyId.setEnd(LocalDateTime.now().plusDays(1));
-        ValidationException ex3 =   assertThrows(ValidationException.class, () -> validator.validateForAddBooking(user, item, bookingDtoOnlyId));
-        assertEquals("Время окончания раньше начала",ex3.getMessage());
+        ValidationException ex3 = assertThrows(ValidationException.class, () -> validator
+                .validateForAddBooking(user, item, bookingDtoOnlyId));
+        assertEquals("Время окончания раньше начала", ex3.getMessage());
         bookingDtoOnlyId.setStart(LocalDateTime.now().minusDays(5));
         bookingDtoOnlyId.setEnd(LocalDateTime.now().plusDays(1));
-        ValidationException ex4 = assertThrows(ValidationException.class, () -> validator.validateForAddBooking(user, item, bookingDtoOnlyId));
-        assertEquals("Время начала не корректно",ex4.getMessage());
+        ValidationException ex4 = assertThrows(ValidationException.class, () -> validator
+                .validateForAddBooking(user, item, bookingDtoOnlyId));
+        assertEquals("Время начала не корректно", ex4.getMessage());
     }
 
     @Test
@@ -158,7 +163,8 @@ public class ValidatorTests extends StorageForTests {
         assertThrows(ItemNotFoundException.class, () -> validator.validateForGetBooking(owner, 1L));
         Booking booking = createBookingWithoutId(user, item);
         bookingRepository.save(booking);
-        assertThrows(ItemNotFoundException.class, () -> validator.validateForGetBooking(otherUser, booking.getId()));
+        assertThrows(ItemNotFoundException.class, () -> validator
+                .validateForGetBooking(otherUser, booking.getId()));
         assertEquals(booking, validator.validateForGetBooking(owner, booking.getId()));
         assertEquals(booking, validator.validateForGetBooking(user, booking.getId()));
     }
@@ -175,13 +181,18 @@ public class ValidatorTests extends StorageForTests {
         bookingRepository.save(booking);
         Booking booking1 = createBooking2();
         assertEquals(booking, validator.validateForUpdateBooking(owner, booking.getId(), true));
-        assertThrows(ItemNotFoundException.class, () -> validator.validateForUpdateBooking(user, booking1.getId(), null));
-        assertThrows(ItemNotFoundException.class, () -> validator.validateForUpdateBooking(user, booking.getId(), null));
-        assertThrows(ValidationException.class, () -> validator.validateForUpdateBooking(owner, booking.getId(), null));
+        assertThrows(ItemNotFoundException.class, () -> validator
+                .validateForUpdateBooking(user, booking1.getId(), null));
+        assertThrows(ItemNotFoundException.class, () -> validator
+                .validateForUpdateBooking(user, booking.getId(), null));
+        assertThrows(ValidationException.class, () -> validator
+                .validateForUpdateBooking(owner, booking.getId(), null));
         booking.setStatus(BookingStatus.APPROVED);
-        assertThrows(ValidationException.class, () -> validator.validateForUpdateBooking(owner, booking.getId(), true));
+        assertThrows(ValidationException.class, () -> validator
+                .validateForUpdateBooking(owner, booking.getId(), true));
         booking.setStatus(BookingStatus.REJECTED);
-        assertThrows(ValidationException.class, () -> validator.validateForUpdateBooking(owner, booking.getId(), true));
+        assertThrows(ValidationException.class, () -> validator
+                .validateForUpdateBooking(owner, booking.getId(), true));
     }
 
     @Test
@@ -198,21 +209,25 @@ public class ValidatorTests extends StorageForTests {
         bookingRepository.save(booking);
         CommentDto commentDto = createCommentDto();
         commentDto.setText("");
-        assertThrows(ValidationException.class, () -> validator.validateBookingForComment(item, user, commentDto));
+        assertThrows(ValidationException.class, () -> validator
+                .validateBookingForComment(item, user, commentDto));
         commentDto.setText("comment");
-        assertThrows(ValidationException.class, () -> validator.validateBookingForComment(item, otherUser, commentDto));
+        assertThrows(ValidationException.class, () -> validator
+                .validateBookingForComment(item, otherUser, commentDto));
     }
 
     @Test
     void validateItemRequestDesc() {
         ItemRequestDto itemRequestDto = createRequestDto();
         itemRequestDto.setDescription("");
-        assertThrows(ValidationException.class, () -> validator.validateItemRequestDesc(itemRequestDto));
+        assertThrows(ValidationException.class, () -> validator
+                .validateItemRequestDesc(itemRequestDto));
     }
 
     @Test
     void validateAndReturnItemRequestByRequestId() {
-        assertThrows(ItemNotFoundException.class, () -> validator.validateAndReturnItemRequestByRequestId(1L));
+        assertThrows(ItemNotFoundException.class, () -> validator
+                .validateAndReturnItemRequestByRequestId(1L));
         User user = createUserWithoutId();
         userRepository.save(user);
         ItemRequest itemRequest = createRequestWithoutId();

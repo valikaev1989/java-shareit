@@ -21,7 +21,7 @@ public class UserDtoJsonTests extends StorageForTests {
         UserDto userDto = createUserDto();
         JsonContent<UserDto> result = json.write(userDto);
         Assertions.assertThat(result).extractingJsonPathNumberValue("$.id")
-                .isEqualTo((int)userDto.getId());
+                .isEqualTo((int) userDto.getId());
         Assertions.assertThat(result).extractingJsonPathStringValue("$.name")
                 .isEqualTo(userDto.getName());
         Assertions.assertThat(result).extractingJsonPathStringValue("$.email")

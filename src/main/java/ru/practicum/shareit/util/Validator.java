@@ -22,6 +22,7 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -108,7 +109,7 @@ public class Validator {
     }
 
     public void validateForAddBooking(User user, Item item, BookingDtoOnlyId bookingDtoId) {
-        if (user.equals(item.getOwner())) {
+        if (user.getId() == item.getOwner().getId()) {
             log.warn("Владелец не может арендовать у себя");
             throw new ItemNotFoundException("Владелец не может арендовать у себя");
         }
@@ -135,7 +136,7 @@ public class Validator {
     public Booking validateForGetBooking(User user, long bookingId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() ->
                 new ItemNotFoundException(String.format("бронь предмета с bookingId '%d' не найдена!", bookingId)));
-        if (user.equals(booking.getBooker()) || user.equals(booking.getItem().getOwner())) {
+        if (user.getId() == booking.getBooker().getId() || user.getId() == booking.getItem().getOwner().getId()) {
             return booking;
         } else {
             log.warn("Вы не владелец или пользователь вещи");
@@ -146,7 +147,7 @@ public class Validator {
     public Booking validateForUpdateBooking(User owner, long bookingId, Boolean approved) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() ->
                 new ItemNotFoundException(String.format("бронь предмета с bookingId '%d' не найдена!", bookingId)));
-        if(!owner.equals(booking.getItem().getOwner())){
+        if (owner.getId() != booking.getItem().getOwner().getId()) {
             log.warn("Вы не владелец вещи");
             throw new ItemNotFoundException("Вы не владелец вещи");
         }
@@ -170,8 +171,9 @@ public class Validator {
             log.warn("Комментарий не должен быть пустым!");
             throw new ValidationException("Комментарий не должен быть пустым!");
         }
-        if (bookingRepository.validateForTakeItem(BookingStatus.REJECTED, booker,
-                item, LocalDateTime.now()).isEmpty()) {
+        List<Booking> bookingList = bookingRepository.validateForTakeItem(BookingStatus.REJECTED, booker,
+                item, LocalDateTime.now());
+        if (bookingList.isEmpty()) {
             log.warn("Вы не брали в аренду эту вещь");
             throw new ValidationException("Вы не брали в аренду эту вещь");
         }

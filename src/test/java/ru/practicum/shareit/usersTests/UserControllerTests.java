@@ -114,6 +114,7 @@ public class UserControllerTests extends StorageForTests {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
+
     @Test
     void addUserIncorrectName() throws Exception {
         UserDto userDto = createUserDtoWithoutId();
@@ -126,6 +127,7 @@ public class UserControllerTests extends StorageForTests {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
     @Test
     void addUserNull() throws Exception {
         Mockito.when(userService.addNewUser(any(UserDto.class))).thenReturn(null);

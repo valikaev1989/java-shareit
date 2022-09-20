@@ -23,14 +23,15 @@ public class CommentMapperTests extends StorageForTests {
     @Test
     void toCommentDto() {
         Comment comment = createComment();
-        CommentDto expectedCommentDto = createCommentDto();
+        CommentDto expectedCommentDto = createCommentDto2();
         CommentDto actualCommentDto = commentMapper.toCommentDto(comment);
+
         assertEquals(expectedCommentDto, actualCommentDto);
     }
 
     @Test
     void toComment() {
-        CommentDto commentDto = createCommentDto();
+        CommentDto commentDto = createCommentDto2();
         User author = createUserTwo();
         Item item = createItemNullRequest();
         Comment expectedComment = createComment();
@@ -39,11 +40,11 @@ public class CommentMapperTests extends StorageForTests {
     }
 
     @Test
-    void toCommentDtoList(){
+    void toCommentDtoList() {
         Comment comment = createComment();
-        List<CommentDto> expectedCommentDtoList= List.of(createCommentDto());
+        List<CommentDto> expectedCommentDtoList = List.of(createCommentDto2());
         List<CommentDto> actualCommentDtoList = commentMapper.toCommentDtoList(List.of(comment));
-        assertEquals(expectedCommentDtoList,actualCommentDtoList);
-        assertEquals(createCommentDto(),actualCommentDtoList.get(0));
+        assertEquals(expectedCommentDtoList, actualCommentDtoList);
+        assertEquals(createCommentDto2(), actualCommentDtoList.get(0));
     }
 }

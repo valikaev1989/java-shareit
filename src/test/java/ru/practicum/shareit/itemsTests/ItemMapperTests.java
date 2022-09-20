@@ -67,6 +67,6 @@ public class ItemMapperTests extends StorageForTests {
         List<ItemDto> expectedItemDtoList = List.of(createItemDtoNullRequest());
         List<ItemDto> actualItemDtoList = itemMapper.toItemDtoList(List.of(createItemNullRequest()));
         assertEquals(expectedItemDtoList, actualItemDtoList);
-        assertEquals(createItemDtoNullRequest(),actualItemDtoList.get(0));
+        assertEquals(createItemDtoNullRequest(), actualItemDtoList.get(0));
     }
 }

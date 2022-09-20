@@ -2,7 +2,6 @@ package ru.practicum.shareit.request.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -107,15 +106,4 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         return requests.stream().map(itemRequest -> itemRequestMapper.toItemRequestWithItemDto
                 (itemRequest, getListItemDtoByRequestId(itemRequest.getId()))).collect(Collectors.toList());
     }
-//    /**
-//     * Получение списка запросов других пользователей со списком вещей подходящих по запросу
-//     *
-//     * @param requests список запросов вещей
-//     */
-//    private List<ItemRequestWithItemDto> getListNotOwnRequest(List<ItemRequest> requests) {
-//        return requests.stream()
-//                .map(itemRequest -> itemRequestMapper.toItemRequestWithItemDto(
-//                        itemRequest, getListItemDtoByRequestId(itemRequest.getRequester().getId())))
-//                .collect(Collectors.toList());
-//    }
 }

@@ -10,7 +10,6 @@ import ru.practicum.shareit.StorageForTests;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemOwnerDto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @JsonTest
