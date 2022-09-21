@@ -76,7 +76,7 @@ public class ItemRepositoryTests extends StorageForTests {
         entityManager.persist(itemRequest);
         User user2 = createUserTwoWithoutId();
         entityManager.persist(user2);
-        Item item1 = makeItemWithRequestId("Магнит", "сувенир", user1,itemRequest.getId());
+        Item item1 = makeItemWithRequestId("Магнит", "сувенир", user1, itemRequest.getId());
         entityManager.persist(item1);
         Item item2 = makeItem("Магний", "сувенир2", false, user1);
         entityManager.persist(item2);

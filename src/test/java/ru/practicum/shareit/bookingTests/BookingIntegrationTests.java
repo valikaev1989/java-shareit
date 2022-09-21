@@ -87,11 +87,12 @@ public class BookingIntegrationTests extends StorageForTests {
     @DisplayName("Интеграционный Тест наличия в БД предмета брони создания букинга предмета")
     void addBooking1() {
         UserDto owner = userService.addNewUser(user1);
-       ItemNotFoundException ex= assertThrows(ItemNotFoundException.class, () -> bookingController
+        ItemNotFoundException ex = assertThrows(ItemNotFoundException.class, () -> bookingController
                 .addBooking(owner.getId(), bookingDtoOnlyId1));
-       assertEquals(String.format("предмет с id '%d' не найден в списке предметов!",
-               bookingDtoOnlyId1.getItemId()),ex.getMessage());
+        assertEquals(String.format("предмет с id '%d' не найден в списке предметов!",
+                bookingDtoOnlyId1.getItemId()), ex.getMessage());
     }
+
     @Test
     @DisplayName("Интеграционный Тест создания букинга предмета")
     void addBooking2() {
