@@ -268,6 +268,7 @@ public class BookingServiceTests extends StorageForTests {
                 .updateStatusBooking(user.getId(), booking.getId(), true);
         assertEquals(expectedBookingDto, actualBookingDto);
     }
+
     /**
      * Шаблон получения списка букинга для пользователя и владельца предмета
      *
