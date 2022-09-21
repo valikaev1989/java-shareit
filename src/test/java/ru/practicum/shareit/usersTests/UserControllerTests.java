@@ -1,6 +1,7 @@
 package ru.practicum.shareit.usersTests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ public class UserControllerTests extends StorageForTests {
     private MockMvc mvc;
 
     @Test
+    @DisplayName("ControllerMVC Тест получения всех пользователей")
     void getAllUser() throws Exception {
         UserDto userDtoOne = createUserDto();
         UserDto userDtoTwo = createUserDtoTwo();
@@ -52,6 +54,7 @@ public class UserControllerTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ControllerMVC Тест добавления пользователя")
     void addUser() throws Exception {
         UserDto userDto = createUserDtoWithoutId();
         UserDto expectedDto = createUserDto();
@@ -68,6 +71,7 @@ public class UserControllerTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ControllerMVC Тест получения пользователя")
     void getUser() throws Exception {
         UserDto expectedDto = createUserDto();
         Mockito.when(userService.findUserDtoById(anyLong())).thenReturn(expectedDto);
@@ -82,6 +86,7 @@ public class UserControllerTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ControllerMVC Тест редактирования данных пользователя")
     void changeUser() throws Exception {
         UserDto userDto = createUserDtoWithoutId();
         UserDto expectedDto = createUserDto();
@@ -98,6 +103,7 @@ public class UserControllerTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ControllerMVC Тест удаления пользователя")
     void deleteUser() throws Exception {
         mvc.perform(delete("/users/" + anyLong())
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -107,6 +113,7 @@ public class UserControllerTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ControllerMVC Тест выдачи ошибки по некорректному идентификатору пользователя")
     void findUserByIncorrectIdTest() throws Exception {
         Mockito.when(userService.findUserDtoById(1L)).thenThrow(UserNotFoundException.class);
         mvc.perform(get("/users/1")
@@ -116,6 +123,7 @@ public class UserControllerTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ControllerMVC Тест выдачи ошибки пустого имени")
     void addUserIncorrectName() throws Exception {
         UserDto userDto = createUserDtoWithoutId();
         userDto.setName("");
@@ -129,6 +137,7 @@ public class UserControllerTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ControllerMVC Тест ошибки 500")
     void addUserNull() throws Exception {
         Mockito.when(userService.addNewUser(any(UserDto.class))).thenReturn(null);
         mvc.perform(post("/users")

@@ -1,6 +1,7 @@
 package ru.practicum.shareit.itemRequestsTests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -37,6 +38,7 @@ public class ItemRequestControllerTests extends StorageForTests {
     MockMvc mvc;
 
     @Test
+    @DisplayName("ControllerMVC Тест получения всех запросов")
     void getAllRequests() throws Exception {
         ItemRequestWithItemDto expectedRequest = createRequestWithItemDto();
         expectedRequest.setItems(List.of(createItemDtoWithRequestId()));
@@ -57,6 +59,7 @@ public class ItemRequestControllerTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ControllerMVC Тест добавления запроса на предмет")
     void addNewItemRequest() throws Exception {
         ItemRequestDto itemRequestDto = createRequestDtoNullId();
         ItemRequestDto expectedRequest = createRequestDto();
@@ -77,6 +80,7 @@ public class ItemRequestControllerTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ControllerMVC Тест получения запросов пользователя на предмет")
     void getOwnRequests() throws Exception {
         ItemRequestWithItemDto expectedRequest = createRequestWithItemDto();
         expectedRequest.setItems(List.of(createItemDtoWithRequestId()));
@@ -97,6 +101,7 @@ public class ItemRequestControllerTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ControllerMVC Тест получения запроса на предмет")
     void getRequest() throws Exception {
         ItemRequestWithItemDto expectedRequest = createRequestWithItemDto();
         when(itemRequestService.getRequest(anyLong(), anyLong()))

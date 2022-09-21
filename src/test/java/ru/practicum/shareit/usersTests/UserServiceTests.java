@@ -1,6 +1,7 @@
 package ru.practicum.shareit.usersTests;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -40,6 +41,7 @@ public class UserServiceTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ServiceMVC Тест получения всех пользователей")
     void getUsers() {
         User user1 = createUser();
         User user2 = createUserTwo();
@@ -54,6 +56,7 @@ public class UserServiceTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ServiceMVC Тест даобвления пользователя")
     void addNewUser() {
         UserDto expectedUserDto = createUserDto();
         User user1 = createUser();
@@ -64,6 +67,7 @@ public class UserServiceTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ServiceMVC Тест редактирование данных пользователя")
     void updateUser() {
         User user = createUser();
         UserDto expectedUserDto = createUserDto();
@@ -76,6 +80,7 @@ public class UserServiceTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ServiceMVC Тест поиска пользователя")
     void findUserDtoById() {
         User user = createUser();
         UserDto expectedUserDto = createUserDto();
@@ -85,6 +90,7 @@ public class UserServiceTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ServiceMVC Тест удаления пользователя")
     void deleteUser() {
         User user = createUser();
         when(validator.validateAndReturnUserByUserId(anyLong())).thenReturn(user);

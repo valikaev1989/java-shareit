@@ -1,6 +1,7 @@
 package ru.practicum.shareit.commentTests;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
@@ -15,6 +16,7 @@ public class CommentDtoJsonTests extends StorageForTests {
     private JacksonTester<CommentDto> json;
 
     @Test
+    @DisplayName("Тест json CommentDto")
     void jsonCommentDto() throws Exception {
         CommentDto commentDto = createCommentDto();
         String created = commentDto.getCreated().toString();

@@ -1,6 +1,7 @@
 package ru.practicum.shareit.commentTests;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -42,6 +43,7 @@ public class CommentServiceTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ServiceMVC тест получения комментариев по ItemId")
     void getCommentsByItemId() {
         Item item = createItemNullRequest();
         Comment comment = createComment();
@@ -53,6 +55,7 @@ public class CommentServiceTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ServiceMVC тест создания комментаря для предмета")
     void addCommentForItem() {
         User user = createUserTwo();
         Item item = createItemNullRequest();

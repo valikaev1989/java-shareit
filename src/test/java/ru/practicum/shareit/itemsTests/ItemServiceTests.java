@@ -57,8 +57,8 @@ public class ItemServiceTests extends StorageForTests {
                 bookingMapper, mockCommentService, mockValidator);
     }
 
-    @DisplayName("qwe")
     @Test
+    @DisplayName("ServiceMVC Тест получения все предметов пользователя")
     void getAllUserItems() {
         User user = createUser();
         Item item1 = createItemWithRequest();
@@ -80,6 +80,7 @@ public class ItemServiceTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ServiceMVC Тест списка предметов по фрагменту текста в названии предмета")
     void findItemsByText() {
         Item item1 = createItemNullRequest();
         Item item2 = createItemNullRequest2();
@@ -96,6 +97,7 @@ public class ItemServiceTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ServiceMVC Тест добавления предмета")
     void addItem() {
         User user = createUser();
         Item item = createItemWithRequest();
@@ -110,6 +112,7 @@ public class ItemServiceTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ServiceMVC Тест получения предметов владельца со списком комментариев и бронирований")
     void findItemOwnerDtoById() {
         User user = createUser();
         User otherUser = createUserTwo();
@@ -143,6 +146,7 @@ public class ItemServiceTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ServiceMVC Тест редактирования предмета")
     void updateItem() {
         User user = createUser();
         Item item = createItemWithRequest();
@@ -165,6 +169,7 @@ public class ItemServiceTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ServiceMVC Тест удаления предмета")
     void deleteItemById() {
         User user = createUser();
         Item item = createItemWithRequest();

@@ -1,6 +1,7 @@
 package ru.practicum.shareit.commentTests;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +22,7 @@ public class CommentMapperTests extends StorageForTests {
     private final CommentMapper commentMapper;
 
     @Test
+    @DisplayName("Тест маппинга в CommentDto")
     void toCommentDto() {
         Comment comment = createComment();
         CommentDto expectedCommentDto = createCommentDto2();
@@ -30,6 +32,7 @@ public class CommentMapperTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Тест маппинга в Comment")
     void toComment() {
         CommentDto commentDto = createCommentDto2();
         User author = createUserTwo();
@@ -40,6 +43,7 @@ public class CommentMapperTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Тест маппинга в список с CommentDto")
     void toCommentDtoList() {
         Comment comment = createComment();
         List<CommentDto> expectedCommentDtoList = List.of(createCommentDto2());

@@ -1,6 +1,7 @@
 package ru.practicum.shareit.bookingTests;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,7 +47,8 @@ public class BookingIntegrationTests extends StorageForTests {
     }
 
     @Test
-    void getAllBookingsFromUser() {
+    @DisplayName("Интеграционный Тест получения всех букингов пользователя предмета")
+    void getAllBookingsFromUserId() {
         UserDto owner = userService.addNewUser(user1);
         UserDto booker = userService.addNewUser(user2);
         itemService.addItem(owner.getId(), item1);
@@ -63,7 +65,8 @@ public class BookingIntegrationTests extends StorageForTests {
     }
 
     @Test
-    void getBookingByIdOwner() {
+    @DisplayName("Интеграционный Тест получения всех букингов владельца предмета")
+    void getAllBookingsByOwnerId() {
         UserDto owner = userService.addNewUser(user1);
         UserDto booker = userService.addNewUser(user2);
         itemService.addItem(owner.getId(), item1);
@@ -80,6 +83,7 @@ public class BookingIntegrationTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Интеграционный Тест создания букинга предмета")
     void addBooking() {
         UserDto owner = userService.addNewUser(user1);
         UserDto booker = userService.addNewUser(user2);
@@ -93,6 +97,7 @@ public class BookingIntegrationTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Интеграционный Тест смены статуса букинга предмета")
     void updateStatusBooking() {
         UserDto owner = userService.addNewUser(user1);
         UserDto booker = userService.addNewUser(user2);
@@ -104,6 +109,7 @@ public class BookingIntegrationTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Интеграционный Тест получения букинга предмета")
     void getBookingById() {
         UserDto owner = userService.addNewUser(user1);
         UserDto booker = userService.addNewUser(user2);

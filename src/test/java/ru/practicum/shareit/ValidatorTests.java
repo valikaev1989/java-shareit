@@ -1,6 +1,7 @@
 package ru.practicum.shareit;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,6 +40,7 @@ public class ValidatorTests extends StorageForTests {
     private final ItemRequestRepository itemRequestRepository;
 
     @Test
+    @DisplayName("Validator Тест проверки наличие в БД пользователя")
     void validateAndReturnUserByUserId() {
         assertThrows(UserNotFoundException.class, () -> validator.validateAndReturnUserByUserId(1L));
         User user = createUserWithoutId();
@@ -47,6 +49,7 @@ public class ValidatorTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Validator Тест проверки данных пользователя")
     void validateUserDTO() {
         UserDto dto1 = new UserDto();
         dto1.setName("");
@@ -70,6 +73,7 @@ public class ValidatorTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Validator Тест владения пользователем предмета")
     void validateOwnerFromItem() {
         User owner = createUserWithoutId();
         userRepository.save(owner);
@@ -81,6 +85,7 @@ public class ValidatorTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Validator Тест проверки данных предмета")
     void validateItemAll() {
         ItemDto itemDto1 = new ItemDto();
         itemDto1.setName("");
@@ -106,6 +111,7 @@ public class ValidatorTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Validator Тест наличия в БД предмета")
     void validateAndReturnItemByItemId() {
         assertThrows(ItemNotFoundException.class, () -> validator.validateAndReturnItemByItemId(1L));
         User owner = createUserWithoutId();
@@ -116,6 +122,7 @@ public class ValidatorTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Validator Тест проверок для метода добавления букинга")
     void validateForAddBooking() {
         User owner = createUserWithoutId();
         userRepository.save(owner);
@@ -151,6 +158,7 @@ public class ValidatorTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Validator Тест проверок для получений букинга")
     void validateForGetBooking() {
         User owner = createUserWithoutId();
         userRepository.save(owner);
@@ -170,6 +178,7 @@ public class ValidatorTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Validator Тест проверок для редактирования букинга")
     void validateForUpdateBooking() {
         User owner = createUserWithoutId();
         userRepository.save(owner);
@@ -196,6 +205,7 @@ public class ValidatorTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Validator Тест проверок для создания комментария")
     void validateBookingForComment() {
         User owner = createUserTwoWithoutId();
         userRepository.save(owner);
@@ -217,6 +227,7 @@ public class ValidatorTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Validator Тест проверок описания запроса о предмете")
     void validateItemRequestDesc() {
         ItemRequestDto itemRequestDto = createRequestDto();
         itemRequestDto.setDescription("");
@@ -225,6 +236,7 @@ public class ValidatorTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Validator Тест проверки наличия в БД запроса о предмете")
     void validateAndReturnItemRequestByRequestId() {
         assertThrows(ItemNotFoundException.class, () -> validator
                 .validateAndReturnItemRequestByRequestId(1L));
@@ -237,6 +249,7 @@ public class ValidatorTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Validator Тест корректности выдачи страниц результата")
     void validatePage() {
         assertThrows(ValidationException.class, () -> validator.validatePage(-1, 5));
         assertThrows(ValidationException.class, () -> validator.validatePage(1, 0));

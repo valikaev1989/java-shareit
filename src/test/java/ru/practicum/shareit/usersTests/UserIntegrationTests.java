@@ -2,6 +2,7 @@ package ru.practicum.shareit.usersTests;
 
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,19 +35,22 @@ class UserIntegrationTests extends StorageForTests {
     }
 
     @Test
-    void testGetAllUsers() {
+    @DisplayName("Интеграционный Тест получения всех пользователей")
+    void getAllUsers() {
         UserDto expectedUserDto1 = userController.addUser(user1);
         UserDto expectedUserDto2 = userController.addUser(user2);
         assertEquals(List.of(expectedUserDto1, expectedUserDto2), userController.getAllUsers());
     }
 
     @Test
-    void testCreateAndFindCorrectUser() {
+    @DisplayName("Интеграционный Тест добавления и получения предмета")
+    void addUserAndGetUserById() {
         UserDto expectedUserDto = userController.addUser(user1);
         assertEquals(expectedUserDto, userController.getUserById(expectedUserDto.getId()));
     }
 
     @Test
+    @DisplayName("Интеграционный Тест выдачи ошибки по схожему email'у")
     void testCreateUserWithExistingEmail() {
         user2.setEmail(user1.getEmail());
         userController.addUser(user1);
@@ -54,7 +58,8 @@ class UserIntegrationTests extends StorageForTests {
     }
 
     @Test
-    void testUpdateUserCorrect() {
+    @DisplayName("Интеграционный Тест редактирования данных пользователя")
+    void updateUser() {
         UserDto userDto = userController.addUser(user1);
         userController.updateUser(user2, userDto.getId());
         assertEquals(user2.getName(), userController.getUserById(userDto.getId()).getName());
@@ -62,7 +67,8 @@ class UserIntegrationTests extends StorageForTests {
     }
 
     @Test
-    void testDeleteUser() {
+    @DisplayName("Интеграционный Тест удаления пользователя")
+    void deleteUserById() {
         UserDto user = userController.addUser(user1);
         UserDto user1 = userController.addUser(user2);
         userController.deleteUserById(user1.getId());

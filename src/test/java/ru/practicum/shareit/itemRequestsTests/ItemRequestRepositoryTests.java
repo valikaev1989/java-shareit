@@ -1,6 +1,7 @@
 package ru.practicum.shareit.itemRequestsTests;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -22,6 +23,7 @@ public class ItemRequestRepositoryTests extends StorageForTests {
     private final ItemRequestRepository itemRequestRepository;
 
     @Test
+    @DisplayName("DataJpaTest получения списка запросов предметов пользователя")
     void findAllByRequesterId() {
         User user = createUserWithoutId();
         entityManager.persist(user);
@@ -36,6 +38,7 @@ public class ItemRequestRepositoryTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("DataJpaTest получения списка запросов предмета без запросов пользователя")
     void findAllByRequesterIdIsNot() {
         User user = createUserWithoutId();
         entityManager.persist(user);

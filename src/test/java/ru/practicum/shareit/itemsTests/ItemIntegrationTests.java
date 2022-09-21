@@ -1,6 +1,7 @@
 package ru.practicum.shareit.itemsTests;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -43,23 +44,37 @@ public class ItemIntegrationTests extends StorageForTests {
     }
 
     @Test
-    void testCreateAndFindCorrectItem() {
+    @DisplayName("Интеграционный Тест добавления предмета и получения из базы данных")
+    void addNewItemAndFindItemById() {
         UserDto userDto = userService.addNewUser(user1);
         ItemDto itemDto = itemController.addNewItem(userDto.getId(), item1);
         assertEquals(itemDto.getId(), itemController.findItemById(itemDto.getId(), userDto.getId()).getId());
     }
 
     @Test
-    void testFindItemsByOwnerId() {
+    @DisplayName("Интеграционный Тест редактирования данных предмета")
+    void updateItem() {
+        UserDto userDto = userService.addNewUser(user1);
+        ItemDto itemDto = itemController.addNewItem(userDto.getId(), item1);
+        itemDto.setName(item2.getName());
+        itemDto.setDescription(item2.getDescription());
+        ItemDto actualItemDto = itemController.updateItem(userDto.getId(), itemDto, itemDto.getId());
+        assertEquals(item2.getName(), actualItemDto.getName());
+        assertEquals(item2.getDescription(), actualItemDto.getDescription());
+    }
+
+    @Test
+    @DisplayName("Интеграционный Тест получения всех предметов пользователя")
+    void findAllByUserId() {
         UserDto userDto = userService.addNewUser(user1);
         itemController.addNewItem(userDto.getId(), item1);
         itemController.addNewItem(userDto.getId(), item2);
-        System.out.println(itemController.findAllByUserId(userDto.getId(), 0, 5));
         assertEquals(2, itemController.findAllByUserId(userDto.getId(), 0, 5).size());
     }
 
     @Test
-    void testDeleteItemByOwner() {
+    @DisplayName("Интеграционный Тест удаления предмета")
+    void deleteItem() {
         UserDto userDto = userService.addNewUser(user1);
         ItemDto expectedItem = itemController.addNewItem(userDto.getId(), item1);
         ItemDto itemDto2 = itemController.addNewItem(userDto.getId(), item2);
@@ -70,7 +85,8 @@ public class ItemIntegrationTests extends StorageForTests {
     }
 
     @Test
-    void testSearchItemByDescription() {
+    @DisplayName("Интеграционный Тест поиска предмета по фрагменту текста")
+    void findItemByText() {
         UserDto userDto = userService.addNewUser(user1);
         item1.setName("roBOcoP");
         ItemDto itemDto = itemController.addNewItem(userDto.getId(), item1);
@@ -78,7 +94,8 @@ public class ItemIntegrationTests extends StorageForTests {
     }
 
     @Test
-    void testAddComment() throws InterruptedException {
+    @DisplayName("Интеграционный Тест добавления комментария к предмету")
+    void addComment() throws InterruptedException {
         UserDto owner = userService.addNewUser(user1);
         UserDto booker = userService.addNewUser(user2);
         ItemDto item = itemController.addNewItem(owner.getId(), item1);

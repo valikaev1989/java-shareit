@@ -1,6 +1,7 @@
 package ru.practicum.shareit.itemsTests;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,6 +37,7 @@ public class ItemMapperTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Тест маппинга в ItemDto")
     void toItemDto() {
         Item item = createItemNullRequest();
         ItemDto expectedItemDto = createItemDtoNullRequest();
@@ -48,6 +50,7 @@ public class ItemMapperTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Тест маппинга в ItemOwnerDto")
     void toItemOwnerDto() {
         Item item = createItemNullRequest();
         Comment comment = createComment();
@@ -63,6 +66,7 @@ public class ItemMapperTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Тест маппинга в список с ItemDto")
     void toItemDtoList() {
         List<ItemDto> expectedItemDtoList = List.of(createItemDtoNullRequest());
         List<ItemDto> actualItemDtoList = itemMapper.toItemDtoList(List.of(createItemNullRequest()));

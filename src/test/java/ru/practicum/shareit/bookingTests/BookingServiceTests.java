@@ -255,6 +255,7 @@ public class BookingServiceTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ServiceMVC Тест смены статуса букинга предмета")
     void updateStatusBooking() {
         User user = createUser();
         Booking booking = createBooking2();
@@ -267,7 +268,11 @@ public class BookingServiceTests extends StorageForTests {
                 .updateStatusBooking(user.getId(), booking.getId(), true);
         assertEquals(expectedBookingDto, actualBookingDto);
     }
-
+    /**
+     * Шаблон получения списка букинга для пользователя и владельца предмета
+     *
+     * @param state фильтр поиска
+     */
     private List<BookingDto> getBookingList(String state) {
         bookingPast.setStart(LocalDateTime.now().minusDays(10));
         bookingPast.setEnd(LocalDateTime.now().minusDays(5));

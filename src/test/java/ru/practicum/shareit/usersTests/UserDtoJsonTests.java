@@ -1,6 +1,7 @@
 package ru.practicum.shareit.usersTests;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
@@ -17,7 +18,8 @@ public class UserDtoJsonTests extends StorageForTests {
     private JacksonTester<UserDto> json;
 
     @Test
-    void testUserDto1() throws IOException {
+    @DisplayName("Тест json UserDto")
+    void testUserDto() throws IOException {
         UserDto userDto = createUserDto();
         JsonContent<UserDto> result = json.write(userDto);
         Assertions.assertThat(result).extractingJsonPathNumberValue("$.id")

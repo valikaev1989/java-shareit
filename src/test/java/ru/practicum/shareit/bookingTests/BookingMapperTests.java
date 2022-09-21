@@ -1,6 +1,7 @@
 package ru.practicum.shareit.bookingTests;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +22,7 @@ public class BookingMapperTests extends StorageForTests {
     private final BookingMapper bookingMapper;
 
     @Test
+    @DisplayName("Тест маппинга в Booking")
     void toBooking() {
         Booking expectedBooking = createBooking();
         Booking actualBooking = bookingMapper
@@ -31,6 +33,7 @@ public class BookingMapperTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Тест маппинга в BookingDto")
     void toBookingDto() {
         BookingDto expectedBookingDto = createBookingDto();
         BookingDto actualBookingDto = bookingMapper.toBookingDto(createBooking());
@@ -38,6 +41,7 @@ public class BookingMapperTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Тест маппинга в BookingDtoOnlyId")
     void toBookingDtoOnlyId() {
         BookingDtoOnlyId expectedBooking = createBookingDtoOnlyIdLast();
         BookingDtoOnlyId actualBooking = bookingMapper.toBookingDtoOnlyId(createBooking());
@@ -45,6 +49,7 @@ public class BookingMapperTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Тест маппинга в список с BookingDto")
     void toBookingDtoList() {
         List<BookingDto> expectedBookingDtoList = List.of(createBookingDto());
         List<BookingDto> actualBookingDtoList = bookingMapper.toBookingDtoList(List.of(createBooking()));

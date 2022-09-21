@@ -1,6 +1,7 @@
 package ru.practicum.shareit.usersTests;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +20,7 @@ class UserMapperTests extends StorageForTests {
     private final UserMapper userMapper;
 
     @Test
+    @DisplayName("Тест маппинга в User")
     void toUser() {
         User userEntity = userMapper.toUser(createUserDto());
         userEntity.setId(1);
@@ -26,12 +28,14 @@ class UserMapperTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Тест маппинга в UserDto")
     void toUserDto() {
         UserDto expectedUserDto = userMapper.toUserDto(createUser());
         assertEquals(expectedUserDto.toString(), createUserDto().toString());
     }
 
     @Test
+    @DisplayName("Тест маппинга в список с UserDto")
     void toUserDtoList() {
         List<UserDto> userDtoList = userMapper.toUserDtoList(List.of(createUser()));
         assertEquals(userDtoList.size(), List.of(createUser()).size());

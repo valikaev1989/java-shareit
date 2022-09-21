@@ -1,6 +1,7 @@
 package ru.practicum.shareit.commentTests;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -22,6 +23,7 @@ public class CommentRepositoryTests extends StorageForTests {
     private final CommentRepository commentRepository;
 
     @Test
+    @DisplayName("DataJpaTest получения всех комментариев о предмете")
     void getAllCommentByItemId() {
         User user = createUserWithoutId();
         entityManager.persist(user);

@@ -1,6 +1,7 @@
 package ru.practicum.shareit.itemsTests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ class ItemControllerTests extends StorageForTests {
     private static final String HEADER = "X-Sharer-User-Id";
 
     @Test
+    @DisplayName("ControllerMVC Тест получения всех предметов пользователя")
     void findAllByUserId() throws Exception {
         ItemOwnerDto itemOwnerDto = createItemOwnerDto();
         when(itemService.getAllUserItems(anyLong(), anyInt(), anyInt()))
@@ -67,6 +69,7 @@ class ItemControllerTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ControllerMVC Тест поиска предмета по фрагменту текста в названии предмета")
     void findItemByText() throws Exception {
         ItemDto itemDto = createItemDtoNullRequest();
         when(itemService.findItemsByText(anyString(), anyInt(), anyInt()))
@@ -86,6 +89,7 @@ class ItemControllerTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ControllerMVC Тест добавления предмета")
     void addNewItem() throws Exception {
         ItemDto enterDto = createItemDtoNullRequestAndId();
         ItemDto exitDto = createItemDtoNullRequest();
@@ -106,6 +110,7 @@ class ItemControllerTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ControllerMVC Тест обновления предмета")
     void updateItem() throws Exception {
         ItemDto itemDto = createItemDtoNullRequest();
         when(itemService.updateItem(anyLong(), anyLong(), any(ItemDto.class)))
@@ -125,6 +130,7 @@ class ItemControllerTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ControllerMVC получение предмета по идентификатору предмета")
     void findById() throws Exception {
         ItemOwnerDto itemOwnerDto = createItemOwnerDto();
         when(itemService.findItemOwnerDtoById(anyLong(), anyLong()))
@@ -144,6 +150,7 @@ class ItemControllerTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ControllerMVC Тест удаление предмета")
     void deleteItem() throws Exception {
         ItemDto itemDto = createItemDtoNullRequest();
         doNothing().when(itemService).deleteItemById(anyLong(), anyLong());
@@ -154,6 +161,7 @@ class ItemControllerTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ControllerMVC Тест добавления комментария к предмету")
     void addComment() throws Exception {
         ItemDto itemDto = createItemDtoNullRequest();
         CommentDto commentDto = createCommentDto();
@@ -174,6 +182,7 @@ class ItemControllerTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ControllerMVC Тест выдачи ошибки при обновлении предмета по неверному ItemId")
     void updateItemTestWithIncorrectId() throws Exception {
         ItemDto itemDto = createItemDtoNullRequest();
         Mockito.when(itemService.updateItem(anyLong(), anyLong(), any(ItemDto.class)))

@@ -1,6 +1,7 @@
 package ru.practicum.shareit.itemsTests;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
@@ -20,6 +21,7 @@ public class ItemDtoJsonTests extends StorageForTests {
     private JacksonTester<ItemOwnerDto> json2;
 
     @Test
+    @DisplayName("Тест json ItemDto")
     void jsonItemDto() throws Exception {
         ItemDto itemDto = createItemDtoWithRequestId();
         JsonContent<ItemDto> result = json.write(itemDto);
@@ -40,7 +42,8 @@ public class ItemDtoJsonTests extends StorageForTests {
     }
 
     @Test
-    void jsonItemOwnerDto1() throws Exception {
+    @DisplayName("Тест json ItemOwnerDto")
+    void jsonItemOwnerDto() throws Exception {
         ItemOwnerDto itemOwnerDto = createItemOwnerDto();
         itemOwnerDto.setLastBooking(null);
         itemOwnerDto.setNextBooking(null);

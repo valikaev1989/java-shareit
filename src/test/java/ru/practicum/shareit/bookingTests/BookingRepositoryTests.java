@@ -1,6 +1,7 @@
 package ru.practicum.shareit.bookingTests;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -34,6 +35,7 @@ public class BookingRepositoryTests extends StorageForTests {
             .of(0 / 20, 20, Sort.by(Sort.Direction.DESC, "end"));
 
     @Test
+    @DisplayName("DataJpaTest получения всех букингов пользователя")
     void allBookingByBooker() {
         List<Booking> expectedAllBookings = getBookingList("ALL");
         List<Booking> actualAllBookings = bookingRepository.findAllByBookerId(user2.getId(), pageable);
@@ -41,6 +43,7 @@ public class BookingRepositoryTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("DataJpaTest получения текущих букингов пользователя")
     void currentBookingByBooker() {
         List<Booking> expectedCurrentBookings = getBookingList("CURRENT");
         List<Booking> actualCurrentBookings = bookingRepository
@@ -49,6 +52,7 @@ public class BookingRepositoryTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("DataJpaTest получения прошлых букингов пользователя")
     void pastBookingByBooker() {
         List<Booking> expectedPastBookings = getBookingList("PAST");
         List<Booking> actualPastBookings = bookingRepository
@@ -57,6 +61,7 @@ public class BookingRepositoryTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("DataJpaTest получения будущих букингов пользователя")
     void futureBookingByBooker() {
         List<Booking> expectedFutureBookings = getBookingList("FUTURE");
         List<Booking> actualFutureBookings = bookingRepository
@@ -65,6 +70,7 @@ public class BookingRepositoryTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("DataJpaTest получения ожидающих букингов пользователя")
     void waitingBookingByBooker() {
         List<Booking> expectedWaitingBookings = getBookingList("WAITING");
         List<Booking> actualWaitingBookings = bookingRepository
@@ -73,6 +79,7 @@ public class BookingRepositoryTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("DataJpaTest получения отмененных букингов пользователя")
     void rejectedBookingByBooker() {
         List<Booking> expectedRejectedBookings = getBookingList("REJECTED");
         List<Booking> actualRejectedBookings = bookingRepository
@@ -81,6 +88,7 @@ public class BookingRepositoryTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("DataJpaTest получения всех букингов владельца")
     void allBookingByOwner() {
         List<Booking> expectedAllBookings = getBookingList("ALL");
         List<Booking> actualAllBookings = bookingRepository.findAllByItemOwnerId(user1.getId(), pageable);
@@ -88,6 +96,7 @@ public class BookingRepositoryTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("DataJpaTest получения текущих букингов владельца")
     void currentBookingByOwner() {
         List<Booking> expectedCurrentBookings = getBookingList("CURRENT");
         List<Booking> actualCurrentBookings = bookingRepository
@@ -96,6 +105,7 @@ public class BookingRepositoryTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("DataJpaTest получения прошедших букингов владельца")
     void pastBookingByOwner() {
         List<Booking> expectedPastBookings = getBookingList("PAST");
         List<Booking> actualPastBookings = bookingRepository
@@ -104,6 +114,7 @@ public class BookingRepositoryTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("DataJpaTest получения будущих букингов владельца")
     void futureBookingByOwner() {
         List<Booking> expectedFutureBookings = getBookingList("FUTURE");
         List<Booking> actualFutureBookings = bookingRepository
@@ -112,6 +123,7 @@ public class BookingRepositoryTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("DataJpaTest получения ожидающих букингов владельца")
     void waitingBookingByOwner() {
         List<Booking> expectedWaitingBookings = getBookingList("WAITING");
         List<Booking> actualWaitingBookings = bookingRepository
@@ -120,6 +132,7 @@ public class BookingRepositoryTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("DataJpaTest получения отмененных букингов владельца")
     void rejectedBookingByOwner() {
         List<Booking> expectedRejectedBookings = getBookingList("REJECTED");
         List<Booking> actualRejectedBookings = bookingRepository
@@ -128,6 +141,7 @@ public class BookingRepositoryTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("DataJpaTest получения последнего и следующего букинга")
     void getLastNextBooking() {
         User user1 = createUserWithoutId();
         entityManager.persist(user1);
@@ -167,6 +181,7 @@ public class BookingRepositoryTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("DataJpaTest проверки пользования предметом пользователем")
     void validateForTakeItem() {
         User user1 = createUserWithoutId();
         entityManager.persist(user1);
@@ -216,6 +231,11 @@ public class BookingRepositoryTests extends StorageForTests {
         assertEquals(expectedBooker, actualBooker);
     }
 
+    /**
+     * Шаблон получения списка букинга для пользователя и владельца предмета
+     *
+     * @param state фильтр поиска
+     */
     private List<Booking> getBookingList(String state) {
         entityManager.persist(user1);
         entityManager.persist(user2);

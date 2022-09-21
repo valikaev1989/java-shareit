@@ -1,6 +1,7 @@
 package ru.practicum.shareit.itemRequestsTests;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,6 +42,7 @@ public class ItemRequestIntegrationTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Интеграционный Тест получения запросов пользователя на предмет")
     void getOwnRequests() {
         UserDto userDto = userService.addNewUser(user1);
         UserDto userDto1 = userService.addNewUser(user2);
@@ -52,6 +54,7 @@ public class ItemRequestIntegrationTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Интеграционный Тест получения всех запросов")
     void getAllRequests() {
         UserDto userDto1 = userService.addNewUser(user1);
         UserDto userDto2 = userService.addNewUser(user2);
@@ -65,6 +68,7 @@ public class ItemRequestIntegrationTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Интеграционный Тест добавления запроса на предмет")
     void addNewItemRequest() {
         UserDto userDto = userService.addNewUser(user1);
         ItemRequestDto itemRequestDto = controller.addNewItemRequest(userDto.getId(), request);
@@ -72,6 +76,7 @@ public class ItemRequestIntegrationTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Интеграционный Тест получения запроса на предмет")
     void getRequest() {
         UserDto userDto = userService.addNewUser(user1);
         UserDto userDto1 = userService.addNewUser(user2);

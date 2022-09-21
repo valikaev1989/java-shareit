@@ -1,6 +1,7 @@
 package ru.practicum.shareit.itemRequestsTests;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -52,6 +53,7 @@ public class ItemRequestServiceTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ServiceMVC Тест получения запросов пользователя со списком предметов")
     void getOwnRequests() {
         User user = createUser();
         Item item = createItemWithRequest();
@@ -70,6 +72,7 @@ public class ItemRequestServiceTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ServiceMVC Тест получения всех запросов со списком предметов")
     void getAllRequests() {
         User user = createUser();
         ItemRequest itemRequest = createRequest();
@@ -89,6 +92,7 @@ public class ItemRequestServiceTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ServiceMVC тест добавления запроса на предмет")
     void addItemRequest() {
         User user = createUser();
         ItemRequest itemRequest = createRequest();
@@ -103,6 +107,7 @@ public class ItemRequestServiceTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ServiceMVC Тест получения запроса предмета")
     void getRequest() {
         User user = createUser();
         ItemRequest itemRequest = createRequest();

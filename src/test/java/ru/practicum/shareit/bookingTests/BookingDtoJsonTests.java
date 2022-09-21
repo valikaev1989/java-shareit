@@ -1,6 +1,7 @@
 package ru.practicum.shareit.bookingTests;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
@@ -20,6 +21,7 @@ public class BookingDtoJsonTests extends StorageForTests {
     private JacksonTester<BookingDtoOnlyId> json2;
 
     @Test
+    @DisplayName("Тест json BookingDto")
     void jsonBookingDto() throws IOException {
         BookingDto bookingDto = createBookingDto();
         bookingDto.setBooker(null);
@@ -40,7 +42,8 @@ public class BookingDtoJsonTests extends StorageForTests {
     }
 
     @Test
-    void jsonBookingDtoOnlyId1() throws Exception {
+    @DisplayName("Тест json BookingDtoOnlyId")
+    void jsonBookingDtoOnlyId() throws Exception {
         BookingDtoOnlyId bookingDtoOnlyId = createBookingDtoOnlyIdLast();
         JsonContent<BookingDtoOnlyId> result = json2.write(bookingDtoOnlyId);
         Assertions.assertThat(result).extractingJsonPathNumberValue("$.id")
