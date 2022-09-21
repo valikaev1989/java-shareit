@@ -30,12 +30,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ItemRequestControllerTests extends StorageForTests {
     private static final String HEADER = "X-Sharer-User-Id";
     @MockBean
-    ItemRequestService itemRequestService;
+    private ItemRequestService itemRequestService;
     @Autowired
-    ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
-    MockMvc mvc;
+    private MockMvc mvc;
 
     @Test
     @DisplayName("ControllerMVC Тест получения всех запросов")

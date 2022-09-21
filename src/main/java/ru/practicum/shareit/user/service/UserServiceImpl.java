@@ -55,7 +55,8 @@ public class UserServiceImpl implements UserService {
             user.setEmail(userDto.getEmail());
         }
         userRepository.save(user);
-        return userMapper.toUserDto(user);
+        User actualUser = validator.validateAndReturnUserByUserId(userId);
+        return userMapper.toUserDto(actualUser);
     }
 
     /**

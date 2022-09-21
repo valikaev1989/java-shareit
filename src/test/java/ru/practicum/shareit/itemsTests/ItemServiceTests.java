@@ -97,6 +97,13 @@ public class ItemServiceTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("ServiceMVC Тест списка предметов по пустому тексту в названии предмета")
+    void findItemsByText2() {
+        List<ItemDto> actualEmptyList = mockItemService.findItemsByText("", 0, 5);
+        assertEquals(List.of(), actualEmptyList);
+    }
+
+    @Test
     @DisplayName("ServiceMVC Тест добавления предмета")
     void addItem() {
         User user = createUser();
@@ -107,15 +114,12 @@ public class ItemServiceTests extends StorageForTests {
         when(mockItemRepository.save(any(Item.class))).thenReturn(item);
         ItemDto actualItemDto = mockItemService.addItem(user.getId(), itemDto);
         assertEquals(expectedItemDto, actualItemDto);
-        System.out.println(actualItemDto);
-        System.out.println(expectedItemDto);
     }
 
     @Test
     @DisplayName("ServiceMVC Тест получения предметов владельца со списком комментариев и бронирований")
-    void findItemOwnerDtoById() {
+    void findItemOwnerDtoById1() {
         User user = createUser();
-        User otherUser = createUserTwo();
         Item item = createItemWithRequest();
         Booking lastBooking = createLastBooking();
         Booking nextBooking = createNextBooking();
@@ -131,22 +135,30 @@ public class ItemServiceTests extends StorageForTests {
         when(mockCommentService.getCommentsByItemId(item.getId())).thenReturn(List.of(commentDto));
         ItemOwnerDto actualItemOwnerDto = mockItemService.findItemOwnerDtoById(user.getId(), item.getId());
         assertEquals(expectedItemOwnerDto, actualItemOwnerDto);
-        System.out.println(expectedItemOwnerDto);
-        System.out.println(actualItemOwnerDto);
+    }
+
+    @Test
+    @DisplayName("ServiceMVC Тест получения предметов пользователем со списком комментариев и бронирований")
+    void findItemOwnerDtoById2() {
+        User otherUser = createUserTwo();
+        Item item = createItemWithRequest();
+        CommentDto commentDto = createCommentDto2();
+        ItemOwnerDto expectedItemOwnerDto = createItemOwnerDto();
         expectedItemOwnerDto.setLastBooking(null);
         expectedItemOwnerDto.setNextBooking(null);
-        when(mockBookingRepository.findFirstByItemOrderByStartAsc(any(Item.class))).thenReturn(null);
-        when(mockBookingRepository.findFirstByItemOrderByEndDesc(any(Item.class))).thenReturn(null);
-        ItemOwnerDto itemOwnerDtoWithNullBooking = mockItemService.findItemOwnerDtoById(user.getId(), item.getId());
-        assertEquals(expectedItemOwnerDto, itemOwnerDtoWithNullBooking);
 
         when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(otherUser);
+        when(mockValidator.validateAndReturnItemByItemId(anyLong())).thenReturn(item);
+        when(mockBookingRepository.findFirstByItemOrderByStartAsc(any(Item.class))).thenReturn(null);
+        when(mockBookingRepository.findFirstByItemOrderByEndDesc(any(Item.class))).thenReturn(null);
+        when(mockCommentService.getCommentsByItemId(item.getId())).thenReturn(List.of(commentDto));
+
         ItemOwnerDto itemOtherUserDto = mockItemService.findItemOwnerDtoById(otherUser.getId(), item.getId());
         assertEquals(expectedItemOwnerDto, itemOtherUserDto);
     }
 
     @Test
-    @DisplayName("ServiceMVC Тест редактирования предмета")
+    @DisplayName("ServiceMVC Тест редактирования названия предмета")
     void updateItem() {
         User user = createUser();
         Item item = createItemWithRequest();
@@ -158,10 +170,32 @@ public class ItemServiceTests extends StorageForTests {
 
         ItemDto actualItemDto1 = mockItemService.updateItem(user.getId(), item.getId(), itemDto);
         assertEquals(itemDto.getName(), actualItemDto1.getName());
+    }
+
+    @Test
+    @DisplayName("ServiceMVC Тест редактирования описания предмета")
+    void updateItem2() {
+        User user = createUser();
+        Item item = createItemWithRequest();
+        ItemDto itemDto = createItemDtoWithRequestId();
+        when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user);
+        when(mockValidator.validateAndReturnItemByItemId(anyLong())).thenReturn(item);
+        when(mockItemRepository.save(any(Item.class))).thenReturn(item);
 
         itemDto.setDescription("testDesc");
         ItemDto actualItemDto2 = mockItemService.updateItem(user.getId(), item.getId(), itemDto);
         assertEquals(itemDto.getName(), actualItemDto2.getName());
+    }
+
+    @Test
+    @DisplayName("ServiceMVC Тест редактирования подтверждения брони предмета")
+    void updateItem3() {
+        User user = createUser();
+        Item item = createItemWithRequest();
+        ItemDto itemDto = createItemDtoWithRequestId();
+        when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user);
+        when(mockValidator.validateAndReturnItemByItemId(anyLong())).thenReturn(item);
+        when(mockItemRepository.save(any(Item.class))).thenReturn(item);
 
         itemDto.setAvailable(false);
         ItemDto actualItemDto3 = mockItemService.updateItem(user.getId(), item.getId(), itemDto);

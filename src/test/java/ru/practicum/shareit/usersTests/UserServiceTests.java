@@ -33,7 +33,7 @@ public class UserServiceTests extends StorageForTests {
     private UserMapper userMapper;
     @Mock
     private Validator validator;
-    UserServiceImpl mockUserService;
+    private UserServiceImpl mockUserService;
 
     @BeforeEach
     void setUp() {

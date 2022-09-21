@@ -179,6 +179,14 @@ public class StorageForTests {
         return item;
     }
 
+    protected Item createItemWithoutId() {
+        Item item = new Item();
+        item.setName("NameItem");
+        item.setDescription("DescriptionItem");
+        item.setAvailable(true);
+        return item;
+    }
+
     protected Item createItemWithoutId2(User user) {
         Item item = new Item();
         item.setName("NameItem2");
@@ -323,7 +331,6 @@ public class StorageForTests {
         booking.setStatus(BookingStatus.WAITING);
         return booking;
     }
-
 
     protected Booking createBooking2() {
         Booking booking = new Booking();

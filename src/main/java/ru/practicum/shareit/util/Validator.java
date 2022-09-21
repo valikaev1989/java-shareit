@@ -110,26 +110,28 @@ public class Validator {
 
     public void validateForAddBooking(User user, Item item, BookingDtoOnlyId bookingDtoId) {
         if (user.getId() == item.getOwner().getId()) {
-            log.warn("Владелец не может арендовать у себя");
-            throw new ItemNotFoundException("Владелец не может арендовать у себя");
+            log.warn("Владелец предмета с id {} не может арендовать у себя предмет с id{}",
+                    user.getId(), item.getId());
+            throw new ItemNotFoundException(String.format("Владелец предмета с id '%d' не может " +
+                    "арендовать у себя предмет с id '%d'", user.getId(), item.getId()));
         }
         if (!item.getAvailable()) {
-            log.warn("Вешь занята");
-            throw new ValidationException("Вешь занята");
+            log.warn("предмет с id {} занят", item.getId());
+            throw new ValidationException(String.format("предмет с id '%d' занят", item.getId()));
         }
         LocalDateTime startTime = bookingDtoId.getStart();
         LocalDateTime endTime = bookingDtoId.getEnd();
         if (endTime.isBefore(LocalDateTime.now())) {
-            log.warn("Время окончания не корректно");
-            throw new ValidationException("Время окончания не корректно");
+            log.warn("Время окончания брони раньше текущего времени");
+            throw new ValidationException("Время окончания брони раньше текущего времени");
         }
         if (startTime.isAfter(endTime)) {
-            log.warn("Время окончания раньше начала");
-            throw new ValidationException("Время окончания раньше начала");
+            log.warn("Время окончания раньше начала брони");
+            throw new ValidationException("Время окончания раньше начала брони");
         }
         if (startTime.isBefore(LocalDateTime.now())) {
-            log.warn("Время начала не корректно");
-            throw new ValidationException("Время начала не корректно");
+            log.warn("Время начала брони раньше текущего времени");
+            throw new ValidationException("Время начала брони раньше текущего времени");
         }
     }
 
@@ -139,17 +141,20 @@ public class Validator {
         if (user.getId() == booking.getBooker().getId() || user.getId() == booking.getItem().getOwner().getId()) {
             return booking;
         } else {
-            log.warn("Вы не владелец или пользователь вещи");
-            throw new ItemNotFoundException("Вы не владелец или пользователь вещи");
+            log.warn("пользователь с id {} не владелец или пользователь вещи c id {}",
+                    user.getId(), booking.getItem().getId());
+            throw new ItemNotFoundException(String.format("пользователь с id '%d' не владелец или " +
+                    "пользователь вещи c id '%d'", user.getId(), booking.getItem().getId()));
         }
     }
 
-    public Booking validateForUpdateBooking(User owner, long bookingId, Boolean approved) {
+    public Booking validateForUpdateBooking(User user, long bookingId, Boolean approved) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() ->
                 new ItemNotFoundException(String.format("бронь предмета с bookingId '%d' не найдена!", bookingId)));
-        if (owner.getId() != booking.getItem().getOwner().getId()) {
-            log.warn("Вы не владелец вещи");
-            throw new ItemNotFoundException("Вы не владелец вещи");
+        if (user.getId() != booking.getItem().getOwner().getId()) {
+            log.warn("пользователь с id {} не владелец вещи c id {}", user.getId(), booking.getItem().getId());
+            throw new ItemNotFoundException(String.format("пользователь с id '%d' не владелец вещи c id '%d'",
+                    user.getId(), booking.getItem().getId()));
         }
         if (approved == null) {
             log.warn("Approved не может быть пустым");
@@ -174,8 +179,9 @@ public class Validator {
         List<Booking> bookingList = bookingRepository.validateForTakeItem(BookingStatus.REJECTED, booker,
                 item, LocalDateTime.now());
         if (bookingList.isEmpty()) {
-            log.warn("Вы не брали в аренду эту вещь");
-            throw new ValidationException("Вы не брали в аренду эту вещь");
+            log.warn("пользователь с id {} не арендовал предмет c id {}", booker.getId(), item.getId());
+            throw new ValidationException(String.format("пользователь с id '%d' не арендовал предмет c id '%d'",
+                    booker.getId(), item.getId()));
         }
     }
 
@@ -194,12 +200,12 @@ public class Validator {
 
     public void validatePage(int from, int size) {
         if (from < 0) {
-            log.warn("страниц выборки не должно быть меньше 0!");
-            throw new ValidationException("страниц выборки не должно быть меньше 0!");
+            log.warn("страниц выборки {} не должно быть меньше 0!", from);
+            throw new ValidationException(String.format("страниц выборки '%d' не должно быть меньше 0!", from));
         }
         if (size < 1) {
-            log.warn("размер выборки не должно быть меньше 1!");
-            throw new ValidationException("размер выборки не должно быть меньше 1!");
+            log.warn("размер выборки {} не должно быть меньше 1!", size);
+            throw new ValidationException(String.format("размер выборки '%d' не должно быть меньше 1!", size));
         }
     }
 }

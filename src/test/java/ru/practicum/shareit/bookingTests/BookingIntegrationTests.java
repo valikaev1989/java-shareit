@@ -22,6 +22,7 @@ import ru.practicum.shareit.user.service.UserService;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 @Transactional
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -35,8 +36,8 @@ public class BookingIntegrationTests extends StorageForTests {
     private final UserDto user2 = createUserDtoTwoWithoutId();
     private final ItemDto item1 = createItemDtoNullRequestAndId();
     private final ItemDto item2 = createItemDtoNullRequestAndIdTwo();
-    BookingDtoOnlyId bookingDtoOnlyId1 = createBookingForComment();
-    BookingDtoOnlyId bookingDtoOnlyId2 = createBookingForComment();
+    private final BookingDtoOnlyId bookingDtoOnlyId1 = createBookingForComment();
+    private final BookingDtoOnlyId bookingDtoOnlyId2 = createBookingForComment();
 
     @Test
     void contextLoads() {
@@ -83,14 +84,22 @@ public class BookingIntegrationTests extends StorageForTests {
     }
 
     @Test
+    @DisplayName("Интеграционный Тест наличия в БД предмета брони создания букинга предмета")
+    void addBooking1() {
+        UserDto owner = userService.addNewUser(user1);
+       ItemNotFoundException ex= assertThrows(ItemNotFoundException.class, () -> bookingController
+                .addBooking(owner.getId(), bookingDtoOnlyId1));
+       assertEquals(String.format("предмет с id '%d' не найден в списке предметов!",
+               bookingDtoOnlyId1.getItemId()),ex.getMessage());
+    }
+    @Test
     @DisplayName("Интеграционный Тест создания букинга предмета")
-    void addBooking() {
+    void addBooking2() {
         UserDto owner = userService.addNewUser(user1);
         UserDto booker = userService.addNewUser(user2);
         ItemDto itemDto = itemService.addItem(owner.getId(), item1);
-        assertThrows(ItemNotFoundException.class, () -> bookingController
-                .addBooking(owner.getId(), bookingDtoOnlyId1));
         BookingDto actualBookingDto = bookingController.addBooking(booker.getId(), bookingDtoOnlyId1);
+
         assertEquals(booker.getId(), actualBookingDto.getBooker().getId());
         assertEquals(itemDto.getId(), actualBookingDto.getItem().getId());
         assertEquals(owner.getId(), actualBookingDto.getItem().getOwnerId());
