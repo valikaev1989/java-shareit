@@ -91,9 +91,6 @@ public class ItemServiceTests extends StorageForTests {
                 any(Pageable.class))).thenReturn(List.of(item1, item2));
         List<ItemDto> actualList = mockItemService.findItemsByText("item", 0, 5);
         assertEquals(expectedList, actualList);
-
-        List<ItemDto> actualEmptyList = mockItemService.findItemsByText("", 0, 5);
-        assertEquals(List.of(), actualEmptyList);
     }
 
     @Test
