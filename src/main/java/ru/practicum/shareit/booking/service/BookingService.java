@@ -10,12 +10,12 @@ public interface BookingService {
     /**
      * Получение списка всех бронирований пользователя
      */
-    List<BookingDto> getBookingsByBookerId(long userId, String state);
+    List<BookingDto> getBookingsByBookerId(long userId, String state, int from, int size);
 
     /**
      * Получние списка бронирования для всех предметов пользователя
      */
-    List<BookingDto> getBookingsByOwnerId(long userId, String state);
+    List<BookingDto> getBookingsByOwnerId(long userId, String state, int from, int size);
 
     /**
      * Добавление нового бронирования

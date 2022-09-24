@@ -9,12 +9,12 @@ public interface ItemService {
     /**
      * Получение списка предметов пользователя
      */
-    List<ItemOwnerDto> getAllUserItems(long userId);
+    List<ItemOwnerDto> getAllUserItems(long userId, int from, int size);
 
     /**
      * Поиск предмета по тексту
      */
-    List<ItemDto> findItemsByText(String text);
+    List<ItemDto> findItemsByText(String text, int from, int size);
 
     /**
      * Добавление предмета

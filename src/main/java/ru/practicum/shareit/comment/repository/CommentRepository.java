@@ -10,6 +10,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     /**
      * Получение списка отзывов предмета
+     *
      * @param itemId id предмета
      */
     @Query("select c from Comment c where c.item.id = ?1")

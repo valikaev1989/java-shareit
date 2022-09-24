@@ -1,13 +1,24 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+/**
+ * id — уникальный идентификатор вещи;
+ * name — краткое название;
+ * description — развёрнутое описание;
+ * available — статус о том, доступна или нет вещь для аренды;
+ * requestId - id ссылки на соответствующий запрос
+ */
 @Data
-@Builder(toBuilder = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class ItemDto {
-    private Long id;
+    private long id;
     private String name;
     private String description;
     private Boolean available;
+    private long ownerId;
+    private Long requestId;
 }

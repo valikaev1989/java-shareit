@@ -2,6 +2,9 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDtoOnlyId;
 import ru.practicum.shareit.booking.dto.BookingMapper;
@@ -17,8 +20,8 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.util.Validator;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,28 +38,33 @@ public class ItemServiceImpl implements ItemService {
      * Получение предметов пользователя
      *
      * @param userId id пользователя
+     * @param from   количество объектов на странице
+     * @param size   количество страниц
      */
     @Override
-    public List<ItemOwnerDto> getAllUserItems(long userId) {
-        List<Item> userItems = itemRepository.findByOwnerIdOrderById(userId);
-        List<ItemOwnerDto> result = new ArrayList<>();
-        for (Item item : userItems) {
-            result.add(findItemOwnerDtoById(userId, item.getId()));
-        }
-        return result;
+    public List<ItemOwnerDto> getAllUserItems(long userId, int from, int size) {
+        validator.validateAndReturnUserByUserId(userId);
+        validator.validatePage(from, size);
+        Pageable pageable = PageRequest.of(from, size, Sort.by("id").ascending());
+        List<Item> userItems = itemRepository.findByOwnerIdOrderById(userId, pageable);
+        return userItems.stream().map(item -> findItemOwnerDtoById(userId, item.getId())).collect(Collectors.toList());
     }
 
     /**
      * Поиск предмета по тексту в названии или описании
      *
      * @param text текст для поиска
+     * @param from количество объектов на странице
+     * @param size количество страниц
      */
     @Override
-    public List<ItemDto> findItemsByText(String text) {
+    public List<ItemDto> findItemsByText(String text, int from, int size) {
         if (text == null || text.isEmpty()) {
-            return new ArrayList<>();
+            return List.of();
         }
-        return itemMapper.toItemDto(itemRepository.searchItemByNameAndDesc(text, text));
+        validator.validatePage(from, size);
+        Pageable pageable = PageRequest.of(from, size, Sort.by("id").ascending());
+        return itemMapper.toItemDtoList(itemRepository.searchItemByNameAndDesc(text, pageable));
     }
 
     /**
@@ -81,9 +89,10 @@ public class ItemServiceImpl implements ItemService {
      */
     @Override
     public ItemOwnerDto findItemOwnerDtoById(long userId, long itemId) {
+        User user = validator.validateAndReturnUserByUserId(userId);
         Item item = validator.validateAndReturnItemByItemId(itemId);
-        Booking lastBooking = bookingRepository.findFirstByItemOrderByEndDesc(item);
-        Booking nextBooking = bookingRepository.findFirstByItemOrderByStartAsc(item);
+        Booking lastBooking = bookingRepository.findFirstByItemOrderByStartAsc(item);
+        Booking nextBooking = bookingRepository.findFirstByItemOrderByEndDesc(item);
         BookingDtoOnlyId lastBookingDto = null;
         BookingDtoOnlyId nextBookingDto = null;
         if (lastBooking != null) {
@@ -93,8 +102,8 @@ public class ItemServiceImpl implements ItemService {
             nextBookingDto = bookingMapper.toBookingDtoOnlyId(nextBooking);
         }
         List<CommentDto> comments = commentService.getCommentsByItemId(itemId);
-        if (userId == item.getOwner().getId()) {
-            return itemMapper.toItemOwnerDto(item, comments, nextBookingDto, lastBookingDto);
+        if (user.getId() == (item.getOwner().getId())) {
+            return itemMapper.toItemOwnerDto(item, comments, lastBookingDto, nextBookingDto);
         }
         return itemMapper.toItemOwnerDto(item, comments, null, null);
     }

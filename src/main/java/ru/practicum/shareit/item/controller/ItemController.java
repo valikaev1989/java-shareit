@@ -28,16 +28,25 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemOwnerDto> findAllByUserId(@RequestHeader(HEADER) long userId) {
+    public List<ItemOwnerDto> findAllByUserId(
+            @RequestHeader(HEADER) long userId,
+            @RequestParam(value = "from", required = false, defaultValue = "0") int from,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
         log.info("Get items by user id = {}", userId);
-        return itemService.getAllUserItems(userId);
+        log.info("With from = {} and size = {}", from, size);
+        return itemService.getAllUserItems(userId, from, size);
     }
 
     @GetMapping("/search")
-    public List<ItemDto> findItemByText(@RequestParam(value = "text") String text) {
+    public List<ItemDto> findItemByText(
+            @RequestParam(value = "text") String text,
+            @RequestParam(value = "from", required = false, defaultValue = "0") int from,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
         log.info("search items by text = {} in name and description", text);
-        return itemService.findItemsByText(text);
+        log.info("With from = {} and size = {}", from, size);
+        return itemService.findItemsByText(text, from, size);
     }
+
 
     @PostMapping
     public ItemDto addNewItem(@RequestHeader(HEADER) long userId, @RequestBody ItemDto itemDto) {
@@ -55,9 +64,7 @@ public class ItemController {
     @GetMapping("/{itemId}")
     public ItemOwnerDto findItemById(@RequestHeader(HEADER) long userId, @PathVariable long itemId) {
         log.info("Get itemId = {}, with userId = {}", itemId, userId);
-        ItemOwnerDto itemOwnerDto = itemService.findItemOwnerDtoById(userId, itemId);
-        log.info("ItemController.findItemById return itemOwnerDto{}", itemOwnerDto);
-        return itemOwnerDto;
+        return itemService.findItemOwnerDtoById(userId, itemId);
     }
 
     @DeleteMapping("/{itemId}")

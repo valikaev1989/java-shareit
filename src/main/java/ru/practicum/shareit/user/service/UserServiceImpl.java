@@ -1,7 +1,7 @@
 package ru.practicum.shareit.user.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
@@ -13,24 +13,18 @@ import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final Validator validator;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, Validator validator) {
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
-        this.validator = validator;
-    }
 
     /**
      * Получение списка пользователей
      */
     @Override
     public List<UserDto> getUsers() {
-        return userMapper.toUserDto(userRepository.findAll());
+        return userMapper.toUserDtoList(userRepository.findAll());
     }
 
     /**
@@ -61,7 +55,8 @@ public class UserServiceImpl implements UserService {
             user.setEmail(userDto.getEmail());
         }
         userRepository.save(user);
-        return userMapper.toUserDto(user);
+        User actualUser = validator.validateAndReturnUserByUserId(userId);
+        return userMapper.toUserDto(actualUser);
     }
 
     /**

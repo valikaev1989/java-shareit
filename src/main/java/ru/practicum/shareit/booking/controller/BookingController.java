@@ -23,17 +23,25 @@ public class BookingController {
     }
 
     @GetMapping
-    public List<BookingDto> getAllBookingsFromUser(@RequestHeader(HEADER) long userId,
-                                                   @RequestParam(defaultValue = "ALL") String state) {
+    public List<BookingDto> getAllBookingsFromUser(
+            @RequestHeader(HEADER) long userId,
+            @RequestParam(value = "state", required = false, defaultValue = "ALL") String state,
+            @RequestParam(value = "from", required = false, defaultValue = "0") int from,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
         log.info("UserBooker {} get own bookings state = {}", userId, state);
-        return bookingService.getBookingsByBookerId(userId, state);
+        log.info("With from = {} and size = {}", from, size);
+        return bookingService.getBookingsByBookerId(userId, state, from, size);
     }
 
     @GetMapping("/owner")
-    public List<BookingDto> getBookingByIdOwner(@RequestHeader(HEADER) long userId,
-                                                @RequestParam(defaultValue = "ALL") String state) {
+    public List<BookingDto> getBookingByIdOwner(
+            @RequestHeader(HEADER) long userId,
+            @RequestParam(value = "state", required = false, defaultValue = "ALL") String state,
+            @RequestParam(value = "from", required = false, defaultValue = "0") int from,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
         log.info("UserOwner {} get bookings for items state = {}", userId, state);
-        return bookingService.getBookingsByOwnerId(userId, state);
+        log.info("With from = {} and size = {}", from, size);
+        return bookingService.getBookingsByOwnerId(userId, state, from, size);
     }
 
     @PostMapping

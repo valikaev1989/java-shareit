@@ -9,9 +9,9 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -23,6 +23,16 @@ public class BookingMapper {
     public BookingMapper(UserMapper userMapper, ItemMapper itemMapper) {
         this.userMapper = userMapper;
         this.itemMapper = itemMapper;
+    }
+
+    public Booking newBooking(BookingDtoOnlyId bookingDto, User user, Item item, BookingStatus status) {
+        Booking booking = new Booking();
+        booking.setItem(item);
+        booking.setBooker(user);
+        booking.setStart(bookingDto.getStart());
+        booking.setEnd(bookingDto.getEnd());
+        booking.setStatus(status);
+        return booking;
     }
 
     public BookingDto toBookingDto(Booking booking) {
@@ -47,22 +57,7 @@ public class BookingMapper {
         return bookingDtoOnlyId;
     }
 
-    public Booking newBooking(BookingDtoOnlyId bookingDto, User user, Item item, BookingStatus status) {
-        Booking booking = new Booking();
-        booking.setItem(item);
-        booking.setBooker(user);
-        booking.setStart(bookingDto.getStart());
-        booking.setEnd(bookingDto.getEnd());
-        booking.setStatus(status);
-        return booking;
-
-    }
-
-    public List<BookingDto> toBookingDto(Collection<Booking> bookings) {
-        List<BookingDto> bookingDtoList = new ArrayList<>();
-        for (Booking booking : bookings) {
-            bookingDtoList.add(toBookingDto(booking));
-        }
-        return bookingDtoList;
+    public List<BookingDto> toBookingDtoList(Collection<Booking> bookings) {
+        return bookings.stream().map(this::toBookingDto).collect(Collectors.toList());
     }
 }
