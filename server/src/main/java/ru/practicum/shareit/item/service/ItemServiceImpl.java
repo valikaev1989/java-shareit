@@ -18,7 +18,7 @@ import ru.practicum.shareit.item.dto.ItemOwnerDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.util.Validator;
+import ru.practicum.shareit.util.ValidatorServer;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,7 +32,7 @@ public class ItemServiceImpl implements ItemService {
     private final BookingRepository bookingRepository;
     private final BookingMapper bookingMapper;
     private final CommentService commentService;
-    private final Validator validator;
+    private final ValidatorServer validator;
 
     /**
      * Получение предметов пользователя
@@ -44,7 +44,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemOwnerDto> getAllUserItems(long userId, int from, int size) {
         validator.validateAndReturnUserByUserId(userId);
-        validator.validatePage(from, size);
+//        validator.validatePage(from, size);
         Pageable pageable = PageRequest.of(from, size, Sort.by("id").ascending());
         List<Item> userItems = itemRepository.findByOwnerIdOrderById(userId, pageable);
         return userItems.stream().map(item -> findItemOwnerDtoById(userId, item.getId())).collect(Collectors.toList());
@@ -62,7 +62,7 @@ public class ItemServiceImpl implements ItemService {
         if (text == null || text.isEmpty()) {
             return List.of();
         }
-        validator.validatePage(from, size);
+//        validator.validatePage(from, size);
         Pageable pageable = PageRequest.of(from, size, Sort.by("id").ascending());
         return itemMapper.toItemDtoList(itemRepository.searchItemByNameAndDesc(text, pageable));
     }
@@ -75,7 +75,7 @@ public class ItemServiceImpl implements ItemService {
      */
     @Override
     public ItemDto addItem(long userId, ItemDto itemDto) {
-        validator.validateItemAll(itemDto);
+//        validator.validateItemAll(itemDto);
         User user = validator.validateAndReturnUserByUserId(userId);
         Item item = itemRepository.save(itemMapper.toItem(itemDto, user));
         return itemMapper.toItemDto(item);
@@ -121,11 +121,9 @@ public class ItemServiceImpl implements ItemService {
         validator.validateAndReturnUserByUserId(userId);
         validator.validateOwnerFromItem(userId, itemId);
         if (itemDto.getName() != null) {
-            validator.validateItemName(itemDto);
             item.setName(itemDto.getName());
         }
         if (itemDto.getDescription() != null) {
-            validator.validateItemDesc(itemDto);
             item.setDescription(itemDto.getDescription());
         }
         if (itemDto.getAvailable() != null) {

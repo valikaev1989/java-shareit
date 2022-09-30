@@ -9,7 +9,7 @@ import ru.practicum.shareit.comment.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.comment.repository.CommentRepository;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.util.Validator;
+import ru.practicum.shareit.util.ValidatorServer;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ import java.util.List;
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
-    private final Validator validator;
+    private final ValidatorServer validator;
 
     /**
      * Получение списка отзывов предмета

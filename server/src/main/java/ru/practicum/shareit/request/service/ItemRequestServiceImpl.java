@@ -16,7 +16,7 @@ import ru.practicum.shareit.request.dto.ItemRequestWithItemDto;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.util.Validator;
+import ru.practicum.shareit.util.ValidatorServer;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class ItemRequestServiceImpl implements ItemRequestService {
     private final ItemRequestRepository requestRepository;
     private final ItemRepository itemRepository;
-    private final Validator validator;
+    private final ValidatorServer validator;
     private final ItemRequestMapper itemRequestMapper;
     private final ItemMapper itemMapper;
 
@@ -54,7 +54,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public List<ItemRequestWithItemDto> getAllRequests(long userId, int from, int size) {
         validator.validateAndReturnUserByUserId(userId);
-        validator.validatePage(from, size);
+//        validator.validatePage(from, size);
         Pageable pageable = PageRequest.of(from, size, Sort.by("created").descending());
         List<ItemRequest> requests = requestRepository.findAllByRequesterIdIsNot(userId, pageable);
         return getListRequest(requests);
@@ -70,7 +70,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public ItemRequestDto addItemRequest(long userId, ItemRequestDto itemRequestDto) {
         User user = validator.validateAndReturnUserByUserId(userId);
-        validator.validateItemRequestDesc(itemRequestDto);
+//        validator.validateItemRequestDesc(itemRequestDto);
         return itemRequestMapper.toItemRequestDto(
                 requestRepository.save(itemRequestMapper.toItemRequest(user, itemRequestDto)));
     }

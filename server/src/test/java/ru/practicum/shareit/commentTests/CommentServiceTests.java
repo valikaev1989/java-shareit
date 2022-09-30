@@ -16,7 +16,7 @@ import ru.practicum.shareit.comment.repository.CommentRepository;
 import ru.practicum.shareit.comment.service.CommentServiceImpl;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.util.Validator;
+import ru.practicum.shareit.util.ValidatorServer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,7 +35,7 @@ public class CommentServiceTests extends StorageForTests {
     @Autowired
     private CommentMapper commentMapper;
     @Mock
-    private Validator mockValidator;
+    private ValidatorServer mockValidator;
 
     @BeforeEach
     void setUp() {

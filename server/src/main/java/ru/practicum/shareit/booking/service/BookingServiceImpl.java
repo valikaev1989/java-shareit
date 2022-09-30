@@ -15,7 +15,7 @@ import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.util.Validator;
+import ru.practicum.shareit.util.ValidatorServer;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import java.util.List;
 public class BookingServiceImpl implements BookingService {
     private final BookingMapper bookingMapper;
     private final BookingRepository bookingRepository;
-    private final Validator validator;
+    private final ValidatorServer validator;
 
     /**
      * Получение списка всех бронирований пользователя.
@@ -38,7 +38,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingDto> getBookingsByBookerId(long userId, String state, int from, int size) {
         validator.validateAndReturnUserByUserId(userId);
-        validator.validatePage(from, size);
+//        validator.validatePage(from, size);
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "end"));
         List<Booking> bookings = new ArrayList<>();
         switch (state) {
@@ -77,7 +77,7 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingDto> getBookingsByOwnerId(long ownerId, String state, int from, int size) {
         validator.validateAndReturnUserByUserId(ownerId);
         List<Booking> bookings = new ArrayList<>();
-        validator.validatePage(from, size);
+//        validator.validatePage(from, size);
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "end"));
         switch (state) {
             case ("ALL"):

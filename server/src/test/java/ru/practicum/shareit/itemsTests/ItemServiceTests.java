@@ -23,7 +23,7 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.util.Validator;
+import ru.practicum.shareit.util.ValidatorServer;
 
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class ItemServiceTests extends StorageForTests {
     @Mock
     private CommentService mockCommentService;
     @Mock
-    private Validator mockValidator;
+    private ValidatorServer mockValidator;
 
     @BeforeEach
     void setUp() {

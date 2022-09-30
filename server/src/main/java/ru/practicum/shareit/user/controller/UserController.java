@@ -29,8 +29,9 @@ public class UserController {
 
     @GetMapping
     public List<UserDto> getAllUsers() {
-        log.info("Total users = {}", userService.getUsers().size());
-        return userService.getUsers();
+        List<UserDto> userDtoList = userService.getUsers();
+        log.info("Total users = {}", userDtoList.size());
+        return userDtoList;
     }
 
     @GetMapping("/{userId}")

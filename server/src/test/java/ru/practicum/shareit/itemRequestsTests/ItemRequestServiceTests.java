@@ -21,7 +21,7 @@ import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.request.service.ItemRequestServiceImpl;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.util.Validator;
+import ru.practicum.shareit.util.ValidatorServer;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class ItemRequestServiceTests extends StorageForTests {
     @Mock
     private ItemRepository mockItemRepository;
     @Mock
-    private Validator mockValidator;
+    private ValidatorServer mockValidator;
     @Autowired
     private ItemRequestMapper itemRequestMapper;
     @Autowired

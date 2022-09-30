@@ -15,7 +15,7 @@ import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.service.UserServiceImpl;
-import ru.practicum.shareit.util.Validator;
+import ru.practicum.shareit.util.ValidatorServer;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class UserServiceTests extends StorageForTests {
     @Autowired
     private UserMapper userMapper;
     @Mock
-    private Validator validator;
+    private ValidatorServer validator;
     private UserServiceImpl mockUserService;
 
     @BeforeEach

@@ -20,7 +20,7 @@ import ru.practicum.shareit.booking.service.BookingServiceImpl;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.util.Validator;
+import ru.practicum.shareit.util.ValidatorServer;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,7 +38,7 @@ public class BookingServiceTests extends StorageForTests {
     @Mock
     private BookingRepository mockBookingRepository;
     @Mock
-    private Validator mockValidator;
+    private ValidatorServer mockValidator;
     private final User user1 = createUser();
     private final User user2 = createUserTwo();
     private final Item item1 = createItemNullRequest();
