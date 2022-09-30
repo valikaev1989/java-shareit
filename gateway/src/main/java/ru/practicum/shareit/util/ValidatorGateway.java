@@ -17,14 +17,15 @@ import java.time.LocalDateTime;
 public class ValidatorGateway {
 
     public void validateId(Long id) {
-        if (id < 0) {
-            log.warn("id меньше нуля");
-            throw new ValidationException("id меньше нуля");
-        }
         if (id == null) {
             log.warn("id =  null");
             throw new ValidationException("id =  null");
         }
+        if (id < 0) {
+            log.warn("id меньше нуля");
+            throw new ValidationException("id меньше нуля");
+        }
+
     }
 
     public void validateUserDTO(UserDto userDto) {
