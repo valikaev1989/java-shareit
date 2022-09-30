@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -14,6 +15,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -33,6 +35,7 @@ public class UserServiceImpl implements UserService {
      * @param userDto dto пользователя
      */
     @Override
+    @Transactional
     public UserDto addNewUser(UserDto userDto) {
         User user = userMapper.toUser(userDto);
         return userMapper.toUserDto(userRepository.save(user));
@@ -44,6 +47,7 @@ public class UserServiceImpl implements UserService {
      * @param userDto dto пользователя
      */
     @Override
+    @Transactional
     public UserDto updateUser(UserDto userDto, Long userId) {
         User user = validator.validateAndReturnUserByUserId(userId);
         if (userDto.getName() != null) {
@@ -75,6 +79,7 @@ public class UserServiceImpl implements UserService {
      * @param userId id пользователя
      */
     @Override
+    @Transactional
     public void deleteUser(Long userId) {
         validator.validateAndReturnUserByUserId(userId);
         userRepository.deleteById(userId);

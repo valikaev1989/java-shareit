@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDtoOnlyId;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ItemServiceImpl implements ItemService {
     private final ItemMapper itemMapper;
     private final ItemRepository itemRepository;
@@ -74,6 +76,7 @@ public class ItemServiceImpl implements ItemService {
      * @param itemDto dto предмета
      */
     @Override
+    @Transactional
     public ItemDto addItem(long userId, ItemDto itemDto) {
 //        validator.validateItemAll(itemDto);
         User user = validator.validateAndReturnUserByUserId(userId);
@@ -116,14 +119,17 @@ public class ItemServiceImpl implements ItemService {
      * @param itemDto dto предмета
      */
     @Override
+    @Transactional
     public ItemDto updateItem(long userId, long itemId, ItemDto itemDto) {
         Item item = validator.validateAndReturnItemByItemId(itemId);
         validator.validateAndReturnUserByUserId(userId);
         validator.validateOwnerFromItem(userId, itemId);
         if (itemDto.getName() != null) {
+            validator.validateItemName(itemDto);
             item.setName(itemDto.getName());
         }
         if (itemDto.getDescription() != null) {
+            validator.validateItemDesc(itemDto);
             item.setDescription(itemDto.getDescription());
         }
         if (itemDto.getAvailable() != null) {
@@ -139,6 +145,7 @@ public class ItemServiceImpl implements ItemService {
      * @param itemId id предмета
      */
     @Override
+    @Transactional
     public void deleteItemById(long userId, long itemId) {
         validator.validateAndReturnUserByUserId(userId);
         validator.validateAndReturnItemByItemId(itemId);

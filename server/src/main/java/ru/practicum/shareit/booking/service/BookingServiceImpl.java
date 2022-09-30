@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoOnlyId;
 import ru.practicum.shareit.booking.dto.BookingMapper;
@@ -24,6 +25,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BookingServiceImpl implements BookingService {
     private final BookingMapper bookingMapper;
     private final BookingRepository bookingRepository;
@@ -38,13 +40,9 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingDto> getBookingsByBookerId(long userId, String state, int from, int size) {
         validator.validateAndReturnUserByUserId(userId);
-//        validator.validatePage(from, size);
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "end"));
         List<Booking> bookings = new ArrayList<>();
         switch (state) {
-            case ("ALL"):
-                bookings.addAll(bookingRepository.findAllByBookerId(userId, pageable));
-                break;
             case ("CURRENT"):
                 bookings.addAll(bookingRepository.findCurrentBookingByBookerId(userId, LocalDateTime.now(), pageable));
                 break;
@@ -61,8 +59,7 @@ public class BookingServiceImpl implements BookingService {
                 bookings.addAll(bookingRepository.findByBookerIdAndStatus(userId, BookingStatus.REJECTED, pageable));
                 break;
             default:
-                log.warn("некорректный статус: {}", state);
-                throw new ValidationException("Unknown state: UNSUPPORTED_STATUS");
+                bookings.addAll(bookingRepository.findAllByBookerId(userId, pageable));
         }
         return bookingMapper.toBookingDtoList(bookings);
     }
@@ -77,12 +74,8 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingDto> getBookingsByOwnerId(long ownerId, String state, int from, int size) {
         validator.validateAndReturnUserByUserId(ownerId);
         List<Booking> bookings = new ArrayList<>();
-//        validator.validatePage(from, size);
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "end"));
         switch (state) {
-            case ("ALL"):
-                bookings.addAll(bookingRepository.findAllByItemOwnerId(ownerId, pageable));
-                break;
             case ("CURRENT"):
                 bookings.addAll(bookingRepository.findCurrentBookingByItemOwnerId(ownerId, LocalDateTime.now(), pageable));
                 break;
@@ -99,8 +92,7 @@ public class BookingServiceImpl implements BookingService {
                 bookings.addAll(bookingRepository.findBookingByOwnerIdAndStatus(ownerId, BookingStatus.REJECTED, pageable));
                 break;
             default:
-                log.warn("некорректный статус: {}", state);
-                throw new ValidationException("Unknown state: UNSUPPORTED_STATUS");
+                bookings.addAll(bookingRepository.findAllByItemOwnerId(ownerId, pageable));
         }
         return bookingMapper.toBookingDtoList(bookings);
     }
@@ -112,10 +104,11 @@ public class BookingServiceImpl implements BookingService {
      * @param bookingDto dto бронирования
      */
     @Override
+    @Transactional
     public BookingDto addBooking(long userId, BookingDtoOnlyId bookingDto) {
         User user = validator.validateAndReturnUserByUserId(userId);
         Item item = validator.validateAndReturnItemByItemId(bookingDto.getItemId());
-        validator.validateForAddBooking(user, item, bookingDto);
+        validator.validateForAddBooking(user, item);
         Booking booking = bookingMapper.newBooking(bookingDto, user, item, BookingStatus.WAITING);
         return bookingMapper.toBookingDto(bookingRepository.save(booking));
     }
@@ -140,9 +133,10 @@ public class BookingServiceImpl implements BookingService {
      * @param approved  подтверждение бронирования
      */
     @Override
+    @Transactional
     public BookingDto updateStatusBooking(long userId, long bookingId, Boolean approved) {
         User owner = validator.validateAndReturnUserByUserId(userId);
-        Booking booking = validator.validateForUpdateBooking(owner, bookingId, approved);
+        Booking booking = validator.validateForUpdateBooking(owner, bookingId);
         booking.setStatus(approved ? BookingStatus.APPROVED : BookingStatus.REJECTED);
         return bookingMapper.toBookingDto(bookingRepository.save(booking));
     }

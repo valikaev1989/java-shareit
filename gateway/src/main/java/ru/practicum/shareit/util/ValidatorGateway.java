@@ -106,16 +106,9 @@ public class ValidatorGateway {
         }
     }
 
-    public void validateItemNameAndDescOnEmpty(ItemDto itemDto) {
-        if (itemDto.getName().isEmpty() || itemDto.getDescription().isEmpty()) {
-            log.warn("имя предмета и описание предмета не должно быть пустым!");
-            throw new ValidationException("имя предмета и описание предмета не должно быть пустым!");
-        }
-    }
-
     public BookingState validateStateBooking(String stateParam) {
         return BookingState.from(stateParam).orElseThrow(() ->
-                new ValidationException(String.format("Unknown state:\"%s\"", stateParam)));
+                new ValidationException("Unknown state: UNSUPPORTED_STATUS"));
     }
 
     public void validateTimeBooking(BookingDto bookingDto) {

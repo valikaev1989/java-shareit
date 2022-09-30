@@ -54,7 +54,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public List<ItemRequestWithItemDto> getAllRequests(long userId, int from, int size) {
         validator.validateAndReturnUserByUserId(userId);
-//        validator.validatePage(from, size);
         Pageable pageable = PageRequest.of(from, size, Sort.by("created").descending());
         List<ItemRequest> requests = requestRepository.findAllByRequesterIdIsNot(userId, pageable);
         return getListRequest(requests);
@@ -70,7 +69,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public ItemRequestDto addItemRequest(long userId, ItemRequestDto itemRequestDto) {
         User user = validator.validateAndReturnUserByUserId(userId);
-//        validator.validateItemRequestDesc(itemRequestDto);
         return itemRequestMapper.toItemRequestDto(
                 requestRepository.save(itemRequestMapper.toItemRequest(user, itemRequestDto)));
     }

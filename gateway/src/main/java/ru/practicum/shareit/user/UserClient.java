@@ -24,7 +24,6 @@ public class UserClient extends BaseClient {
         );
     }
 
-
     public ResponseEntity<Object> addNewUser(UserDto userDto) {
         return post("", userDto);
     }

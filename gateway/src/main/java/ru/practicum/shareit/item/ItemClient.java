@@ -26,37 +26,38 @@ public class ItemClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> addItem(long userId, ItemDto itemDto) {
+    public ResponseEntity<Object> addNewItem(long userId, ItemDto itemDto) {
         return post("", userId, itemDto);
     }
 
-    public ResponseEntity<Object> getItem(long userId, long itemId) {
+    public ResponseEntity<Object> findItemById(long userId, long itemId) {
         return get("/" + itemId, userId);
     }
 
-    public ResponseEntity<Object> update(long userId, long itemId, ItemDto itemDto) {
+    public ResponseEntity<Object> updateItem(long userId, long itemId, ItemDto itemDto) {
         return patch("/" + itemId, userId, itemDto);
     }
 
-    public ResponseEntity<Object> findByDescription(String text, int from, int size) {
+    public ResponseEntity<Object> findItemByText(String text, long userId, int[] page) {
+
         Map<String, Object> parameters = Map.of(
                 "text", text,
-                "from", from,
-                "size", size
+                "from", page[0],
+                "size", page[1]
         );
-        return get("/search", null, parameters);
+        return get("/search?text={text}&from={from}&size={size}", userId, parameters);
     }
 
-    public void delete(long userId, long itemId) {
+    public void deleteItem(long userId, long itemId) {
         delete("/" + itemId, userId);
     }
 
-    public ResponseEntity<Object> findAllByUserId(long userId, int from, int size) {
+    public ResponseEntity<Object> findAllByUserId(long userId, int[] page) {
         Map<String, Object> parameters = Map.of(
-                "from", from,
-                "size", size
+                "from", page[0],
+                "size", page[1]
         );
-        return get("", userId, parameters);
+        return get("?from={from}&size={size}", userId, parameters);
     }
 
     public ResponseEntity<Object> addComment(long userId, long itemId, CommentDto commentDto) {

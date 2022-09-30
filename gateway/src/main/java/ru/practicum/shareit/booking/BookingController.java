@@ -26,53 +26,70 @@ public class BookingController {
     @PostMapping
     public ResponseEntity<Object> addBooking(@RequestHeader(HEADER) long userId,
                                              @RequestBody BookingDto bookingDto) {
-        log.info("GATEWAY: Creating booking {}, userId={}", bookingDto, userId);
+        log.info("GATEWAY start addBooking: bookingDto =  {}, userId = {}", bookingDto, userId);
         validator.validateId(userId);
         validator.validateTimeBooking(bookingDto);
-        return bookingClient.bookItem(userId, bookingDto);
+        ResponseEntity<Object> responseEntity = bookingClient.addBooking(userId, bookingDto);
+        log.info("GATEWAY end addBooking: booking =  {}", responseEntity);
+        return responseEntity;
     }
 
     @PatchMapping("/{bookingId}")
-    public ResponseEntity<Object> update(@RequestHeader(HEADER) long userId,
-                                         @RequestParam Boolean approved, @PathVariable Long bookingId) {
-        log.info("GATEWAY: Patch booking {}, userId={}, approved={}", bookingId, userId, approved);
+    public ResponseEntity<Object> updateStatusBooking(@RequestHeader(HEADER) long userId,
+                                                      @RequestParam Boolean approved,
+                                                      @PathVariable Long bookingId) {
+        log.info("GATEWAY start updateStatus: bookingId = {}, userId = {}, approved = {}",
+                bookingId, userId, approved);
         validator.validateId(userId);
         validator.validateId(bookingId);
         validator.validateApprovedBooking(approved);
-        return bookingClient.update(userId, bookingId, approved);
+        ResponseEntity<Object> responseEntity = bookingClient.updateStatusBooking(userId, bookingId, approved);
+        log.info("GATEWAY end updateStatus: booking = {}", responseEntity);
+        return responseEntity;
     }
 
     @GetMapping("/{bookingId}")
-    public ResponseEntity<Object> getBooking(@RequestHeader(HEADER) long userId,
-                                             @PathVariable Long bookingId) {
-        log.info("GATEWAY: Get booking {}, userId={}", bookingId, userId);
+    public ResponseEntity<Object> getBookingById(@RequestHeader(HEADER) long userId,
+                                                 @PathVariable Long bookingId) {
+        log.info("GATEWAY start getBookingById: bookingId = {}, userId = {}", bookingId, userId);
         validator.validateId(userId);
         validator.validateId(bookingId);
-        return bookingClient.getBooking(userId, bookingId);
+        ResponseEntity<Object> responseEntity = bookingClient.getBookingById(userId, bookingId);
+        log.info("GATEWAY end getBookingById: booking = {}", responseEntity);
+        return responseEntity;
     }
 
     @GetMapping
-    public ResponseEntity<Object> getBookings(@RequestHeader(HEADER) long userId,
-                                              @RequestParam(name = "state", defaultValue = "all") String stateParam,
-                                              @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                              @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
-
-        log.info("GATEWAY: Get booking with state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
+    public ResponseEntity<Object> getAllBookingsFromUser(
+            @RequestHeader(HEADER) long userId,
+            @RequestParam(name = "state", defaultValue = "all") String stateParam,
+            @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+            @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        log.info("GATEWAY getAllBookingsFromUser: state = {}, userId = {}, from = {}, size = {}",
+                stateParam, userId, from, size);
         validator.validateId(userId);
         validator.validatePage(from, size);
+        int[] page = {from, size};
         BookingState state = validator.validateStateBooking(stateParam);
-        return bookingClient.getBookings(userId, state, from, size);
+        ResponseEntity<Object> responseEntity = bookingClient.getAllBookingsFromUser(userId, state, page);
+        log.info("GATEWAY end getAllBookingsFromUser: booking = {}", responseEntity);
+        return responseEntity;
     }
 
     @GetMapping("/owner")
-    public ResponseEntity<Object> getBookingsForItems(@RequestHeader(HEADER) long userId,
-                                                      @RequestParam(name = "state", defaultValue = "all") String stateParam,
-                                                      @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                                      @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        log.info("GATEWAY: Get booking with state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
+    public ResponseEntity<Object> getBookingByIdOwner(
+            @RequestHeader(HEADER) long userId,
+            @RequestParam(name = "state", defaultValue = "all") String stateParam,
+            @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+            @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        log.info("GATEWAY getBookingByIdOwner: state = {}, userId = {}, from = {}, size = {}",
+                stateParam, userId, from, size);
         validator.validateId(userId);
         validator.validatePage(from, size);
+        int[] page = {from, size};
         BookingState state = validator.validateStateBooking(stateParam);
-        return bookingClient.getBookingsForItems(userId, state, from, size);
+        ResponseEntity<Object> responseEntity = bookingClient.getBookingByIdOwner(userId, state, page);
+        log.info("GATEWAY end getBookingByIdOwner: booking = {}", responseEntity);
+        return responseEntity;
     }
 }

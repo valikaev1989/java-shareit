@@ -19,41 +19,41 @@ public class BookingClient extends BaseClient {
 
     @Autowired
     public BookingClient(@Value("${shareit-server.url}") String serverUrl, RestTemplateBuilder builder) {
-        super(
-                builder
-                        .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))
-                        .requestFactory(HttpComponentsClientHttpRequestFactory::new)
-                        .build()
+        super(builder
+                .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))
+                .requestFactory(HttpComponentsClientHttpRequestFactory::new)
+                .build()
         );
     }
 
-    public ResponseEntity<Object> getBookings(long userId, BookingState state, Integer from, Integer size) {
+    public ResponseEntity<Object> getAllBookingsFromUser(long userId, BookingState state, int[] page) {
         Map<String, Object> parameters = Map.of(
                 "state", state.name(),
-                "from", from,
-                "size", size
+                "from", page[0],
+                "size", page[1]
         );
-        return get("", userId, parameters);
+        return get("?state={state}&from={from}&size={size}", userId, parameters);
     }
 
-    public ResponseEntity<Object> getBookingsForItems(long userId, BookingState state, Integer from, Integer size) {
+    public ResponseEntity<Object> getBookingByIdOwner(long userId, BookingState state, int[] page) {
         Map<String, Object> parameters = Map.of(
                 "state", state.name(),
-                "from", from,
-                "size", size
+                "from", page[0],
+                "size", page[1]
         );
-        return get("/owner", userId, parameters);
+        return get("/owner?state={state}&from={from}&size={size}", userId, parameters);
     }
 
-    public ResponseEntity<Object> bookItem(long userId, BookingDto requestDto) {
+    public ResponseEntity<Object> addBooking(long userId, BookingDto requestDto) {
         return post("", userId, requestDto);
     }
 
-    public ResponseEntity<Object> getBooking(long userId, Long bookingId) {
+    public ResponseEntity<Object> getBookingById(long userId, Long bookingId) {
         return get("/" + bookingId, userId);
     }
 
-    public ResponseEntity<Object> update(long userId, Long bookingId, Boolean approved) {
-        return patch("/" + bookingId, userId, approved);
+    public ResponseEntity<Object> updateStatusBooking(long userId, Long bookingId, Boolean approved) {
+        Map<String, Object> parameters = Map.of("approved", approved);
+        return patch("/" + bookingId + "?approved={approved}", userId, parameters, null);
     }
 }
