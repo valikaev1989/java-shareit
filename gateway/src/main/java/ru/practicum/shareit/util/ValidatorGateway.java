@@ -25,7 +25,6 @@ public class ValidatorGateway {
             log.warn("id меньше нуля");
             throw new ValidationException("id меньше нуля");
         }
-
     }
 
     public void validateUserDTO(UserDto userDto) {
