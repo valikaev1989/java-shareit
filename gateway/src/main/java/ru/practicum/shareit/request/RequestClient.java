@@ -18,7 +18,7 @@ public class RequestClient extends BaseClient {
     private static final String API_PREFIX = "/requests";
 
     @Autowired
-    public RequestClient(@Value("http://localhost:9090") String serverUrl, RestTemplateBuilder builder) {
+    public RequestClient(@Value("${shareit-server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(builder
                 .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))
                 .requestFactory(HttpComponentsClientHttpRequestFactory::new)
@@ -39,7 +39,7 @@ public class RequestClient extends BaseClient {
                 "from", page[0],
                 "size", page[1]
         );
-        return get("/all?from={from}&size={size}", userId, parameters);
+        return get("/all/?from={from}&size={size}", userId, parameters);
     }
 
     public ResponseEntity<Object> getRequest(long userId, long requestId) {

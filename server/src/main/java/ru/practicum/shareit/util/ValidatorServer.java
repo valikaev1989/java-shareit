@@ -125,6 +125,7 @@ public class ValidatorServer {
     }
 
     public void validateBookingForComment(Item item, User booker) {
+        log.info("LocalDateTime.now() = {}", LocalDateTime.now());
         List<Booking> bookingList = bookingRepository.validateForTakeItem(BookingStatus.REJECTED, booker,
                 item, LocalDateTime.now());
         if (bookingList.isEmpty()) {

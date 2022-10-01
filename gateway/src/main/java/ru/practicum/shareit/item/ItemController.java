@@ -99,7 +99,7 @@ public class ItemController {
         validator.validateId(itemId);
         validator.validateCommentText(commentDto);
         ResponseEntity<Object> responseEntity = itemClient.addComment(userId, itemId, commentDto);
-        log.info("GATEWAY end addComment: comment = {}", itemId);
+        log.info("GATEWAY end addComment: comment = {}", responseEntity);
         return responseEntity;
     }
 }
