@@ -54,7 +54,6 @@ public class UserServiceImpl implements UserService {
             user.setName(userDto.getName());
         }
         if (userDto.getEmail() != null) {
-            validator.validateEmailUser(userDto);
             user.setEmail(userDto.getEmail());
         }
         userRepository.save(user);

@@ -46,7 +46,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemOwnerDto> getAllUserItems(long userId, int from, int size) {
         validator.validateAndReturnUserByUserId(userId);
-//        validator.validatePage(from, size);
         Pageable pageable = PageRequest.of(from, size, Sort.by("id").ascending());
         List<Item> userItems = itemRepository.findByOwnerIdOrderById(userId, pageable);
         return userItems.stream().map(item -> findItemOwnerDtoById(userId, item.getId())).collect(Collectors.toList());
@@ -64,7 +63,6 @@ public class ItemServiceImpl implements ItemService {
         if (text == null || text.isEmpty()) {
             return List.of();
         }
-//        validator.validatePage(from, size);
         Pageable pageable = PageRequest.of(from, size, Sort.by("id").ascending());
         return itemMapper.toItemDtoList(itemRepository.searchItemByNameAndDesc(text, pageable));
     }
@@ -125,11 +123,9 @@ public class ItemServiceImpl implements ItemService {
         validator.validateAndReturnUserByUserId(userId);
         validator.validateOwnerFromItem(userId, itemId);
         if (itemDto.getName() != null) {
-            validator.validateItemName(itemDto);
             item.setName(itemDto.getName());
         }
         if (itemDto.getDescription() != null) {
-            validator.validateItemDesc(itemDto);
             item.setDescription(itemDto.getDescription());
         }
         if (itemDto.getAvailable() != null) {

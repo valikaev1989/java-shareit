@@ -7,7 +7,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.commentDto.CommentDto;
 import ru.practicum.shareit.item.itemDto.ItemDto;
-import ru.practicum.shareit.util.ValidatorGateway;
 
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
@@ -21,13 +20,10 @@ public class ItemController {
 
     private static final String HEADER = "X-Sharer-User-Id";
     private final ItemClient itemClient;
-    private final ValidatorGateway validator;
 
     @PostMapping
     public ResponseEntity<Object> addItem(@RequestHeader(HEADER) long userId, @RequestBody ItemDto itemDto) {
         log.info("GATEWAY start addItem: userId = {}, itemDto = {}", userId, itemDto);
-        validator.validateId(userId);
-        validator.validateItemAll(itemDto);
         ResponseEntity<Object> responseEntity = itemClient.addNewItem(userId, itemDto);
         log.info("GATEWAY end addItem: item = {}", responseEntity);
         return responseEntity;
@@ -37,8 +33,6 @@ public class ItemController {
     public ResponseEntity<Object> updateItem(@RequestHeader(HEADER) long userId, @RequestBody ItemDto itemDto,
                                              @PathVariable long itemId) {
         log.info("GATEWAY start updateItem: userId = {}, itemId = {}, itemDto {}", userId, itemId, itemDto);
-        validator.validateId(userId);
-        validator.validateId(itemId);
         ResponseEntity<Object> responseEntity = itemClient.updateItem(userId, itemId, itemDto);
         log.info("GATEWAY end updateItem: item = {}", responseEntity);
         return responseEntity;
@@ -47,8 +41,6 @@ public class ItemController {
     @GetMapping("/{itemId}")
     public ResponseEntity<Object> findById(@RequestHeader(HEADER) long userId, @PathVariable long itemId) {
         log.info("GATEWAY start findById: userId = {}, itemId = {}", userId, itemId);
-        validator.validateId(userId);
-        validator.validateId(itemId);
         ResponseEntity<Object> responseEntity = itemClient.findItemById(userId, itemId);
         log.info("GATEWAY end findById: item = {}", responseEntity);
         return responseEntity;
@@ -61,7 +53,6 @@ public class ItemController {
             @PositiveOrZero @RequestParam(value = "from", required = false, defaultValue = "0") int from,
             @Positive @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
         log.info("GATEWAY start findItemByText: text = {}, from={}, size={}", text, from, size);
-        validator.validatePage(from, size);
         int[] page = {from, size};
         ResponseEntity<Object> responseEntity = itemClient.findItemByText(text, userId, page);
         log.info("GATEWAY end findItemByText: items = {}", responseEntity);
@@ -74,8 +65,6 @@ public class ItemController {
             @PositiveOrZero @RequestParam(value = "from", required = false, defaultValue = "0") int from,
             @Positive @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
         log.info("GATEWAY start findAllByUserId: user id = {} from={}, size={}", userId, from, size);
-        validator.validateId(userId);
-        validator.validatePage(from, size);
         int[] page = {from, size};
         ResponseEntity<Object> responseEntity = itemClient.findAllByUserId(userId, page);
         log.info("GATEWAY end findAllByUserId: items = {}", responseEntity);
@@ -85,8 +74,6 @@ public class ItemController {
     @DeleteMapping("/{itemId}")
     public void deleteItem(@RequestHeader(HEADER) long userId, @PathVariable long itemId) {
         log.info("GATEWAY start deleteItem: itemId = {}, userId = {}", itemId, userId);
-        validator.validateId(userId);
-        validator.validateId(itemId);
         itemClient.deleteItem(userId, itemId);
         log.info("GATEWAY end deleteItem: item = {}", itemId);
     }
@@ -95,9 +82,6 @@ public class ItemController {
     public ResponseEntity<Object> addComment(@RequestHeader(HEADER) long userId, @PathVariable long itemId,
                                              @RequestBody CommentDto commentDto) {
         log.info("GATEWAY start addComment: userId = {}, comment = {}, itemId = {}", userId, commentDto, itemId);
-        validator.validateId(userId);
-        validator.validateId(itemId);
-        validator.validateCommentText(commentDto);
         ResponseEntity<Object> responseEntity = itemClient.addComment(userId, itemId, commentDto);
         log.info("GATEWAY end addComment: comment = {}", responseEntity);
         return responseEntity;

@@ -48,13 +48,19 @@ public class ValidatorGateway {
     }
 
     public void validateEmailUser(UserDto userDto) {
-        String patternEmail = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+" +
-                "@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
-        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(patternEmail);
-        java.util.regex.Matcher matcher = pattern.matcher(userDto.getEmail());
-        if (!matcher.matches()) {
-            log.warn("Некорректный адрес электронной почты: {}", userDto.getEmail());
-            throw new ValidationException("некорректный email");
+        if (userDto.getEmail() != null) {
+            if (userDto.getEmail().isEmpty()) {
+                log.warn("отсутствует адрес электронной почты: {}", userDto.getEmail());
+                throw new ValidationException("email отсутствует");
+            }
+            String patternEmail = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+" +
+                    "@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+            java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(patternEmail);
+            java.util.regex.Matcher matcher = pattern.matcher(userDto.getEmail());
+            if (!matcher.matches()) {
+                log.warn("Некорректный адрес электронной почты: {}", userDto.getEmail());
+                throw new ValidationException("некорректный email");
+            }
         }
     }
 
@@ -84,23 +90,44 @@ public class ValidatorGateway {
     }
 
     public void validateItemAll(ItemDto itemDto) {
+        validateItemNotNull(itemDto);
         validateItemName(itemDto);
         validateItemDesc(itemDto);
+    }
+
+    public void validateForUpdateItem(ItemDto itemDto) {
+        if (itemDto.getDescription() != null) {
+            validateItemDesc(itemDto);
+        }
+        if (itemDto.getName() != null) {
+            validateItemName(itemDto);
+        }
+    }
+
+    public void validateItemNotNull(ItemDto itemDto) {
         if (itemDto.getAvailable() == null) {
-            log.warn("доступность предмета не должна быть пустым!");
-            throw new ValidationException("доступность предмета не должна быть пустым!");
+            log.warn("доступность предмета не должна быть отсутствует!");
+            throw new ValidationException("доступность предмета не должна быть отсутствует!");
+        }
+        if (itemDto.getName() == null) {
+            log.warn("имя предмета не должно быть отсутствует!");
+            throw new ValidationException("имя предмета не должно быть отсутствует!");
+        }
+        if (itemDto.getDescription() == null) {
+            log.warn("описание предмета не должно быть отсутствует!");
+            throw new ValidationException("описание предмета не должно быть отсутствует!");
         }
     }
 
     public void validateItemName(ItemDto itemDto) {
-        if (itemDto.getName().isEmpty() || itemDto.getName() == null) {
+        if (itemDto.getName().isEmpty()) {
             log.warn("имя предмета не должно быть пустым!");
             throw new ValidationException("имя предмета не должно быть пустым!");
         }
     }
 
     public void validateItemDesc(ItemDto itemDto) {
-        if (itemDto.getDescription() == null || itemDto.getDescription().isEmpty()) {
+        if (itemDto.getDescription().isEmpty()) {
             log.warn("описание предмета не должно быть пустым!");
             throw new ValidationException("описание предмета не должно быть пустым!");
         }

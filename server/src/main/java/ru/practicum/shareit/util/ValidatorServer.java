@@ -36,40 +36,13 @@ public class ValidatorServer {
                 "пользователь с id '%d' не найден в списке пользователей!", userId)));
     }
 
-    public void validateEmailUser(UserDto userDto) {
-        if (userDto.getEmail().isEmpty()) {
-            log.warn("отсутствует адрес электронной почты: {}", userDto.getEmail());
-            throw new ValidationException("email отсутствует");
-        }
-        String patternEmail = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+" +
-                "@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
-        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(patternEmail);
-        java.util.regex.Matcher matcher = pattern.matcher(userDto.getEmail());
-        if (!matcher.matches()) {
-            log.warn("Некорректный адрес электронной почты: {}", userDto.getEmail());
-            throw new ValidationException("некорректный email");
-        }
-    }
+
 
     public void validateOwnerFromItem(Long userId, Long itemId) {
         if (!userId.equals(validateAndReturnItemByItemId(itemId).getOwner().getId())) {
             log.warn("пользователь с userId '{}' не является владельцем предмета с itemId {}!", userId, itemId);
             throw new UserNotFoundException(String.format("пользователь с userId '%d' не является " +
                     "владельцем предмета с itemId '%d'!", userId, itemId));
-        }
-    }
-
-    public void validateItemName(ItemDto itemDto) {
-        if (itemDto.getName().isEmpty() || itemDto.getName() == null) {
-            log.warn("имя предмета не должно быть пустым!");
-            throw new ValidationException("имя предмета не должно быть пустым!");
-        }
-    }
-
-    public void validateItemDesc(ItemDto itemDto) {
-        if (itemDto.getDescription() == null || itemDto.getDescription().isEmpty()) {
-            log.warn("описание предмета не должно быть пустым!");
-            throw new ValidationException("описание предмета не должно быть пустым!");
         }
     }
 

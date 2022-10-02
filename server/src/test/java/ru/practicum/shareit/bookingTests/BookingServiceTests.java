@@ -54,15 +54,6 @@ public class BookingServiceTests extends StorageForTests {
         mockBookingServiceImpl = new BookingServiceImpl(bookingMapper, mockBookingRepository, mockValidator);
     }
 
-//    @Test
-//    @DisplayName("ServiceMVC Тест ошибки получения букинга пользователя предмета")
-//    void unknownStateBookingByBooker() {
-//        when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user2);
-//        ValidationException ex = assertThrows(ValidationException.class, () -> mockBookingServiceImpl
-//                .getBookingsByBookerId(user2.getId(), "Unknown state", 0, 5));
-//        assertEquals("Unknown state: UNSUPPORTED_STATUS", ex.getMessage());
-//    }
-
     @Test
     @DisplayName("ServiceMVC Тест получения всех букингов пользователя предмета")
     void allBookingByBooker() {
@@ -139,15 +130,6 @@ public class BookingServiceTests extends StorageForTests {
                 .getBookingsByBookerId(user2.getId(), "REJECTED", 0, 5);
         assertEquals(expectedRejectedBooking, actualRejectedBookings);
     }
-
-//    @Test
-//    @DisplayName("ServiceMVC Тест ошибки получения букинга владельца предмета")
-//    void unknownStateBookingByOwner() {
-//        when(mockValidator.validateAndReturnUserByUserId(anyLong())).thenReturn(user1);
-//        ValidationException ex = assertThrows(ValidationException.class, () -> mockBookingServiceImpl
-//                .getBookingsByOwnerId(user1.getId(), "Unknown state", 0, 5));
-//        assertEquals("Unknown state: UNSUPPORTED_STATUS", ex.getMessage());
-//    }
 
     @Test
     @DisplayName("ServiceMVC Тест получения всех букингов владельца предмета")
