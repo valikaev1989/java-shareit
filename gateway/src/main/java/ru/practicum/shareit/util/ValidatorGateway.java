@@ -33,14 +33,14 @@ public class ValidatorGateway {
         validateEmailUser(userDto);
     }
 
-    public void validateNameUser(UserDto userDto) {
+    private void validateNameUser(UserDto userDto) {
         if (userDto.getName().isEmpty() || userDto.getName().contains(" ")) {
             log.warn("Логин не должен быть пустым и не должен содержать пробелов");
             throw new ValidationException("некорректный логин");
         }
     }
 
-    public void validateNotNullEmailUser(UserDto userDto) {
+    private void validateNotNullEmailUser(UserDto userDto) {
         if (userDto.getEmail() == null) {
             log.warn("отсутствует адрес электронной почты: {}", userDto.getEmail());
             throw new ValidationException("email отсутствует");
@@ -104,7 +104,7 @@ public class ValidatorGateway {
         }
     }
 
-    public void validateItemNotNull(ItemDto itemDto) {
+    private void validateItemNotNull(ItemDto itemDto) {
         if (itemDto.getAvailable() == null) {
             log.warn("доступность предмета не должна быть отсутствует!");
             throw new ValidationException("доступность предмета не должна быть отсутствует!");
@@ -119,14 +119,14 @@ public class ValidatorGateway {
         }
     }
 
-    public void validateItemName(ItemDto itemDto) {
+    private void validateItemName(ItemDto itemDto) {
         if (itemDto.getName().isEmpty()) {
             log.warn("имя предмета не должно быть пустым!");
             throw new ValidationException("имя предмета не должно быть пустым!");
         }
     }
 
-    public void validateItemDesc(ItemDto itemDto) {
+    private void validateItemDesc(ItemDto itemDto) {
         if (itemDto.getDescription().isEmpty()) {
             log.warn("описание предмета не должно быть пустым!");
             throw new ValidationException("описание предмета не должно быть пустым!");
