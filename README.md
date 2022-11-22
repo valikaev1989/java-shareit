@@ -47,3 +47,4 @@
 4. Для проверки работоспособности приложения предусмотрены тесты для приложения постман:
 [shareit-tests](https://github.com/valikaev1989/java-shareit/blob/main/postmanTests/tests.json)
 Также в этом проекте было реализовано внутренние тесты с покрытием кода на 99%
+[](https://github.com/valikaev1989/java-shareit/blob/main/media/coverage.PNG)
