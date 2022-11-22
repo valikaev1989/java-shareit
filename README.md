@@ -30,7 +30,7 @@
 
 3. ### Схема базы данных приложения:
 
-![](E:\dev\shareitt\java-shareit\java-shareit\server\src\main\resources\database.PNG)
+[](https://github.com/valikaev1989/java-shareit/blob/main/server/src/main/resources/database.PNG)
 
 Инструкция по запуску:
 -
@@ -45,3 +45,5 @@
 2. Для запуска проекта потребуется docker и docker-compose.
 3. Команда "docker-compose up" запускает оба сервиса с бд
 4. Для проверки работоспособности приложения предусмотрены тесты для приложения постман:
+[shareit-tests](https://github.com/valikaev1989/java-shareit/blob/main/postmanTests/tests.json)
+Также в этом проекте было реализовано внутренние тесты с покрытием кода на 99%
