@@ -30,8 +30,6 @@
 
 3. ### Схема базы данных приложения:
 
-[](https://github.com/valikaev1989/java-shareit/blob/main/server/src/main/resources/database.PNG)
-
 Инструкция по запуску:
 -
 
@@ -47,4 +45,3 @@
 4. Для проверки работоспособности приложения предусмотрены тесты для приложения постман:
 [shareit-tests](https://github.com/valikaev1989/java-shareit/blob/main/postmanTests/tests.json)
 Также в этом проекте было реализовано внутренние тесты с покрытием кода на 99%
-[qwe](https://github.com/valikaev1989/java-shareit/blob/main/media/coverage.PNG)
